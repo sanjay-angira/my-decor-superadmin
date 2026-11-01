@@ -1,0 +1,57 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Offer' : 'Add Offer'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Offer Name</span>
+      <input pInputText formControlName="offerName" />
+    </label>
+    <label class="prime-form-field">
+      <span>Offer Slug</span>
+      <input pInputText formControlName="offerSlug" (input)="markSlugDirty()" />
+    </label>
+    <app-image-upload label="Offer Image" [path]="uploadPath" formControlName="image" />
+    <label class="prime-form-field">
+      <span>Discount Type</span>
+      <p-select
+        [options]="[{ label: 'Percentage', value: 'percentage' }, { label: 'Fixed', value: 'fixed' }]"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="discountType"
+      />
+    </label>
+    <label class="prime-form-field">
+      <span>Discount Value</span>
+      <input pInputText type="number" formControlName="discountValue" />
+    </label>
+    <label class="prime-form-toggle">
+      <p-checkbox formControlName="timeBased" [binary]="true" />
+      <span>Time Based</span>
+    </label>
+    @if (form.controls.timeBased.value) {
+      <label class="prime-form-field">
+        <span>Start Date/Time</span>
+        <input pInputText type="datetime-local" formControlName="startDateTime" />
+      </label>
+      <label class="prime-form-field">
+        <span>End Date/Time</span>
+        <input pInputText type="datetime-local" formControlName="endDateTime" />
+      </label>
+    }
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isActive" />
+      <span>Active</span>
+    </label>
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Offer' : 'Create Offer' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

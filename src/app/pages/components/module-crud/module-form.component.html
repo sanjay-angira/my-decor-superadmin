@@ -1,0 +1,78 @@
+@if (dedicatedForm(); as formCmp) {
+  <ng-container [ngComponentOutlet]="formCmp" [ngComponentOutletInputs]="formInputs()" />
+} @else {
+  <div class="vr-page">
+    <div class="vr-page-header-band">
+      <div class="vr-title-card">
+        <div class="vr-title-left">
+          <h1>{{ isEdit() ? 'Edit' : 'Add' }} {{ label }}</h1>
+          <div class="vr-breadcrumbs">
+            <a [routerLink]="['/admin', moduleKey()]">
+              <i class="pi pi-home" aria-hidden="true"></i>
+            </a>
+            <span class="dot"></span>
+            <a [routerLink]="['/admin', moduleKey()]">{{ label }}</a>
+            <span class="dot"></span>
+            <span>{{ isEdit() ? 'Edit' : 'Add' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vr-page-content vr-form-content">
+      <div class="vr-card vr-form-body">
+        @if (loading()) {
+          <div class="center"><i class="pi pi-spin pi-spinner" aria-label="Loading"></i></div>
+        } @else if (!fields.length) {
+          <p>No editable form is configured for this module yet.</p>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+            @for (field of fields; track field.key) {
+              @if (field.type === 'toggle') {
+                <label class="prime-form-field prime-form-toggle">
+                  <p-checkbox [formControlName]="field.key" [binary]="true" />
+                  <span>{{ field.label }}</span>
+                </label>
+              } @else if (field.type === 'select') {
+                <label class="prime-form-field">
+                  <span>{{ field.label }}</span>
+                  <p-select
+                    [options]="field.options || []"
+                    optionLabel="label"
+                    optionValue="value"
+                    [formControlName]="field.key"
+                  />
+                </label>
+              } @else if (field.type === 'textarea') {
+                <label class="prime-form-field full">
+                  <span>{{ field.label }}</span>
+                  <textarea pTextarea rows="4" [formControlName]="field.key"></textarea>
+                </label>
+              } @else {
+                <label class="prime-form-field">
+                  <span>{{ field.label }}</span>
+                  <input
+                    pInputText
+                    [type]="field.type === 'number' ? 'number' : field.type === 'password' ? 'password' : field.type === 'email' ? 'email' : field.type === 'date' ? 'date' : 'text'"
+                    [formControlName]="field.key"
+                  />
+                </label>
+              }
+            }
+
+            <div class="actions">
+              <button pButton type="submit" [disabled]="saving()">
+                @if (saving()) {
+                  <i class="pi pi-spin pi-spinner" aria-label="Saving"></i>
+                } @else {
+                  {{ isEdit() ? 'Update' : 'Create' }}
+                }
+              </button>
+              <a pButton [outlined]="true" [routerLink]="['/admin', moduleKey()]">Cancel</a>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+}

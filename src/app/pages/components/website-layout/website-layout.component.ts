@@ -1,0 +1,155 @@
+import { Component, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { TooltipModule } from 'primeng/tooltip';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { ApiService } from '../../../core/services/api.service';
+import { AdminToastService } from '../../../core/services/admin-toast.service';
+import { TableSkeletonComponent } from '../table-skeleton/table-skeleton.component';
+import {
+  WebsiteLayoutColumns,
+  type AdminTableColumnDefinition,
+} from '../../../../static-data/static-common-table-columns';
+
+@Component({
+  selector: 'app-website-layout',
+  imports: [
+    RouterLink,
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    ToggleSwitchModule,
+    TooltipModule,
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
+    TableSkeletonComponent,
+  ],
+  templateUrl: './website-layout.component.html',
+  styleUrl: './website-layout.component.scss',
+})
+export class WebsiteLayoutComponent {
+  private readonly api = inject(ApiService);
+  private readonly snack = inject(AdminToastService);
+  private readonly confirmation = inject(ConfirmationService);
+
+  readonly loading = signal(true);
+  readonly reordering = signal(false);
+  readonly showColumnFilters = signal(false);
+  readonly rows = signal<any[]>([]);
+  readonly columnOptions: AdminTableColumnDefinition[] = WebsiteLayoutColumns.map((c) => ({
+    ...c,
+  }));
+  displayedColumns: string[] = [];
+
+  constructor() {
+    this.syncDisplayedColumns();
+    this.load();
+  }
+
+  syncDisplayedColumns(): void {
+    this.displayedColumns = [
+      'drag',
+      ...this.columnOptions
+        .filter((c) => c.visible)
+        .map((c) => (c.datatype === 'button' ? 'actions' : c.property)),
+    ];
+  }
+
+  toggleColumnFilters(): void {
+    this.showColumnFilters.update((visible) => !visible);
+  }
+
+  skeletonHeaders(): string[] {
+    return this.displayedColumns.map((key) => {
+      if (key === 'drag') return '';
+      if (key === 'actions') return 'Actions';
+      return this.columnOptions.find((column) => column.property === key)?.label ?? key;
+    });
+  }
+
+  load(): void {
+    this.loading.set(true);
+    this.api
+      .get('/cms-sections', { pageNumber: 1, pageSize: 100, column: 'position', order: 'ASC' })
+      .subscribe({
+        next: (res) => {
+          this.rows.set(res?.data?.rows ?? res?.data ?? []);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
+  }
+
+  isActive(row: any): boolean {
+    return row?.status === true || row?.status === 'active' || row?.isActive === true;
+  }
+
+  toggle(row: any): void {
+    this.api.put(`/cms-sections/${row.id}`, { status: !this.isActive(row) }).subscribe({
+      next: () => {
+        this.snack.open('Updated', 'OK', { duration: 2000 });
+        this.load();
+      },
+    });
+  }
+
+  drop(event: CdkDragDrop<any[]>): void {
+    if (event.previousIndex === event.currentIndex || this.reordering()) return;
+
+    const list = [...this.rows()];
+    moveItemInArray(list, event.previousIndex, event.currentIndex);
+    const sections = list.map((item, idx) => ({
+      ...item,
+      position: idx + 1,
+    }));
+    this.rows.set(sections);
+    this.persistOrder(sections);
+  }
+
+  private persistOrder(list: any[]): void {
+    this.reordering.set(true);
+    this.api
+      .put('/cms-sections/reorder', {
+        sections: list.map((item) => ({ id: item.id, position: item.position })),
+      })
+      .subscribe({
+        next: () => {
+          this.reordering.set(false);
+          this.snack.open('Section order saved', 'OK', { duration: 1800 });
+        },
+        error: () => {
+          this.reordering.set(false);
+          this.snack.open('Reorder failed', 'Dismiss', { duration: 3000 });
+          this.load();
+        },
+      });
+  }
+
+  delete(row: any): void {
+    this.confirmation.confirm({
+      header: 'Delete section',
+      message: `Delete "${row.title}"?`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+      this.api.delete(`/cms-sections/${row.id}`).subscribe({
+        next: () => {
+          this.snack.open('Deleted', 'OK', { duration: 2000 });
+          this.load();
+        },
+      });
+      },
+    });
+  }
+}

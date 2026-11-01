@@ -1,0 +1,37 @@
+<p-dialog
+  header="Add product tag"
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(480px, 90vw)' }"
+>
+  <form [formGroup]="form" (ngSubmit)="save()" class="tag-dialog-form">
+    <p>Create a new product tag.</p>
+    <label for="tag-name">Tag name</label>
+    <input id="tag-name" pInputText formControlName="tagName" autocomplete="off" class="w-full" />
+    @if (form.controls.tagName.touched && form.controls.tagName.hasError('required')) {
+      <small class="field-error">Tag name is required.</small>
+    }
+    @if (form.controls.tagName.hasError('minlength')) {
+      <small class="field-error">Tag name must be at least 2 characters.</small>
+    }
+    @if (slugPreview()) {
+      <small class="tag-slug-preview">Slug: {{ slugPreview() }}</small>
+    }
+    @if (error()) {
+      <small class="field-error">{{ error() }}</small>
+    }
+    <div class="tag-dialog-actions">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        [outlined]="true"
+        type="button"
+        (onClick)="cancel()"
+      />
+      <p-button [label]="saving() ? 'Adding...' : 'Add tag'" type="submit" [disabled]="saving()" />
+    </div>
+  </form>
+</p-dialog>

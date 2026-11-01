@@ -1,0 +1,128 @@
+.error-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  background: rgba(244, 67, 54, 0.1);
+  color: var(--vr-danger);
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.column-filter {
+  position: relative;
+}
+
+.column-filter-trigger {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: var(--vr-primary);
+  cursor: pointer;
+  list-style: none;
+}
+
+.column-filter-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.column-filter-trigger:hover {
+  background: var(--vr-surface-muted);
+}
+
+.column-filter-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 12rem;
+  max-height: 20rem;
+  overflow: auto;
+  padding: 0.5rem;
+  border: 1px solid var(--vr-border);
+  border-radius: 0.375rem;
+  background: var(--vr-card);
+  box-shadow: var(--vr-shadow-lg);
+}
+
+.column-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem;
+  color: var(--vr-text);
+  cursor: pointer;
+}
+
+.row-actions {
+  white-space: nowrap;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  opacity: 0.35;
+}
+
+.vr-role-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.vr-role-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px;
+}
+
+.vr-role-breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.3;
+}
+
+.vr-role-breakdown-row .vr-status {
+  flex-shrink: 0;
+  font-size: 11px;
+  padding: 2px 6px;
+}
+
+.vr-status.admin {
+  color: var(--vr-status-green);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.vr-status.user {
+  color: var(--vr-status-cyan);
+  background: rgba(0, 188, 212, 0.1);
+}
+
+.vr-status.seller {
+  color: #e65100;
+  background: rgba(230, 81, 0, 0.1);
+}
+
+.vr-status.default {
+  color: var(--vr-text-muted, #64748b);
+  background: rgba(100, 116, 139, 0.12);
+}
+
+.vr-status.default {
+  color: var(--vr-text-secondary);
+  background: rgba(95, 99, 104, 0.1);
+}

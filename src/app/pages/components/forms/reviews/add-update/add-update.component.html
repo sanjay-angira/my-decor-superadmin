@@ -1,0 +1,55 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Review' : 'Add Review'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Rating</span>
+      <p-select [options]="ratings" formControlName="rating" />
+    </label>
+    <app-quill-editor label="Comment" [required]="true" formControlName="comment" />
+    <label class="prime-form-field">
+      <span>Product</span>
+      <p-select
+        [options]="products()"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="productId"
+      />
+    </label>
+    <label class="prime-form-toggle">
+      <p-checkbox formControlName="isManual" [binary]="true" />
+      <span>Manual review</span>
+    </label>
+    @if (form.controls.isManual.value) {
+      <label class="prime-form-field">
+        <span>User Name</span>
+        <input pInputText formControlName="userName" />
+      </label>
+    } @else {
+      <label class="prime-form-field">
+        <span>User</span>
+        <p-select
+          [options]="users()"
+          optionLabel="label"
+          optionValue="value"
+          formControlName="userId"
+        />
+      </label>
+    }
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isApproved" />
+      <span>Approved</span>
+    </label>
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Review' : 'Create Review' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

@@ -1,0 +1,131 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Footer Settings</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard" aria-label="Dashboard"><i class="pi pi-home"></i></a>
+          <span class="dot"></span>
+          <span>Footer Settings</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content vr-form-content">
+    @if (loading()) {
+      <div class="center"><p-progress-spinner [style]="{ width: '36px', height: '36px' }" /></div>
+    } @else {
+      <div class="vr-card">
+        <div class="card-head">
+          <h3>Sections</h3>
+          <button pButton type="button" (click)="openSection()">Add section</button>
+        </div>
+        @for (section of sections(); track section.id; let i = $index) {
+          <div class="list-row">
+            <div>
+              <p class="title">{{ section.title }}</p>
+              <span class="chip">Position {{ section.position }}</span>
+            </div>
+            <div class="row-btns">
+              <button pButton [text]="true" [rounded]="true" icon="pi pi-arrow-up" type="button" aria-label="Move up" [disabled]="i === 0" (click)="moveSection(i, -1)">
+              </button>
+              <button pButton [text]="true" [rounded]="true" icon="pi pi-arrow-down" type="button" aria-label="Move down" [disabled]="i === sections().length - 1" (click)="moveSection(i, 1)">
+              </button>
+              <p-toggleswitch
+                [ngModel]="section.status"
+                (ngModelChange)="toggleSection(section, $event)"
+                ariaLabel="Visible"
+              />
+              <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" aria-label="Edit section" (click)="openSection(section)"></button>
+              <button pButton [text]="true" [rounded]="true" icon="pi pi-trash" type="button" aria-label="Delete section" (click)="deleteSection(section)"></button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="vr-card">
+        <div class="card-head">
+          <h3>Footer items</h3>
+          <button pButton type="button" [disabled]="!menuSection()" (click)="openItem()">
+            Add item
+          </button>
+        </div>
+        @for (row of items(); track row.id) {
+          <div class="list-row">
+            <div>
+              <p class="title">{{ row.label }}</p>
+              <p class="muted">{{ row.url }}</p>
+            </div>
+            <div class="row-btns">
+              <p-toggleswitch [ngModel]="row.status" (ngModelChange)="toggleItem(row, $event)" />
+              <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" aria-label="Edit item" (click)="openItem(row)"></button>
+              <button pButton [text]="true" [rounded]="true" icon="pi pi-trash" type="button" aria-label="Delete item" (click)="deleteItem(row)"></button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (dialogKind()) {
+  <div class="overlay" (click)="closeDialog()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <div class="dlg-head">
+        <div class="dlg-title">
+          <span class="dlg-icon">
+            <i [class]="dialogKind() === 'section' ? 'pi pi-list' : 'pi pi-link'"></i>
+          </span>
+          <div>
+            <h2>{{ dialogTitle() }}</h2>
+            <p>{{ dialogSubtitle() }}</p>
+          </div>
+        </div>
+        <button pButton [text]="true" [rounded]="true" icon="pi pi-times" type="button" class="close-btn" (click)="closeDialog()" aria-label="Close"></button>
+      </div>
+
+      <div class="dlg-body">
+      @if (dialogKind() === 'section') {
+        <label class="prime-form-field full">
+          <span>Title</span>
+          <input pInputText [(ngModel)]="sectionForm.title" />
+        </label>
+        <label class="prime-form-toggle">
+          <p-toggleswitch [(ngModel)]="sectionForm.status" />
+          <span>Visible on storefront</span>
+        </label>
+        <div class="actions">
+          <button pButton [outlined]="true" type="button" (click)="closeDialog()">Cancel</button>
+          <button pButton type="button" [disabled]="dialogSaving()" (click)="saveSection()">Save</button>
+        </div>
+      } @else {
+        <label class="prime-form-field full">
+          <span>Section</span>
+          <p-select [options]="sections()" optionLabel="title" optionValue="id" [(ngModel)]="linkForm.sectionId" />
+        </label>
+        <label class="prime-form-field full">
+          <span>Label</span>
+          <input pInputText [(ngModel)]="linkForm.label" />
+        </label>
+        <label class="prime-form-field full">
+          <span>URL</span>
+          <input pInputText [(ngModel)]="linkForm.url" />
+        </label>
+        <label class="prime-form-field">
+          <span>Position</span>
+          <input pInputText type="number" [(ngModel)]="linkForm.position" />
+        </label>
+        <label class="prime-form-toggle">
+          <p-toggleswitch [(ngModel)]="linkForm.status" />
+          <span>Active</span>
+        </label>
+        <div class="actions">
+          <button pButton [outlined]="true" type="button" (click)="closeDialog()">Cancel</button>
+          <button pButton type="button" [disabled]="dialogSaving()" (click)="saveItem()">Save</button>
+        </div>
+      }
+      </div>
+    </div>
+  </div>
+}

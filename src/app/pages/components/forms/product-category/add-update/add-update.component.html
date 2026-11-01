@@ -1,0 +1,173 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Product Category' : 'Add Product Category'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" class="category-form">
+    <p-stepper [value]="1" [linear]="true">
+      <p-step-list>
+        <p-step [value]="1">General Information</p-step>
+        <p-step [value]="2">Media Assets</p-step>
+        <p-step [value]="3">SEO Settings</p-step>
+      </p-step-list>
+      <p-step-panels>
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+        <div class="step-grid">
+          <label class="prime-form-field">
+            <span>Category Name</span>
+            <input pInputText formControlName="categoryName" />
+            @if (form.controls.categoryName.touched && form.controls.categoryName.hasError('required')) {
+              <span class="field-error">Category name is required</span>
+            }
+            @if (form.controls.categoryName.hasError('minlength')) {
+              <span class="field-error">Category name must be at least 3 characters</span>
+            }
+          </label>
+
+          <label class="prime-form-field">
+            <span>Parent Category</span>
+            <p-select
+              [options]="categories()"
+              optionLabel="label"
+              optionValue="value"
+              formControlName="parentId"
+              placeholder="Select a Parent Category"
+              [showClear]="true"
+            />
+          </label>
+
+          <label class="prime-form-field full">
+            <span>Short Description</span>
+            <input pInputText formControlName="shortDescription" [maxlength]="shortDescMax" />
+            <small>{{ shortDescLength() }}/{{ shortDescMax }}</small>
+            @if (form.controls.shortDescription.touched && form.controls.shortDescription.hasError('required')) {
+              <span class="field-error">Short description is required</span>
+            }
+          </label>
+
+          <div class="full">
+            <app-quill-editor
+              label="Description"
+              [required]="true"
+              minHeight="200px"
+              formControlName="description"
+            />
+            @if (form.controls.description.touched && form.controls.description.invalid) {
+              <div class="field-error">Description is required</div>
+            }
+          </div>
+
+          <label class="prime-form-field full">
+            <span>Offers</span>
+            <p-multiselect
+              [options]="offers()"
+              optionLabel="label"
+              optionValue="value"
+              formControlName="offerIds"
+              display="chip"
+            />
+          </label>
+
+          <div class="toggle-row full">
+            <div class="toggle-item">
+              <span>Active Status</span>
+              <p-toggleswitch formControlName="isActive" />
+              <span class="status-chip" [class.on]="form.controls.isActive.value">
+                {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button pButton type="button" [disabled]="!isStepValid(1)" (click)="activateCallback(2)">
+            Next
+          </button>
+        </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+        <div class="media-grid">
+          <app-image-upload
+            class="full"
+            label="Main Image"
+            [path]="paths.image"
+            imageType="category"
+            formControlName="image"
+          />
+          <app-image-upload
+            class="full"
+            label="Category Icon"
+            [path]="paths.icon"
+            accept="image/svg+xml,.svg,image/*"
+            formControlName="icon"
+          />
+          <app-image-upload
+            class="full"
+            label="Category Banner"
+            [path]="paths.banner"
+            imageType="category"
+            formControlName="banner"
+          />
+          <app-image-upload
+            class="full"
+            label="Category Video"
+            [path]="paths.video"
+            accept="video/*"
+            formControlName="video"
+          />
+        </div>
+        <div class="step-actions">
+          <button pButton [outlined]="true" type="button" (click)="activateCallback(1)">
+            Back
+          </button>
+          <button pButton type="button" (click)="activateCallback(3)">
+            Next
+          </button>
+        </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="3">
+          <ng-template #content let-activateCallback="activateCallback">
+        <div class="step-grid" formGroupName="seo">
+          <label class="prime-form-field full">
+            <span>Meta Title</span>
+            <input pInputText formControlName="metaTitle" [maxlength]="metaTitleMax" />
+            <small>{{ metaTitleLength() }}/{{ metaTitleMax }}</small>
+            @if (form.controls.seo.controls.metaTitle.touched && form.controls.seo.controls.metaTitle.hasError('required')) {
+              <span class="field-error">Meta Title is required</span>
+            }
+          </label>
+          <label class="prime-form-field full">
+            <span>Meta Description</span>
+            <textarea pInputText rows="3" formControlName="metaDescription" [maxlength]="metaDescMax"></textarea>
+            <small>{{ metaDescLength() }}/{{ metaDescMax }}</small>
+            @if (form.controls.seo.controls.metaDescription.touched && form.controls.seo.controls.metaDescription.hasError('required')) {
+              <span class="field-error">Meta Description is required</span>
+            }
+          </label>
+          <label class="prime-form-field full">
+            <span>Meta Keywords</span>
+            <input pInputText formControlName="metaKeywords" />
+            <small>Separate keywords with commas</small>
+          </label>
+        </div>
+        <div class="step-actions">
+          <button pButton [outlined]="true" type="button" (click)="activateCallback(2)">
+            Back
+          </button>
+          <button pButton type="button" [disabled]="saving() || !form.valid" (click)="submit()">
+            {{ isEdit() ? 'Update Product Category' : 'Create Product Category' }}
+          </button>
+        </div>
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
+    </p-stepper>
+  </form>
+</app-admin-form-shell>

@@ -1,0 +1,77 @@
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.column-filter-menu {
+  position: absolute;
+  z-index: 20;
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+  padding: 12px;
+  background: var(--vr-card);
+  border: 1px solid var(--vr-border);
+  border-radius: 10px;
+  box-shadow: var(--vr-shadow-lg);
+}
+
+.column-filter-menu[hidden] {
+  display: none;
+}
+
+.column-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.website-layout-actions {
+  white-space: nowrap;
+}
+
+.website-layout-actions button:hover,
+.website-layout-actions a:hover {
+  background: var(--vr-primary-soft);
+}
+
+.drag-col {
+  width: 44px;
+  padding-right: 0;
+}
+
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--vr-text-muted);
+  cursor: grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.cdk-drag-preview {
+  display: table;
+  background: var(--vr-card);
+  box-shadow: var(--vr-shadow-lg);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.35;
+}
+
+.cdk-drop-list-dragging tr:not(.cdk-drag-placeholder) {
+  transition: transform 180ms ease;
+}

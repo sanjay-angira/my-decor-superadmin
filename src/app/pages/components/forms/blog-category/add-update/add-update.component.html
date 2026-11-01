@@ -1,0 +1,33 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Blog Category' : 'Add Blog Category'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Title</span>
+      <input pInputText formControlName="title" />
+    </label>
+    <label class="prime-form-field">
+      <span>Slug</span>
+      <input pInputText formControlName="slug" (input)="markSlugDirty()" />
+    </label>
+    <label class="prime-form-field">
+      <span>Description</span>
+      <textarea pTextarea rows="4" formControlName="description"></textarea>
+    </label>
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isActive" />
+      <span>Active</span>
+    </label>
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Category' : 'Create Category' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

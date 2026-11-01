@@ -1,0 +1,53 @@
+.vr-table-skel {
+  width: 100%;
+}
+
+:host ::ng-deep .vr-table-skel .vr-table-skel-heading {
+  display: inline-block;
+  width: 5rem;
+  height: 0.75rem;
+}
+
+:host ::ng-deep .vr-table-skel .vr-table-scroll > p-table .p-datatable-tbody > tr > td > .vr-skeleton {
+  width: min(78%, 10rem);
+  height: 1.3125rem;
+}
+
+.vr-table-skel-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+:host ::ng-deep .vr-table-skel .vr-table-skel-actions .vr-skeleton {
+  flex: 0 0 2.25rem;
+  width: 2rem;
+  height: 2.25rem;
+  border-radius: 50%;
+}
+
+.vr-table-skel-pager {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--vr-border-subtle);
+}
+
+.vr-table-skel-pager .pager-range {
+  width: 88px;
+  height: 12px;
+}
+
+.vr-table-skel-pager .pager-size {
+  width: 48px;
+  height: 12px;
+}
+
+.vr-table-skel-pager .pager-nav {
+  width: 96px;
+  height: 28px;
+  border-radius: 6px;
+}

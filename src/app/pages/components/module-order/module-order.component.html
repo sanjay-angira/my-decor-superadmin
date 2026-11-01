@@ -1,0 +1,242 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Module Order Management</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard" aria-label="Dashboard"><i class="pi pi-home"></i></a>
+          <span class="dot"></span>
+          <span>Module Order</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div>
+          <p class="stat-label">Total Modules</p>
+          <p class="stat-value">{{ getTotalModulesCount() }}</p>
+        </div>
+        <div class="stat-icon"><i class="pi pi-th-large"></i></div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <p class="stat-label">Total Categories</p>
+          <p class="stat-value">{{ getTotalCategoriesCount() }}</p>
+        </div>
+        <div class="stat-icon"><i class="pi pi-folder"></i></div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <p class="stat-label">Uncategorized Modules</p>
+          <p class="stat-value">{{ uncategorizedModules().length }}</p>
+        </div>
+        <div class="stat-icon"><i class="pi pi-folder-open"></i></div>
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <div class="vr-card joined center">
+        <p-progress-spinner [style]="{ width: '36px', height: '36px' }" />
+      </div>
+    } @else {
+      <div class="toolbar-card">
+        <div class="toolbar-left">
+          <button pButton [text]="true" [rounded]="true" icon="pi pi-plus" type="button" (click)="expandAllCategories()" pTooltip="Expand all categories"></button>
+          <button pButton [text]="true" [rounded]="true" icon="pi pi-minus" type="button" (click)="collapseAllCategories()" pTooltip="Collapse all categories"></button>
+        </div>
+        <button pButton type="button" (click)="openAddModuleDialog()">
+          <i class="pi pi-plus"></i>
+          Add New Module
+        </button>
+      </div>
+
+      <div
+        class="category-list"
+        cdkDropList
+        [cdkDropListData]="categories()"
+        (cdkDropListDropped)="onCategoryDrop($event)"
+      >
+        <p-accordion [multiple]="true" [value]="expandedCategoryValues()" (valueChange)="onAccordionValueChange($event)">
+          @for (category of categories(); track category.id) {
+            <p-accordion-panel
+              [value]="category.id"
+              cdkDrag
+              [cdkDragData]="category"
+              class="category-panel"
+            >
+              <p-accordion-header>
+                <div class="panel-header">
+                  <div class="panel-title">
+                    <span class="drag-handle" cdkDragHandle>
+                      <i class="pi pi-bars"></i>
+                    </span>
+                    <span class="cat-icon">
+                      <i [class]="iconClass(category.categoryIcon)"></i>
+                    </span>
+                    <h2>{{ category.category }}</h2>
+                    <span class="count-chip">{{ category.modules.length }}</span>
+                    <span class="order-hint">Order: {{ category.order || 'N/A' }}</span>
+                  </div>
+                  <div class="panel-actions">
+                    <button
+                      pButton
+                      [text]="true"
+                      [rounded]="true"
+                      icon="pi pi-plus-circle"
+                      type="button"
+                      (click)="openAddModuleDialog(category.category); $event.stopPropagation()"
+                      pTooltip="Add module to this category"
+                    >
+                    </button>
+                    <button
+                      pButton
+                      [text]="true"
+                      [rounded]="true"
+                      icon="pi pi-pencil"
+                      type="button"
+                      (click)="editCategory(category); $event.stopPropagation()"
+                      pTooltip="Edit category name"
+                    >
+                    </button>
+                    <button
+                      pButton
+                      [text]="true"
+                      [rounded]="true"
+                      severity="danger"
+                      icon="pi pi-trash"
+                      type="button"
+                      (click)="deleteCategory(category); $event.stopPropagation()"
+                      pTooltip="Delete category"
+                    >
+                    </button>
+                  </div>
+                </div>
+              </p-accordion-header>
+
+              <p-accordion-content>
+              <div
+                class="module-drop"
+                cdkDropList
+                [id]="category.id"
+                [cdkDropListData]="category.modules"
+                [cdkDropListConnectedTo]="getAllCategoryIds()"
+                (cdkDropListDropped)="onModuleDrop($event)"
+              >
+                @for (module of category.modules; track module.id) {
+                  <div class="module-row" cdkDrag [cdkDragData]="module">
+                    <div class="module-main">
+                      <i class="pi pi-bars row-drag"></i>
+                      <span class="mod-icon">
+                        <i [class]="iconClass(module.icon)"></i>
+                      </span>
+                      <div class="module-copy">
+                        <h4>{{ module.name }}</h4>
+                        <div class="meta">
+                          <span>Order: {{ module.order || 'N/A' }}</span>
+                          @if (module.router_link) {
+                            <span class="route">{{ module.router_link }}</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-actions">
+                      <button
+                        pButton
+                        [text]="true"
+                        [rounded]="true"
+                        icon="pi pi-pencil"
+                        type="button"
+                        (click)="editModule(module); $event.stopPropagation()"
+                        pTooltip="Edit module"
+                      >
+                      </button>
+                      <button
+                        pButton
+                        [text]="true"
+                        [rounded]="true"
+                        severity="danger"
+                        icon="pi pi-trash"
+                        type="button"
+                        (click)="deleteModule(module); $event.stopPropagation()"
+                        pTooltip="Delete module"
+                      >
+                      </button>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="empty-drop">No modules in this category. Click + to add one.</div>
+                }
+              </div>
+              </p-accordion-content>
+            </p-accordion-panel>
+          }
+        </p-accordion>
+      </div>
+
+      @if (uncategorizedModules().length > 0) {
+        <div class="uncategorized">
+          <div class="uncat-header">
+            <div class="panel-title">
+              <span class="cat-icon gray">
+                <i class="pi pi-folder-open"></i>
+              </span>
+              <h2>Uncategorized Modules</h2>
+              <span class="count-chip gray">{{ uncategorizedModules().length }}</span>
+            </div>
+            <button
+              pButton
+              [text]="true"
+              [rounded]="true"
+              icon="pi pi-plus-circle"
+              type="button"
+              (click)="openAddModuleDialog()"
+              pTooltip="Add module without category"
+            >
+            </button>
+          </div>
+          <div
+            class="module-drop dashed"
+            cdkDropList
+            [id]="uncategorizedId"
+            [cdkDropListData]="uncategorizedModules()"
+            [cdkDropListConnectedTo]="getAllCategoryIds()"
+            (cdkDropListDropped)="onModuleDrop($event)"
+          >
+            @for (module of uncategorizedModules(); track module.id) {
+              <div class="module-row card" cdkDrag [cdkDragData]="module">
+                <div class="module-main">
+                  <i class="pi pi-bars row-drag"></i>
+                  <span class="mod-icon gray">
+                    <i [class]="iconClass(module.icon)"></i>
+                  </span>
+                  <div class="module-copy">
+                    <h4>{{ module.name }}</h4>
+                    <p class="meta">Order: {{ module.order || 'N/A' }}</p>
+                  </div>
+                </div>
+                <div class="row-actions">
+                  <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" (click)="editModule(module)" pTooltip="Edit module">
+                  </button>
+                  <button pButton [text]="true" [rounded]="true" severity="danger" icon="pi pi-trash" type="button" (click)="deleteModule(module)" pTooltip="Delete module">
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (categories().length === 0 && uncategorizedModules().length === 0) {
+        <div class="vr-card joined vr-empty">
+          <i class="pi pi-inbox" style="font-size:48px;opacity:.35"></i>
+          <h3>No Modules Found</h3>
+          <p>There are no modules to display.</p>
+          <button pButton type="button" (click)="openAddModuleDialog()">Add New Module</button>
+        </div>
+      }
+    }
+  </div>
+</div>

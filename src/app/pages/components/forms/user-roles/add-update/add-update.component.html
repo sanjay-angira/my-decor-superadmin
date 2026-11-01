@@ -1,0 +1,35 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Role' : 'Add Role'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Role Name</span>
+      <input pInputText formControlName="roleName" />
+    </label>
+    <label class="prime-form-field">
+      <span>Role Id</span>
+      <input pInputText type="number" formControlName="roleId" />
+    </label>
+
+    @if (showPermissions()) {
+      <app-permission-matrix
+        class="full"
+        title="Default role permissions"
+        [rows]="permissions()"
+        (rowsChange)="permissions.set($event)"
+      />
+    }
+
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Role' : 'Create Role' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

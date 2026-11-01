@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.preview {
+  position: relative;
+  width: fit-content;
+}
+
+img,
+video {
+  max-width: 100%;
+  max-height: 160px;
+  border-radius: 4px;
+  border: 1px solid var(--vr-border);
+  object-fit: cover;
+}
+
+.preview button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--vr-card);
+}
+
+.upload-error {
+  display: block;
+  margin-top: 6px;
+  color: var(--vr-danger);
+}

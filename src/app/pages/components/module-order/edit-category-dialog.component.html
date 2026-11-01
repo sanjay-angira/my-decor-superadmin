@@ -1,0 +1,46 @@
+<div class="dlg">
+  <div class="dlg-head">
+    <div class="dlg-title">
+      <span class="dlg-icon"><i class="pi pi-pencil" aria-hidden="true"></i></span>
+      <div>
+        <h2>Rename Category</h2>
+        <p>Update the category name and heading icon</p>
+      </div>
+    </div>
+    <button pButton [text]="true" [rounded]="true" type="button" class="close-btn" (click)="cancel()" aria-label="Close">
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="dlg-content">
+      <label class="prime-form-field full">
+        <span>Category Name</span>
+        <input pInputText formControlName="categoryName" />
+        @if (form.controls.categoryName.hasError('required') && form.controls.categoryName.touched) {
+          <span class="field-error">Category name is required</span>
+        }
+        @if (form.controls.categoryName.hasError('categoryExists')) {
+          <span class="field-error">This category already exists</span>
+        }
+      </label>
+
+      <label class="prime-form-field full">
+        <span>Category Icon (heading)</span>
+        <p-select
+          [options]="filteredIcons"
+          [filter]="true"
+          [showClear]="true"
+          placeholder="Select an icon"
+          formControlName="categoryIcon"
+        />
+        <small>Select an icon for the category heading</small>
+      </label>
+    </div>
+
+    <div class="dlg-actions">
+      <button pButton [outlined]="true" type="button" (click)="cancel()">Cancel</button>
+      <button pButton type="submit" class="submit-btn">Update Category</button>
+    </div>
+  </form>
+</div>

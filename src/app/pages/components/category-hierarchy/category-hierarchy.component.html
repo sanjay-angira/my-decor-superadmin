@@ -1,0 +1,140 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Category Hierarchy</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard">
+            <i class="pi pi-home" aria-hidden="true"></i>
+          </a>
+          <span class="dot"></span>
+          <span>Category Hierarchy</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vr-filter-bar">
+      <div class="vr-search-pill">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input pInputText type="search" [formControl]="searchControl" placeholder="Search categories..." />
+        @if (searchControl.value) {
+          <button pButton type="button" [text]="true" [rounded]="true" (click)="searchControl.setValue('')" aria-label="Clear search">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+      <div class="filter-actions">
+        @if (selectedLeaf(); as leaf) {
+          <button
+            pButton
+            type="button"
+            (click)="openAddAttribute(leaf)"
+          >
+            <i class="pi pi-plus" aria-hidden="true"></i>
+            Add Attribute
+          </button>
+          <button
+            pButton
+            type="button"
+            (click)="openCategoryGuidelines(leaf)"
+          >
+            <i class="pi pi-list-check" aria-hidden="true"></i>
+            Add Category Guideline
+          </button>
+        }
+        <a pButton routerLink="/admin/categories/add">
+          <i class="pi pi-plus" aria-hidden="true"></i>
+          Add Category
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    @if (error()) {
+      <div class="error-banner">
+        <span>{{ error() }}</span>
+        <button pButton [text]="true" type="button" (click)="load()">Retry</button>
+      </div>
+    }
+
+    <div class="vr-card joined tree-card">
+      @if (loading()) {
+        <div class="center">
+          <i class="pi pi-spin pi-spinner" aria-label="Loading categories"></i>
+        </div>
+      } @else if (!visibleTree().length) {
+        <div class="empty">
+          <i class="pi pi-sitemap" aria-hidden="true"></i>
+          <p>{{ searchControl.value ? 'No categories match your search.' : 'No categories yet.' }}</p>
+          <a pButton routerLink="/admin/categories/add">Add Category</a>
+        </div>
+      } @else {
+        <div class="columns">
+          @for (items of columns(); track $index; let level = $index) {
+            <div class="column">
+              <div class="column-title">
+                {{ level === 0 ? 'Categories' : 'Subcategories' }}
+              </div>
+              @if (!items.length) {
+                <div class="column-empty-wrap">
+                  <p class="column-empty">No subcategories</p>
+                  @if (selectedLeaf(); as leaf) {
+                    <button
+                      pButton
+                      [outlined]="true"
+                      type="button"
+                      class="leaf-groups-btn"
+                      (click)="openAddAttribute(leaf)"
+                    >
+                      <i class="pi pi-plus" aria-hidden="true"></i>
+                      Add Attribute
+                    </button>
+                    <button
+                      pButton
+                      [outlined]="true"
+                      type="button"
+                      class="leaf-groups-btn"
+                      (click)="openCategoryGuidelines(leaf)"
+                    >
+                      <i class="pi pi-list-check" aria-hidden="true"></i>
+                      Add Category Guideline
+                    </button>
+                    <p class="leaf-hint">
+                      Manage attributes and guidelines for
+                      <strong>{{ leaf.categoryName }}</strong>.
+                    </p>
+                  }
+                </div>
+              } @else {
+                @for (node of items; track node.id) {
+                  <div
+                    class="column-row"
+                    [class.active]="selectedIdAt(level) === node.id"
+                    [class.inactive]="node.isActive === false"
+                  >
+                    <button class="column-link" type="button" (click)="select(node, level)">
+                      <i [class]="node.children?.length ? 'pi pi-folder' : 'pi pi-tag'" aria-hidden="true"></i>
+                      <span>{{ node.categoryName }}</span>
+                      @if (node.children?.length) {
+                        <i class="pi pi-chevron-right chevron" aria-hidden="true"></i>
+                      }
+                    </button>
+                    <button
+                      class="edit-btn"
+                      type="button"
+                      title="Edit category"
+                      (click)="openEdit(node, $event)"
+                    >
+                      <i class="pi pi-pencil" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit ' + personLabel() : 'Add ' + personLabel()"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    @if (!directoryRole()) {
+      <label class="prime-form-field">
+        <span>Phone Number</span>
+        <input pInputText formControlName="phoneNumber" />
+        @if (form.controls.phoneNumber.hasError('required')) {
+          <span class="field-error">Phone number is required</span>
+        } @else if (form.controls.phoneNumber.hasError('pattern')) {
+          <span class="field-error">Enter a valid phone number (5–10 digits)</span>
+        } @else if (form.controls.phoneNumber.hasError('phoneTaken')) {
+          <span class="field-error">Phone number already exists</span>
+        }
+      </label>
+
+      <label class="prime-form-field">
+        <span>Roles</span>
+        <p-multiselect [options]="roles()" optionLabel="label" optionValue="value" formControlName="roleIds" display="chip" />
+      </label>
+
+      @if (selectedRoles().length) {
+        <p-accordion class="role-accordion full" [multiple]="true" value="0">
+          @for (role of selectedRoles(); track role.value; let i = $index) {
+            <p-accordion-panel [value]="i" [formGroup]="roleProfileGroup(role.value)">
+              <p-accordion-header>
+                <span>{{ role.label }} profile</span>
+                <small class="role-email">{{ roleProfileGroup(role.value).get('email')?.value || 'No email yet' }}</small>
+              </p-accordion-header>
+              <p-accordion-content>
+              <div class="role-panel-body">
+                <label class="prime-form-field">
+                  <span>First Name</span>
+                  <input pInputText formControlName="firstName" />
+                </label>
+                <label class="prime-form-field">
+                  <span>Last Name</span>
+                  <input pInputText formControlName="lastName" />
+                </label>
+                <label class="prime-form-field">
+                  <span>Email</span>
+                  <input pInputText type="email" formControlName="email" />
+                  @if (
+                    roleProfileGroup(role.value).get('email')?.invalid &&
+                    (roleProfileGroup(role.value).get('email')?.touched ||
+                      roleProfileGroup(role.value).get('email')?.dirty)
+                  ) {
+                    <span class="field-error">{{ emailErrorMessage(roleProfileGroup(role.value).get('email')) }}</span>
+                  }
+                </label>
+                <app-image-upload
+                  [label]="role.label + ' Profile Image'"
+                  [path]="uploadPath"
+                  formControlName="profileImage"
+                />
+                <div class="role-toggles role-panel-full">
+                  <label class="prime-form-toggle">
+                    <p-toggleswitch formControlName="isActive" />
+                    <span>{{ role.label }} Active</span>
+                  </label>
+                  <label class="prime-form-toggle">
+                    <p-toggleswitch formControlName="isDeleted" />
+                    <span>{{ role.label }} Deleted</span>
+                  </label>
+                </div>
+                @if (isAdminRole(role)) {
+                  <app-permission-matrix
+                    class="role-panel-full"
+                    title="Admin permissions"
+                    [rows]="permissions()"
+                    (rowsChange)="onPermissionsChange($event)"
+                  />
+                }
+              </div>
+              </p-accordion-content>
+            </p-accordion-panel>
+          }
+        </p-accordion>
+      }
+    } @else {
+      <label class="prime-form-field">
+        <span>First Name</span>
+        <input pInputText formControlName="firstName" />
+        @if (form.controls.firstName.hasError('required')) {
+          <span class="field-error">First name is required</span>
+        } @else if (form.controls.firstName.hasError('minlength')) {
+          <span class="field-error">First name must be at least 2 characters</span>
+        }
+      </label>
+      <label class="prime-form-field">
+        <span>Last Name</span>
+        <input pInputText formControlName="lastName" />
+      </label>
+      <label class="prime-form-field">
+        <span>Phone Number</span>
+        <input pInputText formControlName="phoneNumber" />
+        @if (form.controls.phoneNumber.hasError('required')) {
+          <span class="field-error">Phone number is required</span>
+        } @else if (form.controls.phoneNumber.hasError('pattern')) {
+          <span class="field-error">Enter a valid phone number (5–10 digits)</span>
+        } @else if (form.controls.phoneNumber.hasError('phoneTaken')) {
+          <span class="field-error">Phone number already exists</span>
+        }
+      </label>
+      <label class="prime-form-field">
+        <span>Email</span>
+        <input pInputText type="email" formControlName="email" />
+        @if (form.controls.email.invalid && (form.controls.email.touched || form.controls.email.dirty)) {
+          <span class="field-error">{{ emailErrorMessage(form.controls.email) }}</span>
+        }
+      </label>
+      <app-image-upload
+        label="Profile Image"
+        [path]="uploadPath"
+        formControlName="profileImage"
+      />
+      <label class="prime-form-toggle">
+        <p-toggleswitch formControlName="isActive" />
+        <span>Active</span>
+      </label>
+      @if (showPermissions()) {
+        <app-permission-matrix
+          class="full"
+          title="Admin permissions"
+          [rows]="permissions()"
+          (rowsChange)="onPermissionsChange($event)"
+        />
+      }
+    }
+
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving() || form.pending">
+        {{ isEdit() ? 'Update ' + personLabel() : 'Create ' + personLabel() }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

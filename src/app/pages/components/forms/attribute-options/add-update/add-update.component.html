@@ -1,0 +1,63 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Attribute Option' : 'Add Attribute Option'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Attribute</span>
+      <p-select
+        [options]="attributes()"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="attributeId"
+      />
+      @if (form.controls.attributeId.touched && form.controls.attributeId.hasError('required')) {
+        <span class="field-error">Attribute is required</span>
+      }
+    </label>
+
+    <label class="prime-form-field">
+      <span>Value</span>
+      <input pInputText formControlName="value" placeholder="Maroon" />
+      @if (form.controls.value.touched && form.controls.value.hasError('required')) {
+        <span class="field-error">Value is required</span>
+      }
+    </label>
+
+    <label class="prime-form-field">
+      <span>Normalized value</span>
+      <input pInputText formControlName="normalizedValue" placeholder="red" />
+    </label>
+
+    <label class="prime-form-field">
+      <span>Hex code</span>
+      <input pInputText formControlName="hexCode" placeholder="#800000" maxlength="7" />
+    </label>
+
+    <app-image-upload
+      label="Swatch image"
+      [path]="swatchPath"
+      formControlName="swatchImageUrl"
+    />
+
+    <label class="prime-form-field">
+      <span>Sort order</span>
+      <input pInputText type="number" formControlName="sortOrder" />
+    </label>
+
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isActive" />
+      <span>Active</span>
+    </label>
+
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving() || form.invalid">
+        {{ isEdit() ? 'Update Attribute Option' : 'Create Attribute Option' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

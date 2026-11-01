@@ -1,0 +1,200 @@
+/* Shared auth UI — mirrors vr-admin bg-pattern + card layout */
+
+.auth-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background:
+    linear-gradient(
+      135deg,
+      var(--vr-auth-a) 22px,
+      var(--vr-auth-b) 22px,
+      var(--vr-auth-b) 24px,
+      transparent 24px,
+      transparent 67px,
+      var(--vr-auth-b) 67px,
+      var(--vr-auth-b) 69px,
+      transparent 69px
+    ),
+    linear-gradient(
+      225deg,
+      var(--vr-auth-a) 22px,
+      var(--vr-auth-b) 22px,
+      var(--vr-auth-b) 24px,
+      transparent 24px,
+      transparent 67px,
+      var(--vr-auth-b) 67px,
+      var(--vr-auth-b) 69px,
+      transparent 69px
+    )
+    0 64px;
+  background-color: var(--vr-auth-a);
+  background-size: 64px 128px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--vr-card);
+  box-shadow: var(--vr-shadow-lg);
+}
+
+.auth-card__logo {
+  padding: 28px 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card__titles {
+  text-align: center;
+  margin-top: 16px;
+  padding: 0 24px;
+}
+
+.auth-card__titles h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--vr-text);
+}
+
+.auth-card__titles h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--vr-text);
+}
+
+.auth-card__titles h4.muted {
+  color: var(--vr-text-muted);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.auth-card__body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  color: var(--vr-text-secondary);
+  font-size: 13px;
+}
+
+.auth-field input {
+  width: 100%;
+}
+
+.auth-field p-password {
+  display: block;
+  width: 100%;
+}
+
+.auth-field p-password input {
+  width: 100%;
+}
+
+.auth-password-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.auth-password-field input {
+  flex: 1;
+  min-width: 0;
+}
+
+.auth-password-field button {
+  flex: 0 0 auto;
+}
+
+.auth-theme-toggle {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  color: var(--vr-text);
+}
+
+.auth-theme-toggle button {
+  color: var(--vr-primary) !important;
+}
+
+.auth-error {
+  color: var(--vr-danger-text);
+  font-size: 13px;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auth-link {
+  color: var(--vr-primary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-submit {
+  width: 100%;
+}
+
+.auth-submit-sm {
+  width: 150px;
+  margin: 8px auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-return {
+  margin-top: 8px;
+  text-align: left;
+}
+
+.password-strength-meter {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 4px 0 8px;
+}
+
+.password-strength-meter.very-weak {
+  color: #dc2626;
+}
+.password-strength-meter.weak {
+  color: #ea580c;
+}
+.password-strength-meter.medium {
+  color: #ca8a04;
+}
+.password-strength-meter.strong {
+  color: #16a34a;
+}

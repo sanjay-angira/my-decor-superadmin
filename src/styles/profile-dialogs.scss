@@ -1,0 +1,27 @@
+.vr-dialog,
+.vr-profile-dialog {
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.vr-dialog .p-dialog-content,
+.vr-profile-dialog .p-dialog-content {
+  max-height: min(70vh, 560px);
+  overflow-x: hidden;
+}
+
+.tag-select-panel .add-tag-option {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  border-top: 1px solid var(--vr-border-strong);
+  background: var(--vr-card) !important;
+  color: var(--vr-chip-primary-text);
+  font-weight: 600;
+}
+
+.tag-select-panel .add-tag-option .pi {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

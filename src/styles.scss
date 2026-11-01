@@ -1,0 +1,25 @@
+@use 'sass:meta';
+
+html {
+  height: 100%;
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  color-scheme: inherit;
+  background-color: var(--vr-page-bg, #f7f4ee);
+  color: var(--vr-text, rgba(0, 0, 0, 0.87));
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  margin: 0;
+  height: 100%;
+}
+
+@include meta.load-css('quill/dist/quill.snow.css');
+@include meta.load-css('./styles/vr-admin-theme');
+@include meta.load-css('./styles/profile-dialogs');
+@include meta.load-css('./app/pages/auth/shared/auth-pages');

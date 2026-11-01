@@ -1,0 +1,27 @@
+
+.lead-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  margin: 0 0 20px;
+}
+
+@media (max-width: 768px) {
+  .lead-meta {
+    grid-template-columns: 1fr;
+  }
+}
+.lead-meta dt {
+  color: var(--vr-text-secondary);
+  font-size: 12px;
+}
+.lead-meta dd {
+  margin: 2px 0 0;
+  font-weight: 500;
+}
+.full {
+  grid-column: 1 / -1;
+}
+.message {
+  white-space: pre-wrap;
+}

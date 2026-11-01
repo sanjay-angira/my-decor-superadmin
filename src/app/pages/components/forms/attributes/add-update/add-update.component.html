@@ -1,0 +1,60 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Attribute' : 'Add Attribute'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Name</span>
+      <input pInputText formControlName="name" placeholder="Color" />
+      @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+        <span class="field-error">Name is required</span>
+      }
+      @if (form.controls.name.hasError('minlength')) {
+        <span class="field-error">Name must be at least 2 characters</span>
+      }
+    </label>
+
+    <label class="prime-form-field">
+      <span>Unit</span>
+      <input pInputText formControlName="unit" placeholder="GB, inch, kg" />
+    </label>
+
+    <label class="prime-form-field">
+      <span>Display Type</span>
+      <p-select [options]="displayTypes" optionLabel="label" optionValue="value" formControlName="displayType" />
+    </label>
+
+    <label class="prime-form-field">
+      <span>Input Type</span>
+      <p-select [options]="inputTypes" optionLabel="label" optionValue="value" formControlName="inputType" />
+    </label>
+
+    <label class="prime-form-field">
+      <span>Sort Order</span>
+      <input pInputText type="number" formControlName="sortOrder" />
+    </label>
+
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isVariantDefining" />
+      <span>Variant defining (creates a new SKU)</span>
+    </label>
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isFilterable" />
+      <span>Show in search / category filters</span>
+    </label>
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isActive" />
+      <span>Active</span>
+    </label>
+
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving() || form.invalid">
+        {{ isEdit() ? 'Update Attribute' : 'Create Attribute' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

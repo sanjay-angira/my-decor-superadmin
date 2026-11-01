@@ -1,0 +1,260 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>{{ label }}</h1>
+        <div class="vr-breadcrumbs">
+          <a routerLink="/admin/dashboard"><i class="pi pi-home" aria-hidden="true"></i></a>
+          <span class="dot"></span>
+          <span>{{ label }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="vr-filter-bar">
+      <div class="vr-search-pill">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input
+          pInputText
+          type="search"
+          [formControl]="searchControl"
+          placeholder="Search..."
+        />
+        @if (searchControl.value) {
+          <button
+            pButton
+            type="button"
+            [text]="true"
+            [rounded]="true"
+            (click)="searchControl.setValue('')"
+            aria-label="Clear search"
+          >
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+      <div class="filter-actions">
+        <details class="column-filter">
+          <summary class="column-filter-trigger" title="Filter columns" aria-label="Filter columns">
+            <i class="pi pi-filter" aria-hidden="true"></i>
+          </summary>
+          <div class="column-filter-menu">
+            @for (column of columnOptions; track column.property) {
+              <label class="column-filter-item">
+                <p-checkbox
+                  [inputId]="'column-' + column.property"
+                  [binary]="true"
+                  [(ngModel)]="column.visible"
+                  (ngModelChange)="syncDisplayedColumns()"
+                />
+                <span>{{ column.label }}</span>
+              </label>
+            }
+          </div>
+        </details>
+        @if (supportsAdd) {
+          <a
+            pButton
+            [rounded]="true"
+            [routerLink]="['/admin', moduleKey, 'add']"
+            [title]="addLabel"
+            [attr.aria-label]="addLabel"
+          >
+            <i class="pi pi-plus" aria-hidden="true"></i>
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    @if (error()) {
+      <div class="error-banner">
+        <span>{{ error() }}</span>
+        <button pButton type="button" [text]="true" (click)="load()">Retry</button>
+      </div>
+    }
+
+    <div class="vr-card joined">
+      @if (loading() && !rows().length) {
+        <app-table-skeleton
+          [headers]="skeletonHeaders()"
+          [rows]="pageSize()"
+          [actionCount]="(supportsView ? 1 : 0) + (supportsEdit ? 1 : 0) + (supportsDelete ? 1 : 0)"
+          [showPaginator]="true"
+        />
+      } @else if (!rows().length) {
+        <div class="vr-empty">
+          <i class="pi pi-inbox empty-icon" aria-hidden="true"></i>
+          <p>No {{ label }} found</p>
+          @if (supportsAdd) {
+            <a pButton [routerLink]="['/admin', moduleKey, 'add']">
+              {{ addLabel }}
+            </a>
+          }
+        </div>
+      } @else {
+        <div class="vr-table-scroll">
+          <p-table
+            [value]="rows()"
+            [lazy]="true"
+            [sortField]="sortingColumn()"
+            [sortOrder]="sortingOrder() === 'ASC' ? 1 : -1"
+            (onSort)="onSort($event)"
+          >
+            <ng-template #header>
+              <tr>
+                @for (col of visibleDataColumns(); track col.property) {
+                  <th [pSortableColumn]="col.property">
+                    {{ col.label }}
+                    <p-sort-icon [field]="col.property" />
+                  </th>
+                }
+                @if (displayedColumns.includes('actions')) {
+                  <th>Actions</th>
+                }
+              </tr>
+            </ng-template>
+            <ng-template #body let-row>
+              <tr>
+                @for (col of visibleDataColumns(); track col.property) {
+                  <td>
+                    @if (col.datatype === 'date' || col.datatype === 'time') {
+                      <span class="vr-status active">
+                        {{ row[col.property] ? (row[col.property] | date: 'mediumDate') : '—' }}
+                      </span>
+                    } @else if ((col.datatype === 'status' || col.datatype === 'on-off') && showRoleBreakdown(row)) {
+                      <div class="vr-role-breakdown">
+                        @for (profile of roleProfileRows(row); track profile.roleId) {
+                          <div class="vr-role-breakdown-row">
+                            <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                            <span
+                              class="vr-status"
+                              [class.active]="profile.isActive"
+                              [class.inactive]="!profile.isActive"
+                            >
+                              {{ profile.isActive ? 'Active' : 'Inactive' }}
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    } @else if (col.datatype === 'deleted' && showRoleBreakdown(row)) {
+                      <div class="vr-role-breakdown">
+                        @for (profile of roleProfileRows(row); track profile.roleId) {
+                          <div class="vr-role-breakdown-row">
+                            <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                            <span
+                              class="vr-status"
+                              [class.inactive]="profile.isDeleted"
+                              [class.active]="!profile.isDeleted"
+                            >
+                              {{ profile.isDeleted ? 'Yes' : 'No' }}
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    } @else if (col.datatype === 'deleted') {
+                      <span
+                        class="vr-status"
+                        [class.inactive]="isRowDeleted(row)"
+                        [class.active]="!isRowDeleted(row)"
+                      >
+                        {{ isRowDeleted(row) ? 'Yes' : 'No' }}
+                      </span>
+                    } @else if (col.datatype === 'status' || col.datatype === 'on-off') {
+                      <span
+                        class="vr-status"
+                        [class.active]="cellValue(row, col.property, col.datatype) === 'Active'"
+                        [class.inactive]="cellValue(row, col.property, col.datatype) !== 'Active'"
+                      >
+                        {{ cellValue(row, col.property, col.datatype) }}
+                      </span>
+                    } @else if (col.datatype === 'id') {
+                      #{{ row[col.property] }}
+                    } @else if (col.datatype === 'role') {
+                      <span class="vr-role-chips">
+                        @for (role of roleNames(row); track role) {
+                          <span [class]="'vr-status ' + roleChipClass(role)">{{ role }}</span>
+                        }
+                      </span>
+                    } @else if (col.datatype === 'name' && showRoleBreakdown(row)) {
+                      <div class="vr-role-breakdown">
+                        @for (profile of roleProfileRows(row); track profile.roleId) {
+                          <div class="vr-role-breakdown-row">
+                            <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                            <span>{{ profile.displayName }}</span>
+                          </div>
+                        }
+                      </div>
+                    } @else if (col.datatype === 'email' && showRoleBreakdown(row)) {
+                      <div class="vr-role-breakdown">
+                        @for (profile of roleProfileRows(row); track profile.roleId) {
+                          <div class="vr-role-breakdown-row">
+                            <span [class]="'vr-status ' + roleChipClass(profile.roleName)">{{ profile.roleName }}</span>
+                            <span>{{ profile.email || '—' }}</span>
+                          </div>
+                        }
+                      </div>
+                    } @else {
+                      {{ cellValue(row, col.property, col.datatype) }}
+                    }
+                  </td>
+                }
+                @if (displayedColumns.includes('actions')) {
+                  <td class="row-actions">
+                    @if (supportsView) {
+                      <a
+                        pButton
+                        [text]="true"
+                        [rounded]="true"
+                        [routerLink]="['/admin', moduleKey, 'view', row.id]"
+                        title="View"
+                        aria-label="View"
+                      >
+                        <i class="pi pi-eye" aria-hidden="true"></i>
+                      </a>
+                    }
+                    @if (supportsEdit) {
+                      <a
+                        pButton
+                        [text]="true"
+                        [rounded]="true"
+                        [routerLink]="['/admin', moduleKey, 'edit', row.id]"
+                        title="Modify"
+                        aria-label="Modify"
+                      >
+                        <i class="pi pi-pencil" aria-hidden="true"></i>
+                      </a>
+                    }
+                    @if (supportsDelete) {
+                      <button
+                        pButton
+                        type="button"
+                        [text]="true"
+                        [rounded]="true"
+                        (click)="deleteRow(row)"
+                        title="Delete"
+                        aria-label="Delete"
+                      >
+                        <i class="pi pi-trash" aria-hidden="true"></i>
+                      </button>
+                    }
+                  </td>
+                }
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <p-paginator
+          [first]="(pageNumber() - 1) * pageSize()"
+          [rows]="pageSize()"
+          [totalRecords]="count()"
+          [rowsPerPageOptions]="[5, 10, 20, 50]"
+          appendTo="body"
+          (onPageChange)="onPage($event)"
+        />
+      }
+    </div>
+  </div>
+</div>

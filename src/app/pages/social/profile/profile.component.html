@@ -1,0 +1,79 @@
+<div class="profile-page">
+  <div class="profile-hero-card">
+    <div class="cover">
+      <div class="cover-overlay"></div>
+      <button
+        type="button"
+        class="avatar-btn avatar-mobile"
+        (click)="updateProfileImage()"
+        aria-label="Update profile image"
+      >
+        <img class="avatar" [src]="avatarUrl()" [alt]="displayName()" />
+        <span class="avatar-hint"><i class="pi pi-camera" aria-hidden="true"></i></span>
+      </button>
+    </div>
+
+    <div class="hero-body">
+      <button
+        type="button"
+        class="avatar-btn avatar-desktop"
+        (click)="updateProfileImage()"
+        aria-label="Update profile image"
+      >
+        <img class="avatar" [src]="avatarUrl()" [alt]="displayName()" />
+        <span class="avatar-hint"><i class="pi pi-camera" aria-hidden="true"></i></span>
+      </button>
+
+      <div class="hero-main">
+        <div class="name-row">
+          <h1>{{ displayName() }}</h1>
+        </div>
+
+        <div class="actions-row">
+          <button pButton type="button" (click)="editProfile()">
+            <i class="pi pi-pencil" aria-hidden="true"></i>
+            Edit Profile
+          </button>
+          <button pButton type="button" (click)="changePassword()">
+            <i class="pi pi-lock" aria-hidden="true"></i>
+            Change Password
+          </button>
+        </div>
+
+        <div class="about-tabs" aria-label="Profile section">ABOUT</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-card">
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="icon-bubble">
+          <i class="pi pi-user" aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class="info-value">{{ displayName() || 'Loading...' }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="icon-bubble">
+          <i class="pi pi-phone" aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class="info-value">{{ user()?.phoneNumber || '—' }}</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="icon-bubble">
+          <i class="pi pi-envelope" aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class="info-value">{{ user()?.email || '—' }}</p>
+          <p class="info-hint">Business inquiries only</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

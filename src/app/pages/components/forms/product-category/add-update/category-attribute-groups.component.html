@@ -1,0 +1,137 @@
+<div class="groups-editor">
+  <p class="hint">
+    Spec tabs are global: adding a tab here makes it available on every category and on the product form.
+    Images, Description, and Variants stay built-in product steps. Drag groups to reorder. Attach catalog attributes to each group.
+  </p>
+
+  <div class="add-tab-row">
+    <label class="prime-form-field">
+      <span>New tab name</span>
+      <input pInputText [(ngModel)]="newTabLabel" name="new-spec-tab" />
+    </label>
+    <button pButton type="button" (click)="addTab()" [disabled]="!newTabLabel.trim()">
+      <i class="pi pi-plus"></i>
+      Add tab
+    </button>
+  </div>
+
+  @if (loading()) {
+    <p class="hint">Loading groups…</p>
+  }
+
+  @for (tab of tabs(); track tab.id) {
+    <section class="tab-block">
+      <header class="tab-head">
+        @if (tab.renaming) {
+          <div class="rename-row">
+            <label class="prime-form-field">
+              <span>Tab name</span>
+              <input pInputText [(ngModel)]="tab.editingLabel" [name]="'rename-' + tab.id" />
+            </label>
+            <button pButton type="button" (click)="renameTab(tab)" [disabled]="!tab.editingLabel.trim()">
+              Save
+            </button>
+            <button pButton [outlined]="true" type="button" (click)="cancelRename(tab)">Cancel</button>
+          </div>
+        } @else {
+          <h3>{{ tab.label }}</h3>
+          <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" (click)="startRename(tab)" aria-label="Rename tab">
+          </button>
+          <button
+            pButton
+            [text]="true"
+            [rounded]="true"
+            severity="danger"
+            icon="pi pi-trash"
+            type="button"
+            (click)="deleteTab(tab)"
+            [disabled]="tab.groups.length > 0"
+            aria-label="Delete tab"
+          >
+          </button>
+        }
+        <div class="add-row">
+          <label class="prime-form-field">
+            <span>New group name</span>
+            <input pInputText [(ngModel)]="tab.newLabel" [name]="'group-' + tab.id" />
+          </label>
+          <button pButton type="button" (click)="addGroup(tab)" [disabled]="!tab.newLabel.trim()">
+            <i class="pi pi-plus"></i>
+            Add group
+          </button>
+        </div>
+      </header>
+
+      <div
+        class="group-list"
+        cdkDropList
+        [cdkDropListData]="tab.groups"
+        (cdkDropListDropped)="dropGroup(tab, $event)"
+      >
+        @for (group of tab.groups; track group.id) {
+          <article class="group-card" cdkDrag>
+            <header class="group-head">
+              <button pButton [text]="true" [rounded]="true" icon="pi pi-bars" type="button" cdkDragHandle aria-label="Drag group">
+              </button>
+              <h4>{{ group.label }}</h4>
+              <button pButton [text]="true" [rounded]="true" severity="danger" icon="pi pi-trash" type="button" (click)="deleteGroup(group)" aria-label="Delete group">
+              </button>
+            </header>
+
+            <div
+              class="attr-list"
+              cdkDropList
+              [cdkDropListData]="group.categoryAttributes"
+              (cdkDropListDropped)="dropAttribute(group, $event)"
+            >
+              @for (row of group.categoryAttributes; track row.id) {
+                <div class="attr-row" cdkDrag>
+                  <button pButton [text]="true" [rounded]="true" icon="pi pi-bars" type="button" cdkDragHandle aria-label="Drag attribute">
+                  </button>
+                  <span class="attr-name">{{ row.attribute?.name || 'Attribute' }}</span>
+                  <label class="prime-form-toggle">
+                    <p-toggleswitch [ngModel]="row.required" (ngModelChange)="toggleRequired(row, $event)" />
+                    <span>Required</span>
+                  </label>
+                  <label class="prime-form-toggle">
+                    <p-toggleswitch [ngModel]="row.fullWidth" (ngModelChange)="toggleFullWidth(row, $event)" />
+                    <span>Full width</span>
+                  </label>
+                  <button pButton [text]="true" [rounded]="true" icon="pi pi-times" type="button" (click)="detachAttribute(row)" aria-label="Detach">
+                  </button>
+                </div>
+              } @empty {
+                <p class="empty">No attributes in this group yet.</p>
+              }
+            </div>
+
+            <div class="attach-row">
+              <label class="prime-form-field">
+                <span>Attach attribute</span>
+                <p-select
+                  [options]="availableAttributes(group)"
+                  optionLabel="label"
+                  optionValue="value"
+                  [ngModel]="attachChoice()[group.id] || ''"
+                  (ngModelChange)="setAttachChoice(group.id, $event)"
+                  placeholder="Select an attribute"
+                />
+              </label>
+              <button
+                pButton
+                [outlined]="true"
+                type="button"
+                (click)="attachAttribute(group)"
+                [disabled]="!attachChoice()[group.id]"
+              >
+                Attach
+              </button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty">No groups yet. Add one to start building this tab.</p>
+        }
+      </div>
+    </section>
+  }
+</div>

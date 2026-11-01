@@ -1,0 +1,55 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Banner' : 'Add Banner'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Title</span>
+      <input pInputText formControlName="title" />
+    </label>
+    <label class="prime-form-field">
+      <span>Subtitle</span>
+      <input pInputText formControlName="subtitle" />
+    </label>
+    <app-image-upload
+      label="Desktop Image"
+      [path]="uploadPath"
+      imageType="banner"
+      [required]="true"
+      formControlName="image"
+    />
+    <app-image-upload
+      label="Mobile Image"
+      [path]="uploadPath"
+      imageType="banner_mobile"
+      [required]="true"
+      formControlName="mobileImage"
+    />
+    <label class="prime-form-field">
+      <span>Banner Link</span>
+      <input pInputText formControlName="bannerLink" />
+    </label>
+    <label class="prime-form-field">
+      <span>Position</span>
+      <input pInputText type="number" formControlName="position" />
+    </label>
+    <label class="prime-form-field">
+      <span>Section ID</span>
+      <input pInputText type="number" formControlName="sectionId" />
+    </label>
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="status" />
+      <span>Active</span>
+    </label>
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Banner' : 'Create Banner' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

@@ -1,0 +1,29 @@
+.tag-dialog-form {
+  display: grid;
+  gap: 10px;
+}
+
+.tag-dialog-form p {
+  margin: 0;
+  color: var(--vr-text-muted);
+}
+
+.tag-dialog-form label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tag-slug-preview {
+  color: var(--vr-text-muted);
+}
+
+.tag-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.field-error {
+  color: var(--vr-danger);
+}

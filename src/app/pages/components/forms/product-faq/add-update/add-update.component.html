@@ -1,0 +1,35 @@
+
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Product FAQ' : 'Add Product FAQ'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Question</span>
+      <input pInputText formControlName="question" />
+    </label>
+    <app-quill-editor label="Answer" [required]="true" formControlName="answer" />
+    <label class="prime-form-field">
+      <span>Product</span>
+      <p-select
+        [options]="products()"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="productId"
+      />
+    </label>
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isActive" />
+      <span>Active</span>
+    </label>
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update FAQ' : 'Create FAQ' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

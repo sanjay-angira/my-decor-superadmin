@@ -1,0 +1,95 @@
+<div class="dlg">
+  <div class="dlg-head">
+    <div class="dlg-title">
+      <span class="dlg-icon">
+        <i [class]="editMode ? 'pi pi-pencil' : 'pi pi-plus-circle'" aria-hidden="true"></i>
+      </span>
+      <div>
+        <h2>{{ editMode ? 'Edit Module' : 'Add New Module' }}</h2>
+        <p>{{ editMode ? 'Update module information' : 'Create a new module for the sidebar' }}</p>
+      </div>
+    </div>
+    <button pButton [text]="true" [rounded]="true" type="button" class="close-btn" (click)="cancel()" aria-label="Close">
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="dlg-content">
+      <label class="prime-form-field full">
+        <span>Module Name</span>
+        <input pInputText formControlName="name" />
+        @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+          <span class="field-error">Module name is required</span>
+        }
+      </label>
+
+      <label class="prime-form-field full">
+        <span>Icon</span>
+        <p-select
+          [options]="filteredIcons"
+          [filter]="true"
+          [showClear]="true"
+          placeholder="Select an icon"
+          formControlName="icon"
+        />
+        <small>Select an icon ({{ availableIcons.length }} available)</small>
+        @if (form.controls.icon.hasError('required') && form.controls.icon.touched) {
+          <span class="field-error">Icon is required</span>
+        }
+      </label>
+
+      <label class="prime-form-field full">
+        <span>Router Link</span>
+        <input pInputText formControlName="router_link" />
+        <small>e.g. /admin/dashboard or /admin/users</small>
+        @if (form.controls.router_link.hasError('required') && form.controls.router_link.touched) {
+          <span class="field-error">Router link is required</span>
+        }
+      </label>
+
+      @if (!showNewCategoryInput) {
+        <label class="prime-form-field full">
+          <span>Category</span>
+          <p-select
+            [options]="categoryOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select a category"
+            formControlName="category"
+          />
+          @if (form.controls.category.hasError('required') && form.controls.category.touched) {
+            <span class="field-error">Category is required</span>
+          }
+        </label>
+      } @else {
+        <label class="prime-form-field full">
+          <span>New Category Name</span>
+          <span class="input-with-action">
+            <input pInputText formControlName="newCategory" />
+            <button
+              pButton
+              [text]="true"
+              [rounded]="true"
+              type="button"
+              (click)="toggleNewCategory()"
+              title="Use existing category"
+            >
+              <i class="pi pi-arrow-left" aria-hidden="true"></i>
+            </button>
+          </span>
+          @if (form.controls.newCategory.hasError('required') && form.controls.newCategory.touched) {
+            <span class="field-error">New category name is required</span>
+          }
+        </label>
+      }
+    </div>
+
+    <div class="dlg-actions">
+      <button pButton [outlined]="true" type="button" (click)="cancel()">Cancel</button>
+      <button pButton type="submit" class="submit-btn">
+        {{ editMode ? 'Update' : 'Add' }} Module
+      </button>
+    </div>
+  </form>
+</div>

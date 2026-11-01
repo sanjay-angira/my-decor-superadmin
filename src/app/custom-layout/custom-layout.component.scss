@@ -1,0 +1,353 @@
+.layout-container {
+  display: flex;
+  height: 100vh;
+  background: var(--vr-page-bg);
+  overflow: hidden;
+}
+
+.layout-sidenav {
+  position: relative;
+  z-index: 4;
+  display: block;
+  flex: 0 0 var(--vr-sidenav-width);
+  width: var(--vr-sidenav-width);
+  background: var(--vr-sidenav-bg);
+  color: var(--vr-sidenav-text);
+  overflow: hidden;
+}
+
+.sidenav-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sidenav-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 72%;
+  height: auto;
+  aspect-ratio: 1;
+  max-width: 200px;
+  max-height: 200px;
+  transform: translate(-50%, -50%);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sidenav-inner > :not(.sidenav-watermark) {
+  position: relative;
+  z-index: 1;
+}
+
+.brand-bar {
+  height: var(--vr-toolbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.sidenav-search {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 12px 12px 4px;
+  padding: 0 10px;
+  min-height: 40px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
+}
+
+.sidenav-search > i {
+  font-size: 18px;
+}
+
+.sidenav-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+}
+
+.sidenav-search input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  font-size: 13px;
+}
+
+.nav-status.muted {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.nav-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-skeleton .nav-item {
+  pointer-events: none;
+  cursor: default;
+  margin: 0 12px;
+  padding: 0;
+}
+
+.nav-skeleton .nav-skel-label {
+  flex: 1;
+  width: 100%;
+  height: 35px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.nav-skeleton .vr-skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+}
+
+.nav-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.nav-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+.nav-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.nav-section {
+  margin-bottom: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 12px 4px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  color: var(--vr-sidenav-text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+button.nav-item {
+  width: calc(100% - 24px);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.nav-section-toggle span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-section-toggle.open .nav-chevron {
+  transform: rotate(90deg);
+}
+
+.nav-dropdown {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.nav-dropdown.open {
+  grid-template-rows: 1fr;
+}
+
+.nav-dropdown-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.nav-child {
+  padding-inline-start: 52px;
+}
+
+.nav-item > i {
+  color: inherit;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.nav-item .nav-chevron {
+  font-size: 18px;
+  margin-left: auto;
+  opacity: 0.7;
+  transition: transform 300ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--vr-sidenav-text-active);
+}
+
+.nav-item.active {
+  background: #fff;
+  color: var(--vr-sidenav-bg);
+}
+
+.nav-item.active > i:not(.nav-chevron) {
+  color: var(--vr-sidenav-bg);
+}
+
+.layout-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  overflow: auto;
+}
+
+.layout-toolbar {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: var(--vr-toolbar-height);
+  padding: 0 1rem;
+  background: var(--vr-toolbar-bg);
+  color: var(--vr-text);
+  border-bottom: 1px solid var(--vr-divider);
+  box-shadow: none;
+}
+
+.layout-toolbar button {
+  color: var(--vr-primary);
+}
+
+.toolbar-icon-button,
+.profile-menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.toolbar-icon-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.toolbar-icon-button:hover,
+.profile-menu-button:hover {
+  background: var(--vr-surface-muted);
+}
+
+.toolbar-title {
+  margin-left: 4px;
+  font-weight: 500;
+  color: var(--vr-text);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.layout-content {
+  padding: var(--vr-gutter);
+  min-height: calc(100vh - var(--vr-toolbar-height));
+  background: var(--vr-page-bg);
+}
+
+.mobile-backdrop {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .layout-sidenav {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(var(--vr-sidenav-width), 85vw);
+    transform: translateX(-100%);
+    transition: transform 200ms ease;
+  }
+
+  .layout-sidenav.mobile-open {
+    transform: translateX(0);
+  }
+
+  .mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    border: 0;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .layout-main {
+    width: 100%;
+  }
+
+  .profile-menu-button span {
+    display: none;
+  }
+}

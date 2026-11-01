@@ -1,0 +1,173 @@
+<app-admin-form-shell [title]="isEdit() ? 'Edit Brand' : 'Add Brand'" [module]="module()" [loading]="loading()"
+  [loadError]="loadError()" [submitError]="submitError()">
+  <form [formGroup]="form" class="brand-form">
+    <p-stepper [value]="1" [linear]="true">
+      <p-step-list>
+        <p-step [value]="1">General Information</p-step>
+        <p-step [value]="2">Media Assets</p-step>
+        <p-step [value]="3">SEO Settings</p-step>
+      </p-step-list>
+      <p-step-panels>
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+        <div class="step-grid">
+          <label class="prime-form-field">
+            <span>Brand Name</span>
+            <input pInputText formControlName="name" />
+            @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+              <span class="field-error">Brand name is required</span>
+            }
+            @if (form.controls.name.hasError('minlength')) {
+              <span class="field-error">Brand name must be at least 2 characters</span>
+            }
+          </label>
+
+          <label class="prime-form-field">
+            <span>Website</span>
+            <input pInputText formControlName="website" placeholder="https://" />
+          </label>
+
+          <label class="prime-form-field">
+            <span>Country of origin</span>
+            <input pInputText formControlName="countryOfOrigin" />
+          </label>
+
+          <label class="prime-form-field">
+            <span>GST number</span>
+            <input pInputText formControlName="gstNumber" />
+          </label>
+
+          <label class="prime-form-field">
+            <span>Support email</span>
+            <input pInputText type="email" formControlName="supportEmail" />
+          </label>
+
+          <label class="prime-form-field">
+            <span>Support phone</span>
+            <input pInputText formControlName="supportPhone" />
+          </label>
+
+          <label class="prime-form-field">
+            <span>Instagram URL</span>
+            <input pInputText formControlName="instagramUrl" />
+          </label>
+
+          <label class="prime-form-field">
+            <span>Facebook URL</span>
+            <input pInputText formControlName="facebookUrl" />
+          </label>
+
+
+          <div class="full">
+            <app-quill-editor label="Description" minHeight="180px" formControlName="description" />
+          </div>
+
+          <label class="prime-form-field full">
+            <span>Categories</span>
+            <p-multiselect
+              [options]="categories()"
+              optionLabel="label"
+              optionValue="value"
+              formControlName="categoryIds"
+              display="chip"
+            />
+          </label>
+
+          <label class="prime-form-field full">
+            <span>Offers</span>
+            <p-multiselect
+              [options]="offers()"
+              optionLabel="label"
+              optionValue="value"
+              formControlName="offerIds"
+              display="chip"
+            />
+          </label>
+
+
+          <div class="toggle-row full">
+            <div class="toggle-item">
+              <span>Verified brand</span>
+              <p-toggleswitch formControlName="isVerified" />
+              <span class="status-chip" [class.on]="form.controls.isVerified.value">
+                {{ form.controls.isVerified.value ? 'Verified' : 'Not Verified' }}
+              </span>
+            </div>
+            <div class="toggle-item">
+              <span>Featured</span>
+              <p-toggleswitch formControlName="isFeatured" />
+              <span class="status-chip" [class.on]="form.controls.isFeatured.value">
+                {{ form.controls.isFeatured.value ? 'Featured' : 'Not Featured' }}
+              </span>
+            </div>
+            <div class="toggle-item">
+              <span>Active Status</span>
+              <p-toggleswitch formControlName="isActive" />
+              <span class="status-chip" [class.on]="form.controls.isActive.value">
+                {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button pButton type="button" [disabled]="!isStepValid(1)" (click)="activateCallback(2)">
+            Next
+          </button>
+        </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+        <div class="media-grid">
+          <app-image-upload label="Brand Logo" [path]="paths.logo" formControlName="logoUrl" />
+          <app-image-upload label="Banner image" [path]="paths.banner" formControlName="bannerImageUrl" />
+          <app-image-upload label="OG image" [path]="paths.og" formControlName="ogImageUrl" />
+          <app-image-upload label="Trademark certificate" [path]="paths.trademark" accept="image/*,.pdf,application/pdf"
+            formControlName="trademarkCertificateUrl" />
+        </div>
+        <div class="step-actions">
+          <button pButton [outlined]="true" type="button" (click)="activateCallback(1)">
+            Back
+          </button>
+          <button pButton type="button" (click)="activateCallback(3)">
+            Next
+          </button>
+        </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="3">
+          <ng-template #content let-activateCallback="activateCallback">
+        <div class="step-grid">
+          <label class="prime-form-field full">
+            <span>Meta Title</span>
+            <input pInputText formControlName="metaTitle" [maxlength]="metaTitleMax" />
+            <small>{{ metaTitleLength() }}/{{ metaTitleMax }}</small>
+          </label>
+          <label class="prime-form-field full">
+            <span>Meta Description</span>
+            <textarea pInputText rows="3" formControlName="metaDescription" [maxlength]="metaDescMax"></textarea>
+            <small>{{ metaDescLength() }}/{{ metaDescMax }}</small>
+          </label>
+          <label class="prime-form-field full">
+            <span>Meta Keywords</span>
+            <input pInputText formControlName="metaKeywords" />
+            <small>Separate keywords with commas</small>
+          </label>
+        </div>
+        <div class="step-actions">
+          <button pButton [outlined]="true" type="button" (click)="activateCallback(2)">
+            Back
+          </button>
+          <button pButton type="button" [disabled]="saving() || form.invalid"
+            (click)="submit()">
+            {{ isEdit() ? 'Update Brand' : 'Create Brand' }}
+          </button>
+        </div>
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
+    </p-stepper>
+  </form>
+</app-admin-form-shell>

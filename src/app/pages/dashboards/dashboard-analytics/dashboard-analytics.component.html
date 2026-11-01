@@ -1,0 +1,159 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Dashboard</h1>
+        <div class="vr-breadcrumbs">
+          <i class="pi pi-home"></i>
+          <span class="dot"></span>
+          <span>Dashboard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content" style="margin-top: 0; padding-top: 1rem">
+    @if (loading()) {
+      <div class="dash-skeleton" aria-busy="true" aria-live="polite">
+        <span class="vr-sr-only">Loading dashboard</span>
+        <div class="stats" aria-hidden="true">
+          @for (_ of skeletonStats; track $index) {
+            <div class="stat-card vr-card">
+              <span class="vr-skeleton vr-skeleton--stat-icon"></span>
+              <div class="skel-copy">
+                <span class="vr-skeleton vr-skeleton--label"></span>
+                <span class="vr-skeleton vr-skeleton--value"></span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="vr-card map-panel" aria-hidden="true">
+          <div class="panel-head">
+            <span class="vr-skeleton vr-skeleton--heading"></span>
+          </div>
+          <div class="skel-map vr-skeleton"></div>
+        </div>
+
+        <div class="panels" aria-hidden="true">
+          <div class="vr-card panel">
+            <div class="panel-head">
+              <span class="vr-skeleton vr-skeleton--heading"></span>
+              <span class="vr-skeleton vr-skeleton--btn"></span>
+            </div>
+            <div class="skel-table-head">
+              @for (col of orderColumns; track col) {
+                <span class="vr-skeleton"></span>
+              }
+            </div>
+            @for (row of skeletonOrderRows; track row) {
+              <div class="skel-table-row">
+                @for (col of orderColumns; track col) {
+                  <span class="vr-skeleton"></span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="vr-card panel">
+            <div class="panel-head">
+              <span class="vr-skeleton vr-skeleton--heading"></span>
+              <span class="vr-skeleton vr-skeleton--btn"></span>
+            </div>
+            @for (_ of skeletonStockRows; track $index) {
+              <div class="skel-stock-row">
+                <span class="vr-skeleton skel-stock-name"></span>
+                <span class="vr-skeleton skel-stock-qty"></span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    } @else if (error()) {
+      <div class="vr-card" style="padding: 1.25rem">{{ error() }}</div>
+    } @else {
+      <div class="stats">
+        <div class="stat-card vr-card">
+          <i class="pi pi-wallet"></i>
+          <div>
+            <small>Revenue</small>
+            <strong>{{ summary()?.revenue ?? summary()?.totalRevenue ?? '—' }}</strong>
+          </div>
+        </div>
+        <div class="stat-card vr-card">
+          <i class="pi pi-receipt"></i>
+          <div>
+            <small>Orders</small>
+            <strong>{{ summary()?.orders ?? summary()?.totalOrders ?? '—' }}</strong>
+          </div>
+        </div>
+        <div class="stat-card vr-card">
+          <i class="pi pi-users"></i>
+          <div>
+            <small>Customers</small>
+            <strong>{{ summary()?.customers ?? summary()?.totalCustomers ?? '—' }}</strong>
+          </div>
+        </div>
+        <div class="stat-card vr-card">
+          <i class="pi pi-box"></i>
+          <div>
+            <small>Products</small>
+            <strong>{{ summary()?.products ?? summary()?.totalProducts ?? '—' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <app-india-map />
+
+      <div class="panels">
+        <div class="vr-card panel">
+          <div class="panel-head">
+            <h3>Recent orders</h3>
+            <a pButton [text]="true" routerLink="/admin/orders">View all</a>
+          </div>
+          @if ((summary()?.recentOrders || []).length) {
+            <table class="vr-table">
+              <thead>
+                <tr>
+                  <th>Order #</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of summary()?.recentOrders || []; track row.id || row.orderNumber) {
+                  <tr>
+                    <td>{{ row.orderNumber }}</td>
+                    <td>{{ row.customerName || row.userName || '—' }}</td>
+                    <td>{{ row.total }}</td>
+                    <td><span class="vr-status active">{{ row.orderStatus }}</span></td>
+                    <td>{{ row.createdAt | date: 'mediumDate' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="muted">No recent orders</p>
+          }
+        </div>
+
+        <div class="vr-card panel">
+          <div class="panel-head">
+            <h3>Low stock</h3>
+            <a pButton [text]="true" routerLink="/admin/products">Products</a>
+          </div>
+          @for (item of summary()?.lowStockProducts || []; track item.id) {
+            <div class="low-stock-row">
+              <span>{{ item.productName || item.name }}</span>
+              <strong>{{ item.stock ?? item.quantity ?? 0 }}</strong>
+            </div>
+          } @empty {
+            <p class="muted">No low-stock items</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="vr-table-skel" role="status" aria-busy="true" aria-live="polite">
+  <span class="vr-sr-only">Loading table</span>
+
+  <div class="vr-table-scroll">
+    <p-table [value]="rowIndexes()">
+      <ng-template #header>
+        <tr>
+          @for (label of headerLabels(); track $index) {
+            @if (label === 'Actions') {
+              <th>{{ label }}</th>
+            } @else {
+              <th
+                [pSortableColumn]="'skeleton-' + $index"
+                [pSortableColumnDisabled]="true"
+              >
+                @if (label) {
+                  {{ label }}
+                } @else {
+                  <span class="vr-skeleton vr-table-skel-heading"></span>
+                }
+                <p-sort-icon [field]="'skeleton-' + $index" />
+              </th>
+            }
+          }
+        </tr>
+      </ng-template>
+      <ng-template #body let-row>
+        <tr>
+          @for (label of headerLabels(); track $index) {
+            <td>
+              @if (label === 'Actions') {
+                <span class="vr-table-skel-actions">
+                  @for (action of actionIndexes(); track action) {
+                    <span class="vr-skeleton"></span>
+                  }
+                </span>
+              } @else {
+                <span class="vr-skeleton"></span>
+              }
+            </td>
+          }
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  @if (showPaginator()) {
+    <div class="vr-table-skel-pager">
+      <span class="vr-skeleton pager-range"></span>
+      <span class="vr-skeleton pager-size"></span>
+      <span class="vr-skeleton pager-nav"></span>
+    </div>
+  }
+</div>

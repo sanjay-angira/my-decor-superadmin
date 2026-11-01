@@ -1,0 +1,139 @@
+.dlg {
+  --dlg-primary: var(--vr-primary);
+  background: var(--vr-card);
+}
+
+.dlg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 8px 12px 20px;
+  min-height: 72px;
+  background: var(--dlg-primary);
+  color: #fff;
+}
+
+.dlg-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.dlg-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dlg-icon i {
+  font-size: 18px;
+  color: #facc15;
+}
+
+.dlg-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dlg-head p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.close-btn {
+  color: #fff !important;
+}
+
+.dlg-content {
+  display: grid;
+  gap: 14px;
+  padding: 24px 24px 8px;
+  overflow: auto;
+}
+
+.full {
+  width: 100%;
+}
+
+.prime-form-field {
+  display: grid;
+  gap: 6px;
+  color: var(--vr-text-secondary);
+  font-size: 13px;
+}
+
+.prime-form-field input,
+.prime-form-field p-select {
+  width: 100%;
+}
+
+.prime-form-field small {
+  color: var(--vr-text-muted);
+}
+
+.field-error {
+  color: var(--vr-danger-text);
+}
+
+.input-with-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.input-with-action input {
+  flex: 1;
+  min-width: 0;
+}
+
+.icon-search {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px;
+  background: var(--vr-card);
+  border-bottom: 1px solid var(--vr-border);
+}
+
+.icon-search input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--vr-border-strong);
+  border-radius: 4px;
+  outline: none;
+  font: inherit;
+  background: var(--vr-input-bg);
+  color: var(--vr-text);
+}
+
+.icon-search .hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--vr-text-muted);
+}
+
+.dlg-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 24px 24px;
+  gap: 8px;
+}
+
+.submit-btn {
+  min-width: 110px;
+  height: 40px;
+  border-radius: 999px;
+  font-weight: 600;
+}

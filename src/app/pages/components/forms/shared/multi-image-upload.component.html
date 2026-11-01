@@ -1,0 +1,45 @@
+<div class="vr-upload">
+  @if (urls.length) {
+    <div class="grid">
+      @for (url of urls; track url; let i = $index) {
+        <div class="item">
+          <img [src]="url" alt="" />
+          <p-button
+            type="button"
+            icon="pi pi-times"
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            (onClick)="remove(i)"
+            ariaLabel="Remove image"
+          />
+        </div>
+      }
+    </div>
+  }
+  <div class="vr-upload-dropzone-wrap">
+    <span class="vr-upload-label"
+      >{{ label() }}
+      @if (required()) {
+        <span class="req">*</span>
+      }
+    </span>
+    <button
+      class="vr-upload-dropzone"
+      type="button"
+      (click)="fileInput.click()"
+      [disabled]="uploading()"
+    >
+      @if (uploading()) {
+        <p-progressspinner [style]="{ width: '22px', height: '22px' }" />
+      } @else {
+        <i class="pi pi-cloud-upload" aria-hidden="true"></i>
+        <span>Click to upload</span>
+      }
+    </button>
+  </div>
+  @if (uploadError()) {
+    <small class="upload-error">{{ uploadError() }}</small>
+  }
+  <input #fileInput type="file" hidden accept="image/*" multiple (change)="onFiles($event)" />
+</div>

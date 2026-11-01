@@ -1,0 +1,118 @@
+<div class="layout-container">
+  <aside
+    class="layout-sidenav"
+    [class.mobile]="isHandset()"
+    [class.mobile-open]="mobileNavOpen()"
+    aria-label="Main navigation"
+  >
+    <div class="sidenav-inner">
+      <div class="sidenav-watermark" aria-hidden="true"></div>
+      <div class="brand-bar">
+        <app-auth-brand-logo variant="sidebar" />
+      </div>
+
+      <div class="sidenav-search">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input
+          type="search"
+          placeholder="Search..."
+          maxlength="500"
+          [formControl]="searchControl"
+        />
+        @if (searchControl.value) {
+          <button type="button" class="search-clear" (click)="clearSearch()" aria-label="Clear search">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+
+      <div class="nav-scroll">
+        @if (menuLoading()) {
+          <div class="nav-skeleton" aria-busy="true" aria-live="polite">
+            <span class="vr-sr-only">Loading menu</span>
+            @for (i of navSkeletonRows; track i) {
+              <div class="nav-item" aria-hidden="true">
+                <span class="nav-skel-label vr-skeleton"></span>
+              </div>
+            }
+          </div>
+        } @else if (!sections().length) {
+          <div class="nav-status muted">No modules found</div>
+        } @else {
+          @for (section of sections(); track section.title) {
+            <div class="nav-section">
+              <button
+                type="button"
+                class="nav-item nav-section-toggle"
+                [class.open]="isOpen(section.title)"
+                [class.active]="isOpen(section.title) || isSectionActive(section)"
+                [attr.aria-expanded]="isOpen(section.title)"
+                (click)="toggleSection(section.title)"
+              >
+                <i [class]="primeIcon(section.icon)" aria-hidden="true"></i>
+                <span>{{ section.title }}</span>
+                <i class="pi pi-chevron-right nav-chevron" aria-hidden="true"></i>
+              </button>
+              <div class="nav-dropdown" [class.open]="isOpen(section.title)">
+                <nav class="nav-dropdown-inner">
+                  @for (item of section.items; track item.href + item.label) {
+                    <a
+                      class="nav-item nav-child"
+                      [routerLink]="item.href"
+                      routerLinkActive="active"
+                      [routerLinkActiveOptions]="navLinkActiveOptions(item.href)"
+                      (click)="isHandset() && closeMobileNavigation()"
+                    >
+                      <i [class]="primeIcon(item.icon)" aria-hidden="true"></i>
+                      <span>{{ item.label }}</span>
+                    </a>
+                  }
+                </nav>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </aside>
+
+  @if (isHandset() && mobileNavOpen()) {
+    <button
+      type="button"
+      class="mobile-backdrop"
+      (click)="closeMobileNavigation()"
+      aria-label="Close navigation"
+    ></button>
+  }
+
+  <div class="layout-main">
+    <header class="layout-toolbar">
+      <button
+        pButton
+        type="button"
+        class="toolbar-icon-button"
+        (click)="toggleMobileNavigation()"
+        aria-label="Toggle menu"
+      >
+        <i class="pi pi-bars" aria-hidden="true"></i>
+      </button>
+      <span class="toolbar-title">Super Admin</span>
+      <span class="spacer"></span>
+      <app-theme-toggle />
+      <button
+        pButton
+        type="button"
+        class="profile-menu-button"
+        (click)="profileMenu.toggle($event)"
+      >
+        <i class="pi pi-user-circle" aria-hidden="true"></i>
+        <span>{{ displayName() }}</span>
+      </button>
+      <p-menu #profileMenu [model]="profileMenuItems" [popup]="true" appendTo="body" [baseZIndex]="10000" />
+    </header>
+
+    <main class="layout-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

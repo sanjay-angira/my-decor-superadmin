@@ -1,0 +1,860 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Product' : 'Add Product'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" class="product-form" (ngSubmit)="submit()">
+    <nav class="step-nav" aria-label="Product form steps">
+      @for (step of steps; track step.id) {
+        <button
+          type="button"
+          class="step-nav-item"
+          [class.active]="currentStep() === step.id"
+          [class.complete]="currentStep() > step.id"
+          [disabled]="step.id >= currentStep()"
+          (click)="goToStep(step.id)"
+        >
+          <span class="step-number">{{ step.id }}</span>
+          <span>{{ step.label }}</span>
+        </button>
+      }
+    </nav>
+
+    @if (currentStep() === 1) {
+      <section class="step-panel" aria-label="Product information">
+        <div class="step-grid">
+          <div class="form-field">
+            <label for="product-name">Product name <span class="required">*</span></label>
+            <input id="product-name" pInputText formControlName="productName" class="w-full" />
+            @if (form.controls.productName.touched && form.controls.productName.invalid) {
+              <small class="field-error">Product name must be at least 2 characters.</small>
+            }
+          </div>
+          <div class="form-field">
+            <label for="product-slug">Product slug <span class="required">*</span></label>
+            <input
+              id="product-slug"
+              pInputText
+              formControlName="productSlug"
+              class="w-full"
+              (input)="markSlugDirty()"
+            />
+            @if (form.controls.productSlug.touched && form.controls.productSlug.invalid) {
+              <small class="field-error">Use 3–100 lowercase letters, numbers, and hyphens.</small>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="product-brand">Brand <span class="required">*</span></label>
+            <p-select
+              inputId="product-brand"
+              formControlName="brandId"
+              [options]="brands()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select a brand"
+              [filter]="true"
+              [fluid]="true"
+              (onChange)="onBrandChange()"
+            />
+            @if (form.controls.brandId.touched && form.controls.brandId.invalid) {
+              <small class="field-error">Brand is required.</small>
+            }
+          </div>
+          <div class="form-field">
+            <label for="product-warehouse">Pickup address <span class="required">*</span></label>
+            <p-select
+              inputId="product-warehouse"
+              formControlName="warehouseId"
+              [options]="warehouses()"
+              optionLabel="label"
+              optionValue="value"
+              [placeholder]="
+                !form.controls.brandId.value
+                  ? 'Select a brand first'
+                  : warehousesLoading()
+                    ? 'Loading pickup addresses...'
+                    : warehouses().length
+                      ? 'Select a pickup address'
+                      : 'No active registered pickup addresses'
+              "
+              [disabled]="
+                !form.controls.brandId.value || warehousesLoading() || !warehouses().length
+              "
+              [fluid]="true"
+            />
+            @if (form.controls.warehouseId.touched && form.controls.warehouseId.invalid) {
+              <small class="field-error">Pickup address is required.</small>
+            }
+            @if (warehouseLoadError()) {
+              <small class="field-error">{{ warehouseLoadError() }}</small>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="product-category">Category <span class="required">*</span></label>
+            <p-select
+              inputId="product-category"
+              formControlName="category"
+              [options]="rootCategories()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select a category"
+              [filter]="true"
+              [fluid]="true"
+            />
+            @if (form.controls.category.touched && form.controls.category.invalid) {
+              <small class="field-error">Category is required.</small>
+            }
+          </div>
+          @for (level of childCategoryLevels(); track $index; let i = $index) {
+            @if (level.length) {
+              <div class="form-field">
+                <label [for]="'child-category-' + i">Child category level {{ i + 1 }}</label>
+                <p-select
+                  [inputId]="'child-category-' + i"
+                  [options]="level"
+                  optionLabel="label"
+                  optionValue="value"
+                  [ngModel]="form.value.childCategories?.[i] || ''"
+                  [ngModelOptions]="{ standalone: true }"
+                  (onChange)="onChildCategory(i, $event.value)"
+                  placeholder="Select a child category"
+                  [fluid]="true"
+                />
+              </div>
+            }
+          }
+
+          <div class="form-field full">
+            <label for="short-description">Short description <span class="required">*</span></label>
+            <input
+              id="short-description"
+              pInputText
+              formControlName="shortDescription"
+              class="w-full"
+            />
+            @if (form.controls.shortDescription.touched && form.controls.shortDescription.invalid) {
+              <small class="field-error">Short description must be at least 2 characters.</small>
+            }
+          </div>
+          <div class="form-field full">
+            <app-quill-editor label="Description" formControlName="description" [required]="true" />
+            @if (form.controls.description.touched && form.controls.description.invalid) {
+              <small class="field-error">Description must contain at least 2 characters.</small>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="product-tags">Product tags</label>
+            <p-multiselect
+              inputId="product-tags"
+              formControlName="productTags"
+              [options]="productTags()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select tags"
+              display="chip"
+              [filter]="true"
+              [fluid]="true"
+            />
+            <p-button
+              label="Add tag"
+              icon="pi pi-plus"
+              severity="secondary"
+              [text]="true"
+              type="button"
+              (onClick)="openAddTagDialog()"
+            />
+            <details class="tag-management">
+              <summary>Manage product tags</summary>
+              @for (tag of productTags(); track tag.value) {
+                <div class="tag-management-item">
+                  <span>{{ tag.label }}</span>
+                  <p-button
+                    [ariaLabel]="'Delete ' + tag.label"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [text]="true"
+                    type="button"
+                    (onClick)="requestTagDelete(tag)"
+                  />
+                </div>
+              }
+            </details>
+            @if (tagDeleteError()) {
+              <small class="field-error">{{ tagDeleteError() }}</small>
+            }
+          </div>
+          <div class="form-field">
+            <label for="product-attributes">Product attributes</label>
+            <p-multiselect
+              inputId="product-attributes"
+              formControlName="attributeIds"
+              [options]="attributes()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select attributes"
+              display="chip"
+              [filter]="true"
+              [fluid]="true"
+            />
+          </div>
+
+          @if (hasImageCapableAttributes()) {
+            <div class="display-modes full" formGroupName="attributeCustomerDisplay">
+              @for (id of form.value.attributeIds || []; track id) {
+                @if (attrSupportsImage(id)) {
+                  <div class="form-field">
+                    <label [for]="'attribute-display-' + id">
+                      Display on customer side ({{ attrLabel(id) }}) <span class="required">*</span>
+                    </label>
+                    <p-select
+                      [inputId]="'attribute-display-' + id"
+                      [formControlName]="'' + id"
+                      [options]="attributeDisplayOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                      placeholder="Select display type"
+                      [fluid]="true"
+                    />
+                  </div>
+                }
+              }
+            </div>
+          }
+
+          <div class="form-field">
+            <label for="product-offers">Apply offers</label>
+            <p-multiselect
+              inputId="product-offers"
+              formControlName="productOffers"
+              [options]="offers()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select offers"
+              display="chip"
+              [filter]="true"
+              [fluid]="true"
+            />
+          </div>
+          <div class="form-field">
+            <label for="frequently-bought">Frequently bought together</label>
+            <p-multiselect
+              inputId="frequently-bought"
+              formControlName="frequentlyBoughtTogether"
+              [options]="products()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select products"
+              display="chip"
+              [filter]="true"
+              [fluid]="true"
+            />
+          </div>
+        </div>
+        <div class="step-actions only-next">
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            type="button"
+            (onClick)="goNext(1)"
+          />
+        </div>
+      </section>
+    }
+
+    @if (currentStep() === 2) {
+      <section class="step-panel" aria-label="Product specifications">
+        @if (formConfigLoading()) {
+          <p class="attr-help">Loading specification fields for this category…</p>
+        } @else if (!getDeepestCategoryId()) {
+          <p class="attr-help">
+            Select a category first. Specification fields are category-specific.
+          </p>
+        } @else if (!specTabs().length || !attributeValues.length) {
+          <p class="attr-help">
+            This category has no specification groups yet. You can continue, or add groups on the
+            category edit screen.
+          </p>
+        } @else {
+          @for (tab of specTabs(); track tab.code) {
+            <section class="spec-tab-section">
+              <h3>{{ tab.label }}</h3>
+              <app-dynamic-attribute-tab [groups]="tab.attributeGroups" [form]="attributeValues" />
+            </section>
+          }
+        }
+        @if (specStepHint()) {
+          <p class="field-error">{{ specStepHint() }}</p>
+        }
+        <div class="step-actions">
+          <p-button
+            label="Previous"
+            icon="pi pi-arrow-left"
+            severity="secondary"
+            [outlined]="true"
+            type="button"
+            (onClick)="goPrevious()"
+          />
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            type="button"
+            (onClick)="goNext(2)"
+          />
+        </div>
+      </section>
+    }
+
+    @if (currentStep() === 3) {
+      <section class="step-panel" aria-label="Product variations">
+        <div class="variations-head">
+          <h3>Variations</h3>
+          <p>Each variant needs its own SKU, price, stock, and package measurements.</p>
+        </div>
+        <div formArrayName="variants" class="variants">
+          @for (variant of variants.controls; track $index; let i = $index) {
+            <details class="variant-card" [open]="i === 0">
+              <summary>
+                <span>Variant #{{ i + 1 }}: {{ variant.value.name || 'Untitled' }}</span>
+                <span
+                  >Selling price: ₹{{ variant.value.price || 0 }} | Stock:
+                  {{ variant.value.stock || 0 }}</span
+                >
+              </summary>
+              <div class="step-grid variant-fields" [formGroupName]="i">
+                <div class="form-field">
+                  <label [for]="'variant-name-' + i"
+                    >Variant name <span class="required">*</span></label
+                  >
+                  <input
+                    pInputText
+                    class="w-full"
+                    [id]="'variant-name-' + i"
+                    formControlName="name"
+                    (input)="onVariantName(i)"
+                  />
+                  @if (variant.get('name')?.touched && variant.get('name')?.invalid) {
+                    <small class="field-error">Variant name is required.</small>
+                  }
+                </div>
+                <div class="form-field">
+                  <label [for]="'variant-slug-' + i"
+                    >Variant slug <span class="required">*</span></label
+                  >
+                  <input
+                    pInputText
+                    class="w-full"
+                    [id]="'variant-slug-' + i"
+                    formControlName="slug"
+                    (input)="markVariantSlugDirty(i)"
+                  />
+                  @if (variant.get('slug')?.touched && variant.get('slug')?.invalid) {
+                    <small class="field-error">Use lowercase letters, numbers, and hyphens.</small>
+                  }
+                </div>
+                <div class="form-field">
+                  <label [for]="'variant-sku-' + i">SKU <span class="required">*</span></label>
+                  <input
+                    pInputText
+                    class="w-full"
+                    [id]="'variant-sku-' + i"
+                    formControlName="sku"
+                  />
+                  @if (variant.get('sku')?.touched && variant.get('sku')?.invalid) {
+                    <small class="field-error">SKU is required.</small>
+                  }
+                </div>
+                <div class="form-field">
+                  <label [for]="'variant-price-' + i"
+                    >Selling price <span class="required">*</span></label
+                  >
+                  <input
+                    pInputText
+                    class="w-full"
+                    [id]="'variant-price-' + i"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    formControlName="price"
+                  />
+                  @if (variant.get('price')?.touched && variant.get('price')?.invalid) {
+                    <small class="field-error">Selling price must be greater than zero.</small>
+                  }
+                </div>
+                <div class="form-field">
+                  <label [for]="'variant-stock-' + i">Stock <span class="required">*</span></label>
+                  <input
+                    pInputText
+                    class="w-full"
+                    [id]="'variant-stock-' + i"
+                    type="number"
+                    min="0"
+                    step="1"
+                    formControlName="stock"
+                  />
+                  @if (variant.get('stock')?.touched && variant.get('stock')?.invalid) {
+                    <small class="field-error">Stock must be zero or more.</small>
+                  }
+                </div>
+                @for (
+                  measurement of [
+                    { name: 'packageHeightCm', label: 'Package height (cm)' },
+                    { name: 'packageWidthCm', label: 'Package width (cm)' },
+                    { name: 'packageLengthCm', label: 'Package length (cm)' },
+                    { name: 'packageWeightGrams', label: 'Package weight (g)' },
+                  ];
+                  track measurement.name
+                ) {
+                  <div class="form-field">
+                    <label [for]="measurement.name + '-' + i"
+                      >{{ measurement.label }} <span class="required">*</span></label
+                    >
+                    <input
+                      pInputText
+                      class="w-full"
+                      [id]="measurement.name + '-' + i"
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      [formControlName]="measurement.name"
+                    />
+                    @if (
+                      variant.get(measurement.name)?.touched &&
+                      variant.get(measurement.name)?.invalid
+                    ) {
+                      <small class="field-error">Value must be greater than zero.</small>
+                    }
+                  </div>
+                }
+                <div class="form-field">
+                  <label [for]="'variant-offers-' + i">Variant offers</label>
+                  <p-multiselect
+                    [inputId]="'variant-offers-' + i"
+                    formControlName="productVariantOffers"
+                    [options]="offers()"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Select offers"
+                    display="chip"
+                    [fluid]="true"
+                  />
+                </div>
+                <div class="form-field full">
+                  <app-quill-editor label="Variant description" formControlName="description" />
+                </div>
+                <app-multi-image-upload
+                  class="full"
+                  label="Variant images"
+                  [path]="uploadPaths.variantImages"
+                  formControlName="images"
+                />
+
+                @if (variantAttributes(i).length) {
+                  <div class="full attr-box" formArrayName="variantAttributes">
+                    <h4>Attribute values</h4>
+                    <p class="attr-help">
+                      Enter a value for every selected attribute. Image-capable attributes may also
+                      need a color code or image.
+                    </p>
+                    @for (attr of variantAttributes(i).controls; track $index; let ai = $index) {
+                      <div class="attr-row" [formGroupName]="ai">
+                        <div class="form-field">
+                          <label [for]="'variant-attribute-' + i + '-' + ai">
+                            {{ attrLabel(attr.get('attributeId')?.value) }}
+                            <span class="required">*</span>
+                          </label>
+                          <input
+                            pInputText
+                            class="w-full"
+                            [id]="'variant-attribute-' + i + '-' + ai"
+                            formControlName="value"
+                            [placeholder]="'Enter ' + attrLabel(attr.get('attributeId')?.value)"
+                          />
+                          @if (
+                            attr.get('value')?.touched && attr.get('value')?.hasError('required')
+                          ) {
+                            <small class="field-error">This attribute value is required.</small>
+                          }
+                        </div>
+                        @if (
+                          attrSupportsImage(attr.get('attributeId')?.value) &&
+                          displayMode(attr.get('attributeId')?.value) === 'code'
+                        ) {
+                          <div class="form-field">
+                            <label [for]="'variant-color-' + i + '-' + ai">
+                              {{ attrLabel(attr.get('attributeId')?.value) }} color code
+                              <span class="required">*</span>
+                            </label>
+                            <input
+                              pInputText
+                              class="w-full color-input"
+                              [id]="'variant-color-' + i + '-' + ai"
+                              type="color"
+                              formControlName="code"
+                            />
+                          </div>
+                        }
+                        @if (
+                          attrSupportsImage(attr.get('attributeId')?.value) &&
+                          displayMode(attr.get('attributeId')?.value) === 'image'
+                        ) {
+                          <app-image-upload
+                            [label]="attrLabel(attr.get('attributeId')?.value) + ' image'"
+                            [path]="uploadPaths.attributeColors"
+                            formControlName="image"
+                          />
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+                <div class="full variant-remove">
+                  <p-button
+                    label="Remove variant"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [outlined]="true"
+                    type="button"
+                    [disabled]="variants.length <= 1"
+                    (onClick)="removeVariant(i)"
+                  />
+                </div>
+              </div>
+            </details>
+          }
+        </div>
+        <div class="add-variant">
+          <p-button label="Add variant" icon="pi pi-plus" type="button" (onClick)="addVariant()" />
+        </div>
+        <div class="step-actions">
+          <p-button
+            label="Previous"
+            icon="pi pi-arrow-left"
+            severity="secondary"
+            [outlined]="true"
+            type="button"
+            (onClick)="goPrevious()"
+          />
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            type="button"
+            (onClick)="goNext(3)"
+          />
+        </div>
+        @if (variantStepHint()) {
+          <p class="field-error">{{ variantStepHint() }}</p>
+        }
+      </section>
+    }
+
+    @if (currentStep() === 4) {
+      <section class="step-panel" aria-label="Product SEO settings">
+        <div formGroupName="seo" class="step-grid">
+          <div class="form-field full">
+            <label for="seo-meta-title">Meta title <span class="required">*</span></label>
+            <input id="seo-meta-title" pInputText formControlName="metaTitle" class="w-full" />
+            @if (form.get('seo.metaTitle')?.touched && form.get('seo.metaTitle')?.invalid) {
+              <small class="field-error">Meta title must be at least 2 characters.</small>
+            }
+          </div>
+          <div class="form-field full">
+            <label for="seo-meta-description"
+              >Meta description <span class="required">*</span></label
+            >
+            <textarea
+              id="seo-meta-description"
+              pTextarea
+              rows="3"
+              formControlName="metaDescription"
+              class="w-full"
+            ></textarea>
+            @if (
+              form.get('seo.metaDescription')?.touched && form.get('seo.metaDescription')?.invalid
+            ) {
+              <small class="field-error">Meta description must be at least 2 characters.</small>
+            }
+          </div>
+          <div class="form-field">
+            <label for="seo-meta-keywords">Meta keywords</label>
+            <input
+              id="seo-meta-keywords"
+              pInputText
+              formControlName="metaKeywords"
+              class="w-full"
+            />
+            <small class="field-hint">Separate keywords with commas.</small>
+          </div>
+          <div class="form-field">
+            <label for="seo-focus-keyword">Focus keyword</label>
+            <input
+              id="seo-focus-keyword"
+              pInputText
+              formControlName="focusKeyword"
+              class="w-full"
+            />
+          </div>
+          <div class="form-field">
+            <label for="seo-canonical-url">Canonical URL</label>
+            <input
+              id="seo-canonical-url"
+              pInputText
+              type="url"
+              formControlName="canonicalUrl"
+              class="w-full"
+            />
+            @if (form.get('seo.canonicalUrl')?.touched && form.get('seo.canonicalUrl')?.invalid) {
+              <small class="field-error">Enter a valid http or https URL.</small>
+            }
+          </div>
+          <div class="form-field">
+            <label for="seo-schema-type">Schema type</label>
+            <input id="seo-schema-type" pInputText formControlName="schemaType" class="w-full" />
+          </div>
+          <div class="form-field full">
+            <label for="seo-keyword-density">Primary keyword density</label>
+            <input
+              id="seo-keyword-density"
+              pInputText
+              formControlName="primaryKeywordDensity"
+              class="w-full"
+            />
+            <small class="field-hint">Optional internal SEO tracking value.</small>
+          </div>
+
+          <fieldset class="seo-section full">
+            <legend>Search engine directives</legend>
+            <div class="form-field">
+              <label for="seo-robots">Robots directive</label>
+              <input id="seo-robots" pInputText formControlName="metaRobots" class="w-full" />
+              <small class="field-hint">Examples: index, follow or noindex, nofollow.</small>
+            </div>
+          </fieldset>
+
+          <fieldset class="seo-section full">
+            <legend>Open Graph (social sharing)</legend>
+            <div class="step-grid">
+              <div class="form-field">
+                <label for="seo-og-title">OG title</label>
+                <input id="seo-og-title" pInputText formControlName="ogTitle" class="w-full" />
+              </div>
+              <div class="form-field">
+                <label for="seo-og-type">OG type</label>
+                <input id="seo-og-type" pInputText formControlName="ogType" class="w-full" />
+              </div>
+              <div class="form-field full">
+                <label for="seo-og-description">OG description</label>
+                <textarea
+                  id="seo-og-description"
+                  pTextarea
+                  rows="2"
+                  formControlName="ogDescription"
+                  class="w-full"
+                ></textarea>
+              </div>
+              <app-image-upload
+                class="full"
+                label="OG image"
+                [path]="uploadPaths.products"
+                formControlName="ogImage"
+              />
+            </div>
+          </fieldset>
+
+          <fieldset class="seo-section full">
+            <legend>Twitter card</legend>
+            <div class="step-grid">
+              <div class="form-field">
+                <label for="seo-twitter-card">Card type</label>
+                <input
+                  id="seo-twitter-card"
+                  pInputText
+                  formControlName="twitterCard"
+                  class="w-full"
+                />
+              </div>
+              <div class="form-field">
+                <label for="seo-twitter-title">Twitter title</label>
+                <input
+                  id="seo-twitter-title"
+                  pInputText
+                  formControlName="twitterTitle"
+                  class="w-full"
+                />
+              </div>
+              <div class="form-field full">
+                <label for="seo-twitter-description">Twitter description</label>
+                <textarea
+                  id="seo-twitter-description"
+                  pTextarea
+                  rows="2"
+                  formControlName="twitterDescription"
+                  class="w-full"
+                ></textarea>
+              </div>
+              <app-image-upload
+                class="full"
+                label="Twitter image"
+                [path]="uploadPaths.products"
+                formControlName="twitterImage"
+              />
+            </div>
+          </fieldset>
+
+          <fieldset class="seo-section full">
+            <legend>Structured data and breadcrumbs</legend>
+            <div class="step-grid">
+              <div class="form-field">
+                <label for="seo-slug">SEO slug override</label>
+                <input id="seo-slug" pInputText formControlName="slug" class="w-full" />
+              </div>
+              <div class="form-field">
+                <label for="seo-breadcrumb-title">Breadcrumb title</label>
+                <input
+                  id="seo-breadcrumb-title"
+                  pInputText
+                  formControlName="breadcrumbsTitle"
+                  class="w-full"
+                />
+              </div>
+              <div class="form-field full">
+                <label for="seo-schema-data">Schema data (JSON)</label>
+                <textarea
+                  id="seo-schema-data"
+                  pTextarea
+                  rows="6"
+                  formControlName="schemaData"
+                  class="w-full"
+                ></textarea>
+                <small class="field-hint">Optional JSON-LD overrides. Enter a JSON object.</small>
+                @if (
+                  form.get('seo.schemaData')?.touched &&
+                  form.get('seo.schemaData')?.hasError('jsonObject')
+                ) {
+                  <small class="field-error">Enter valid JSON object data.</small>
+                }
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="step-actions">
+          <p-button
+            label="Previous"
+            icon="pi pi-arrow-left"
+            severity="secondary"
+            [outlined]="true"
+            type="button"
+            (onClick)="goPrevious()"
+          />
+          <p-button
+            label="Next"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            type="button"
+            (onClick)="goNext(4)"
+          />
+        </div>
+      </section>
+    }
+
+    @if (currentStep() === 5) {
+      <section class="step-panel" aria-label="Product settings">
+        <div class="step-grid">
+          <div class="form-field">
+            <label for="publish-status">Publish status <span class="required">*</span></label>
+            <p-select
+              inputId="publish-status"
+              formControlName="publishStatus"
+              [options]="[
+                { label: 'Draft', value: 'draft' },
+                { label: 'Published', value: 'published' },
+                { label: 'Scheduled', value: 'scheduled' },
+              ]"
+              optionLabel="label"
+              optionValue="value"
+              [fluid]="true"
+            />
+          </div>
+          <div class="toggle-item">
+            <label for="active-status">Active status</label>
+            <p-toggleswitch inputId="active-status" formControlName="isActive" />
+            <span class="status-chip" [class.on]="form.controls.isActive.value">
+              {{ form.controls.isActive.value ? 'Active' : 'Not active' }}
+            </span>
+          </div>
+        </div>
+        <div class="step-actions">
+          <p-button
+            label="Previous"
+            icon="pi pi-arrow-left"
+            severity="secondary"
+            [outlined]="true"
+            type="button"
+            (onClick)="goPrevious()"
+          />
+          <p-button
+            [label]="
+              saving()
+                ? isEdit()
+                  ? 'Updating product...'
+                  : 'Creating product...'
+                : isEdit()
+                  ? 'Update product'
+                  : 'Create product'
+            "
+            icon="pi pi-check"
+            type="submit"
+            [disabled]="saving() || !isStepValid(5)"
+          />
+        </div>
+      </section>
+    }
+  </form>
+
+  <app-add-tag-dialog
+    [visible]="showAddTagDialog()"
+    [existingNames]="existingProductTagNames()"
+    (visibleChange)="onTagDialogVisibleChange($event)"
+    (created)="onTagCreated($event)"
+  />
+  <p-dialog
+    header="Delete product tag"
+    [visible]="!!pendingTagDelete()"
+    (visibleChange)="onTagDeleteDialogVisibleChange($event)"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: 'min(420px, 90vw)' }"
+  >
+    <p>Delete "{{ pendingTagDelete()?.label }}"? This cannot be undone.</p>
+    @if (tagDeleteError()) {
+      <small class="field-error">{{ tagDeleteError() }}</small>
+    }
+    <div class="tag-dialog-actions">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        [outlined]="true"
+        type="button"
+        [disabled]="deletingTag()"
+        (onClick)="onTagDeleteDialogVisibleChange(false)"
+      />
+      <p-button
+        label="Delete tag"
+        icon="pi pi-trash"
+        severity="danger"
+        type="button"
+        [loading]="deletingTag()"
+        [disabled]="deletingTag()"
+        (onClick)="confirmTagDelete()"
+      />
+    </div>
+  </p-dialog>
+</app-admin-form-shell>
