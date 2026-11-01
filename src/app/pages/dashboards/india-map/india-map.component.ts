@@ -126,7 +126,7 @@ export class IndiaMapComponent implements AfterViewInit {
     const indiaPolygons = Highcharts.geojson(topology);
     const indiaBorders = Highcharts.geojson(topology, 'mapline');
     const dark = this.theme.isDark();
-    const textColor = dark ? '#ecece2' : '#2e302a';
+    const textColor = dark ? '#f0f0f0' : '#242424';
     const tooltipFormatter = this.getMapTooltip.bind(this);
 
     return {
@@ -163,8 +163,8 @@ export class IndiaMapComponent implements AfterViewInit {
           type: 'map',
           name: 'India',
           data: indiaPolygons,
-          nullColor: dark ? '#344033' : '#efe4d7',
-          borderColor: dark ? '#b8c2bb' : '#29332d',
+          nullColor: dark ? '#343434' : '#e8e8e8',
+          borderColor: dark ? '#b8b8b8' : '#333333',
           borderWidth: 1.4,
           showInLegend: false,
           enableMouseTracking: false,
@@ -174,7 +174,7 @@ export class IndiaMapComponent implements AfterViewInit {
           type: 'mapline',
           name: 'State borders',
           data: indiaBorders,
-          color: dark ? '#8fa181' : '#74856a',
+          color: dark ? '#888888' : '#777777',
           showInLegend: false,
           enableMouseTracking: false,
           lineWidth: 1,
@@ -184,7 +184,7 @@ export class IndiaMapComponent implements AfterViewInit {
           name: 'Routes',
           data: this.routeLines(),
           lineWidth: 2,
-          color: dark ? '#b8c2bb' : '#29332d',
+          color: dark ? '#f0f0f0' : '#000000',
           enableMouseTracking: true,
           showInLegend: true,
         },
@@ -192,13 +192,13 @@ export class IndiaMapComponent implements AfterViewInit {
           type: 'mappoint',
           name: 'Warehouses',
           data: this.warehousePoints(),
-          color: dark ? '#a8bb97' : '#5f8061',
+          color: dark ? '#bdbdbd' : '#666666',
         },
         {
           type: 'mappoint',
           name: 'Customers',
           data: this.customerPoints(),
-          color: dark ? '#d4dad6' : '#29332d',
+          color: dark ? '#f5f5f5' : '#242424',
         },
       ],
     };

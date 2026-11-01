@@ -14,8 +14,8 @@
   padding: 12px;
   background: var(--vr-card);
   border: 1px solid var(--vr-border);
-  border-radius: 10px;
-  box-shadow: var(--vr-shadow-lg);
+  border-radius: var(--vr-table-radius);
+  box-shadow: var(--vr-shadow);
 }
 
 .column-filter-menu[hidden] {
@@ -65,7 +65,7 @@
 .cdk-drag-preview {
   display: table;
   background: var(--vr-card);
-  box-shadow: var(--vr-shadow-lg);
+  box-shadow: var(--vr-shadow);
 }
 
 .cdk-drag-placeholder {

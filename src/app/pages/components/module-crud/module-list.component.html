@@ -56,11 +56,12 @@
           <a
             pButton
             [rounded]="true"
+            [iconOnly]="true"
             [routerLink]="['/admin', moduleKey, 'add']"
             [title]="addLabel"
             [attr.aria-label]="addLabel"
           >
-            <i class="pi pi-plus" aria-hidden="true"></i>
+            <i class="pi pi-plus" pButtonIcon aria-hidden="true"></i>
           </a>
         }
       </div>

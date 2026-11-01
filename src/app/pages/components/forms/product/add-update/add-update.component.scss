@@ -166,7 +166,7 @@
   min-width: 0;
   padding: 1rem;
   border: 1px solid var(--vr-border);
-  border-radius: 0.5rem;
+  border-radius: var(--vr-table-radius);
   background: var(--vr-card);
 }
 

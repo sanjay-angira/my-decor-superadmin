@@ -5,7 +5,7 @@
   gap: 12px;
   margin-bottom: 12px;
   padding: 12px 16px;
-  border-radius: 4px;
+  border-radius: var(--vr-table-radius);
   background: rgba(244, 67, 54, 0.1);
   color: var(--vr-danger);
 }
@@ -53,9 +53,9 @@
   overflow: auto;
   padding: 0.5rem;
   border: 1px solid var(--vr-border);
-  border-radius: 0.375rem;
+  border-radius: var(--vr-table-radius);
   background: var(--vr-card);
-  box-shadow: var(--vr-shadow-lg);
+  box-shadow: var(--vr-shadow);
 }
 
 .column-filter-item {

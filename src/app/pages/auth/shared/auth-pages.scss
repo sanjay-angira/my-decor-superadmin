@@ -41,7 +41,7 @@
   width: 100%;
   max-width: 28rem;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--vr-table-radius);
   background: var(--vr-card);
   box-shadow: var(--vr-shadow-lg);
 }

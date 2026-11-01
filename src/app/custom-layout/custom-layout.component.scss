@@ -14,6 +14,13 @@
   background: var(--vr-sidenav-bg);
   color: var(--vr-sidenav-text);
   overflow: hidden;
+  transition: flex-basis 200ms ease, width 200ms ease;
+}
+
+.layout-sidenav.collapsed {
+  flex-basis: 0;
+  width: 0;
+  min-width: 0;
 }
 
 .sidenav-inner {

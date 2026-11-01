@@ -92,7 +92,7 @@
 .skel-map {
   height: 520px;
   margin: 0 1.25rem 1rem;
-  border-radius: 4px;
+  border-radius: var(--vr-table-radius);
 }
 
 app-india-map {

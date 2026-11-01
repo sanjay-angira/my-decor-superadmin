@@ -7,8 +7,8 @@
 .profile-hero-card,
 .about-card {
   background: var(--vr-card);
-  border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(82, 63, 104, 0.08);
+  border-radius: var(--vr-table-radius);
+  box-shadow: var(--vr-shadow);
   overflow: hidden;
 }
 
@@ -16,10 +16,10 @@
   position: relative;
   height: 256px;
   background:
-    linear-gradient(120deg, rgba(var(--vr-primary-rgb), 0.58), rgba(33, 42, 34, 0.38)),
-    radial-gradient(circle at 20% 30%, #d7b49c, transparent 45%),
-    radial-gradient(circle at 80% 20%, #aab69c, transparent 40%),
-    linear-gradient(160deg, var(--vr-primary) 0%, #67564a 55%, #29332d 100%);
+    linear-gradient(120deg, rgba(var(--vr-primary-rgb), 0.58), rgba(var(--vr-primary-rgb), 0.38)),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1), transparent 40%),
+    linear-gradient(160deg, var(--vr-primary) 0%, var(--vr-accent) 55%, var(--vr-text) 100%);
   background-size: cover;
 }
 

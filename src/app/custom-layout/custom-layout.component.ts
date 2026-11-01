@@ -5,7 +5,7 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
 import { LoginService } from '../core/services/login.service';
 import { NavigationService } from '../core/services/navigation.service';
@@ -42,13 +42,14 @@ export class CustomLayoutComponent implements OnInit {
   readonly displayName = signal(this.login.displayName);
   readonly openTitles = signal<Set<string>>(new Set());
   readonly mobileNavOpen = signal(false);
+  readonly desktopNavCollapsed = signal(false);
   readonly profileMenuItems: MenuItem[] = [
     { label: 'Profile', icon: 'pi pi-user', routerLink: ['/admin/profile'] },
     { separator: true },
     { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() },
   ];
   readonly isHandset = toSignal(
-    this.bp.observe(Breakpoints.Handset).pipe(map((r) => r.matches)),
+    this.bp.observe('(max-width: 767px)').pipe(map((r) => r.matches)),
     { initialValue: false }
   );
 
@@ -176,8 +177,13 @@ export class CustomLayoutComponent implements OnInit {
     this.searchControl.setValue('');
   }
 
-  toggleMobileNavigation(): void {
-    this.mobileNavOpen.update((open) => !open);
+  toggleNavigation(): void {
+    if (this.isHandset()) {
+      this.mobileNavOpen.update((open) => !open);
+      return;
+    }
+
+    this.desktopNavCollapsed.update((collapsed) => !collapsed);
   }
 
   closeMobileNavigation(): void {

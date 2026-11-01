@@ -86,8 +86,8 @@
   display: grid;
   grid-template-rows: auto 1fr;
   background: var(--vr-card);
-  border-radius: 5px;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28);
+  border-radius: var(--vr-table-radius);
+  box-shadow: var(--vr-shadow);
 }
 
 .dlg-head {

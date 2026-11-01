@@ -9,7 +9,7 @@
 .error {
   margin-bottom: 16px;
   padding: 12px 16px;
-  border-radius: 4px;
+  border-radius: var(--vr-table-radius);
   background: rgba(244, 67, 54, 0.1);
   color: var(--vr-danger);
 }

@@ -26,7 +26,7 @@
 .kv {
   padding: 12px 14px;
   border: 1px solid var(--vr-border, rgba(15, 23, 42, 0.12));
-  border-radius: 8px;
+  border-radius: var(--vr-table-radius);
   background: var(--vr-surface-soft, rgba(248, 250, 252, 0.9));
 }
 
@@ -62,9 +62,10 @@
 
 .profile-card {
   border: 1px solid var(--vr-border, rgba(15, 23, 42, 0.12));
-  border-radius: 10px;
+  border-radius: var(--vr-table-radius);
   padding: 14px;
   background: var(--vr-card, #fff);
+  box-shadow: var(--vr-shadow);
 }
 
 .profile-card-header {
