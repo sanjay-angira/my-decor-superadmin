@@ -4,35 +4,29 @@
 }
 
 .quill-editor-wrapper {
-  position: relative;
-  display: block;
-  border: 1px solid var(--vr-border-strong);
-  border-radius: var(--vr-table-radius);
-  background: var(--vr-card);
+  display: grid;
+  gap: 0.4rem;
 }
 
-.quill-editor-wrapper.focused {
-  border: 2px solid var(--vr-primary);
+.editor-surface {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--vr-border-strong);
+  border-radius: var(--p-form-field-border-radius, 6px);
+  background: var(--vr-input-bg);
+  box-shadow: var(--vr-shadow);
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.quill-editor-wrapper.focused .editor-surface {
+  border-color: var(--vr-primary);
+  box-shadow: var(--vr-shadow), 0 0 0 3px var(--vr-primary-soft);
 }
 
 .quill-editor-label {
-  position: absolute;
-  top: 52px;
-  left: 12px;
-  font-size: 16px;
-  color: var(--vr-text-muted);
-  pointer-events: none;
-  transition: all 0.2s ease-out;
-  background: var(--vr-card);
-  padding: 0 5px;
-  z-index: 1;
-}
-
-.quill-editor-wrapper.focused .quill-editor-label,
-.quill-editor-wrapper.has-content .quill-editor-label {
-  top: -10px;
-  font-size: 12px;
-  color: var(--vr-primary);
+  color: var(--vr-text);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .req {
@@ -45,26 +39,64 @@
 }
 
 :host ::ng-deep .ql-toolbar.ql-snow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
   border-top: none;
   border-left: none;
   border-right: none;
   border-bottom: 1px solid var(--vr-border);
-  border-radius: var(--vr-table-radius) var(--vr-table-radius) 0 0;
-  background: var(--vr-card);
+  border-radius: var(--p-form-field-border-radius, 6px)
+    var(--p-form-field-border-radius, 6px) 0 0;
+  background: var(--vr-input-bg);
+  color: var(--vr-text-secondary);
+  padding: 0.5rem 0.75rem;
 }
 
 :host ::ng-deep .quill-editor-wrapper.focused .ql-toolbar.ql-snow {
   border-bottom-color: var(--vr-primary);
 }
 
+:host ::ng-deep .ql-snow.ql-toolbar button {
+  border-radius: 6px;
+}
+
+:host ::ng-deep .ql-snow.ql-toolbar button:hover,
+:host ::ng-deep .ql-snow.ql-toolbar button:focus-visible,
+:host ::ng-deep .ql-snow.ql-toolbar button.ql-active {
+  background: var(--vr-primary-soft);
+}
+
+:host ::ng-deep .ql-snow.ql-toolbar button:focus-visible {
+  outline: 2px solid var(--vr-primary);
+  outline-offset: 1px;
+}
+
+:host ::ng-deep .ql-snow.ql-toolbar button:hover .ql-stroke,
+:host ::ng-deep .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+:host ::ng-deep .ql-snow.ql-toolbar button:focus-visible .ql-stroke {
+  stroke: var(--vr-primary);
+}
+
+:host ::ng-deep .ql-snow.ql-toolbar button:hover .ql-fill,
+:host ::ng-deep .ql-snow.ql-toolbar button.ql-active .ql-fill,
+:host ::ng-deep .ql-snow.ql-toolbar button:focus-visible .ql-fill {
+  fill: var(--vr-primary);
+}
+
 :host ::ng-deep .ql-container.ql-snow {
   border: none;
   font-size: 14px;
   min-height: 150px;
+  background: var(--vr-input-bg);
+  border-radius: 0 0 var(--p-form-field-border-radius, 6px)
+    var(--p-form-field-border-radius, 6px);
 }
 
 :host ::ng-deep .ql-editor {
   min-height: 150px;
+  padding: 0.75rem;
   color: var(--vr-text);
 }
 
@@ -80,12 +112,56 @@
   color: var(--vr-text);
 }
 
+:host ::ng-deep .ql-snow .ql-picker-options {
+  border-color: var(--vr-border);
+  border-radius: 8px;
+  background: var(--vr-card);
+  box-shadow: var(--vr-shadow);
+}
+
+:host ::ng-deep .ql-snow .ql-picker-item {
+  color: var(--vr-text);
+}
+
+:host ::ng-deep .ql-snow .ql-picker-item:hover,
+:host ::ng-deep .ql-snow .ql-picker-item.ql-selected {
+  color: var(--vr-primary);
+}
+
+:host ::ng-deep .ql-snow .ql-tooltip {
+  z-index: 2;
+  border-color: var(--vr-border);
+  border-radius: 8px;
+  background: var(--vr-card);
+  box-shadow: var(--vr-shadow);
+  color: var(--vr-text);
+}
+
+:host ::ng-deep .ql-snow .ql-tooltip input[type='text'] {
+  border-color: var(--vr-border-strong);
+  border-radius: 6px;
+  background: var(--vr-input-bg);
+  color: var(--vr-text);
+}
+
 :host ::ng-deep .ql-editor:focus,
 :host ::ng-deep .ql-editor:focus-visible {
   outline: none;
 }
 
 :host ::ng-deep .ql-editor.ql-blank::before {
-  color: transparent;
+  color: var(--vr-text-muted);
   font-style: normal;
+  left: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  :host ::ng-deep .ql-toolbar.ql-snow {
+    gap: 0.25rem;
+    padding: 0.5rem;
+  }
+
+  :host ::ng-deep .ql-editor {
+    padding: 0.75rem;
+  }
 }

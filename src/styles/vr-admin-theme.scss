@@ -279,8 +279,7 @@ html[data-theme='dark'] {
 .dlg,
 .p-dialog,
 .cdk-drag-preview,
-.matrix-scroll,
-.quill-editor-wrapper {
+.matrix-scroll {
   border: 1px solid var(--vr-border);
   border-radius: var(--vr-table-radius);
   box-shadow: var(--vr-shadow);

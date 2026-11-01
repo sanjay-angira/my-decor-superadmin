@@ -1,11 +1,18 @@
 <div
   class="quill-editor-wrapper"
   [class.focused]="focused()"
-  [class.has-content]="hasContent()"
-  (click)="focusEditor()"
+  (focusin)="onFocusIn()"
+  (focusout)="onFocusOut($event)"
 >
   <span class="quill-editor-label">
     {{ label() }}@if (required()) {<span class="req">*</span>}
   </span>
-  <div #editor class="editor"></div>
+  <div class="editor-surface">
+    <div
+      #editor
+      class="editor"
+      [attr.aria-label]="label()"
+      [attr.aria-required]="required() ? 'true' : null"
+    ></div>
+  </div>
 </div>

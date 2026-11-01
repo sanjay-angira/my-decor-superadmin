@@ -15,6 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectModule } from 'primeng/select';
+import { StepperModule } from 'primeng/stepper';
 import { TextareaModule } from 'primeng/textarea';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { catchError, of, startWith, switchMap } from 'rxjs';
@@ -54,6 +55,7 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
     MultiSelectModule,
     RadioButtonModule,
     SelectModule,
+    StepperModule,
     TextareaModule,
     ToggleSwitchModule,
     AdminFormShellComponent,
@@ -930,8 +932,8 @@ export class ProductFormComponent implements OnInit {
     this.currentStep.update((step) => Math.max(step - 1, 1));
   }
 
-  goToStep(step: number): void {
-    if (step < this.currentStep()) {
+  goToStep(step: number | undefined): void {
+    if (step !== undefined && step < this.currentStep()) {
       this.submitError.set('');
       this.currentStep.set(step);
     }

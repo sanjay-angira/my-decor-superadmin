@@ -31,10 +31,10 @@ export class QuillEditorComponent implements AfterViewInit, OnDestroy, ControlVa
   readonly minHeight = input('150px');
 
   readonly focused = signal(false);
-  readonly hasContent = signal(false);
 
   private quill?: Quill;
   private pending = '';
+  private disabled = false;
   private onChange: (v: string) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
@@ -67,19 +67,13 @@ export class QuillEditorComponent implements AfterViewInit, OnDestroy, ControlVa
 
     if (this.pending) {
       this.quill.root.innerHTML = this.pending;
-      this.updateHasContent(this.pending);
     }
 
-    this.quill.root.addEventListener('focus', () => this.focused.set(true));
-    this.quill.root.addEventListener('blur', () => {
-      this.focused.set(false);
-      this.onTouched();
-    });
+    this.quill.enable(!this.disabled);
 
     this.quill.on('text-change', () => {
       const html = this.quill?.root.innerHTML || '';
       const normalized = html === '<p><br></p>' ? '' : html;
-      this.updateHasContent(normalized);
       this.onChange(normalized);
     });
   }
@@ -88,15 +82,24 @@ export class QuillEditorComponent implements AfterViewInit, OnDestroy, ControlVa
     this.quill = undefined;
   }
 
-  focusEditor(): void {
-    this.quill?.focus();
+  onFocusIn(): void {
     this.focused.set(true);
+  }
+
+  onFocusOut(event: FocusEvent): void {
+    const wrapper = event.currentTarget;
+    const nextTarget = event.relatedTarget;
+    if (wrapper instanceof HTMLElement && nextTarget instanceof Node && wrapper.contains(nextTarget)) {
+      return;
+    }
+
+    this.focused.set(false);
+    this.onTouched();
   }
 
   writeValue(value: string | null): void {
     const html = value || '';
     this.pending = html;
-    this.updateHasContent(html);
     if (this.quill && this.quill.root.innerHTML !== html) {
       this.quill.root.innerHTML = html || '';
     }
@@ -111,11 +114,7 @@ export class QuillEditorComponent implements AfterViewInit, OnDestroy, ControlVa
   }
 
   setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
     this.quill?.enable(!isDisabled);
-  }
-
-  private updateHasContent(html: string): void {
-    const text = html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
-    this.hasContent.set(!!text);
   }
 }

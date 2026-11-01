@@ -6,23 +6,16 @@
   [submitError]="submitError()"
 >
   <form [formGroup]="form" class="product-form" (ngSubmit)="submit()">
-    <nav class="step-nav" aria-label="Product form steps">
+    <p-stepper [value]="currentStep()" (valueChange)="goToStep($event)">
+      <p-step-list>
       @for (step of steps; track step.id) {
-        <button
-          type="button"
-          class="step-nav-item"
-          [class.active]="currentStep() === step.id"
-          [class.complete]="currentStep() > step.id"
-          [disabled]="step.id >= currentStep()"
-          (click)="goToStep(step.id)"
-        >
-          <span class="step-number">{{ step.id }}</span>
-          <span>{{ step.label }}</span>
-        </button>
+        <p-step [value]="step.id" [disabled]="step.id > currentStep()">{{ step.label }}</p-step>
       }
-    </nav>
+      </p-step-list>
+      <p-step-panels>
+        <p-step-panel [value]="1">
+          <ng-template #content>
 
-    @if (currentStep() === 1) {
       <section class="step-panel" aria-label="Product information">
         <div class="step-grid">
           <div class="form-field">
@@ -265,9 +258,11 @@
           />
         </div>
       </section>
-    }
+          </ng-template>
+        </p-step-panel>
 
-    @if (currentStep() === 2) {
+        <p-step-panel [value]="2">
+          <ng-template #content>
       <section class="step-panel" aria-label="Product specifications">
         @if (formConfigLoading()) {
           <p class="attr-help">Loading specification fields for this category…</p>
@@ -309,9 +304,11 @@
           />
         </div>
       </section>
-    }
+          </ng-template>
+        </p-step-panel>
 
-    @if (currentStep() === 3) {
+        <p-step-panel [value]="3">
+          <ng-template #content>
       <section class="step-panel" aria-label="Product variations">
         <div class="variations-head">
           <h3>Variations</h3>
@@ -553,9 +550,11 @@
           <p class="field-error">{{ variantStepHint() }}</p>
         }
       </section>
-    }
+          </ng-template>
+        </p-step-panel>
 
-    @if (currentStep() === 4) {
+        <p-step-panel [value]="4">
+          <ng-template #content>
       <section class="step-panel" aria-label="Product SEO settings">
         <div formGroupName="seo" class="step-grid">
           <div class="form-field full">
@@ -762,9 +761,11 @@
           />
         </div>
       </section>
-    }
+          </ng-template>
+        </p-step-panel>
 
-    @if (currentStep() === 5) {
+        <p-step-panel [value]="5">
+          <ng-template #content>
       <section class="step-panel" aria-label="Product settings">
         <div class="step-grid">
           <div class="form-field">
@@ -815,7 +816,10 @@
           />
         </div>
       </section>
-    }
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
+    </p-stepper>
   </form>
 
   <app-add-tag-dialog
