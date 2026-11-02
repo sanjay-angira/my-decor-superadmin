@@ -41,5 +41,5 @@
 .warn {
   margin: 8px 0 0;
   font-size: 13px;
-  color: var(--vr-warn, #b45309);
+  color: var(--vr-warn, var(--vr-warning));
 }

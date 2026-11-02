@@ -76,7 +76,7 @@ import { ApiService } from '../../../core/services/api.service';
         padding: 0 12px 0 20px;
         height: 64px;
         background: var(--dlg-primary);
-        color: #fff;
+        color: var(--vr-white);
       }
       .dlg-title {
         display: flex;
@@ -89,7 +89,7 @@ import { ApiService } from '../../../core/services/api.service';
         width: 32px;
         height: 32px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.18);
+        background: var(--vr-white-18);
       }
       .dlg-icon i {
         font-size: 18px;
@@ -100,7 +100,7 @@ import { ApiService } from '../../../core/services/api.service';
         font-weight: 600;
       }
       .close-btn {
-        color: #fff !important;
+        color: var(--vr-white) !important;
       }
       .dlg-content {
         display: grid;
@@ -146,7 +146,7 @@ import { ApiService } from '../../../core/services/api.service';
         height: 40px;
         border-radius: 999px;
         background: var(--dlg-primary);
-        color: #fff;
+        color: var(--vr-white);
         font-weight: 600;
       }
       .submit-btn:disabled {

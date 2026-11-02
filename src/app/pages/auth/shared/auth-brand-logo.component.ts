@@ -36,7 +36,7 @@ import { Component, input } from '@angular/core';
         place-items: center;
         border-radius: 10px;
         background: var(--vr-primary);
-        color: #fff;
+        color: var(--vr-white);
         font-size: 19px;
       }
       .brand-logo__name {
@@ -60,16 +60,16 @@ import { Component, input } from '@angular/core';
         color: var(--vr-text-secondary);
       }
       .brand-logo--sidebar .brand-logo__mark {
-        background: #fff;
+        background: var(--vr-white);
         color: var(--vr-primary);
       }
       .brand-logo--sidebar .brand-logo__name,
       :host-context(html[data-theme='dark']) .brand-logo--sidebar .brand-logo__name {
-        color: #fff;
+        color: var(--vr-white);
       }
       .brand-logo--sidebar .brand-logo__name small,
       :host-context(html[data-theme='dark']) .brand-logo--sidebar .brand-logo__name small {
-        color: rgba(255, 255, 255, 0.78);
+        color: var(--vr-white-78);
       }
     `,
   ],

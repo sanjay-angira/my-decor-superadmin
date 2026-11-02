@@ -118,7 +118,7 @@ function matchPasswords(group: AbstractControl): ValidationErrors | null {
         padding: 0 12px 0 20px;
         height: 64px;
         background: var(--dlg-primary);
-        color: #fff;
+        color: var(--vr-white);
       }
       .dlg-title {
         display: flex;
@@ -131,7 +131,7 @@ function matchPasswords(group: AbstractControl): ValidationErrors | null {
         width: 32px;
         height: 32px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.18);
+        background: var(--vr-white-18);
       }
       .dlg-icon i {
         font-size: 18px;
@@ -142,7 +142,7 @@ function matchPasswords(group: AbstractControl): ValidationErrors | null {
         font-weight: 600;
       }
       .close-btn {
-        color: #fff !important;
+        color: var(--vr-white) !important;
       }
       .dlg-content {
         display: grid;
@@ -199,7 +199,7 @@ function matchPasswords(group: AbstractControl): ValidationErrors | null {
         height: 40px;
         border-radius: 999px;
         background: var(--dlg-primary);
-        color: #fff;
+        color: var(--vr-white);
         font-weight: 600;
       }
       .submit-btn:disabled {

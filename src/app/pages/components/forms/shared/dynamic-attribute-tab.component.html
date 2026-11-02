@@ -46,7 +46,7 @@
                     type="button"
                     class="swatch"
                     [class.on]="ctrl.get('optionId')?.value === opt.id"
-                    [style.background]="opt.hexCode || '#ccc'"
+                    [style.background]="opt.hexCode || 'var(--vr-border-strong)'"
                     [title]="opt.value"
                     (click)="ctrl.get('optionId')?.setValue(opt.id)"
                   ></button>

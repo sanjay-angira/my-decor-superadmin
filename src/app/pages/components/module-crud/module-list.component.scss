@@ -6,7 +6,7 @@
   margin-bottom: 12px;
   padding: 12px 16px;
   border-radius: var(--vr-table-radius);
-  background: rgba(244, 67, 54, 0.1);
+  background: var(--vr-danger-soft);
   color: var(--vr-danger);
 }
 
@@ -104,25 +104,25 @@
 
 .vr-status.admin {
   color: var(--vr-status-green);
-  background: rgba(76, 175, 80, 0.1);
+  background: var(--vr-status-green-soft);
 }
 
 .vr-status.user {
   color: var(--vr-status-cyan);
-  background: rgba(0, 188, 212, 0.1);
+  background: var(--vr-status-cyan-soft);
 }
 
 .vr-status.seller {
-  color: #e65100;
-  background: rgba(230, 81, 0, 0.1);
+  color: var(--vr-status-orange-strong);
+  background: var(--vr-status-orange-soft);
 }
 
 .vr-status.default {
-  color: var(--vr-text-muted, #64748b);
-  background: rgba(100, 116, 139, 0.12);
+  color: var(--vr-text-muted, var(--vr-status-neutral));
+  background: var(--vr-status-neutral-soft);
 }
 
 .vr-status.default {
   color: var(--vr-text-secondary);
-  background: rgba(95, 99, 104, 0.1);
+  background: var(--vr-status-neutral-muted);
 }

@@ -149,7 +149,7 @@
   height: 32px;
   border-radius: var(--vr-table-radius);
   background: linear-gradient(135deg, var(--vr-primary), var(--vr-accent));
-  color: #fff;
+  color: var(--vr-white);
   flex-shrink: 0;
 }
 
@@ -160,7 +160,7 @@
 
 .cat-icon.gray,
 .mod-icon.gray {
-  background: linear-gradient(135deg, #9ca3af, #4b5563);
+  background: linear-gradient(135deg, var(--vr-neutral-400), var(--vr-neutral-600));
 }
 
 .mod-icon {

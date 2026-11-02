@@ -40,11 +40,11 @@
 }
 
 .panel.allowed .panel-head .pi {
-  color: #15803d;
+  color: var(--vr-status-green-strong);
 }
 
 .panel.not-allowed .panel-head .pi {
-  color: #b91c1c;
+  color: var(--vr-danger-text);
 }
 
 .add-row,

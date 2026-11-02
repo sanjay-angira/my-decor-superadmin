@@ -60,7 +60,7 @@ app-permission-matrix.full {
 
 :host ::ng-deep .role-accordion .p-accordionpanel {
   margin-bottom: 10px;
-  border: 1px solid var(--vr-border, rgba(15, 23, 42, 0.12));
+  border: 1px solid var(--vr-border);
   border-radius: 5px !important;
   box-shadow: var(--vr-shadow);
   overflow: hidden;
@@ -83,7 +83,7 @@ app-permission-matrix.full {
   justify-content: flex-end;
   align-items: center;
   margin-right: 12px;
-  color: var(--vr-text-secondary, #64748b);
+  color: var(--vr-text-secondary, var(--vr-status-neutral));
 }
 
 @media (max-width: 768px) {

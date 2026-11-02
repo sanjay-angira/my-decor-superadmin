@@ -12,7 +12,7 @@
   padding: 12px 8px 12px 20px;
   min-height: 72px;
   background: var(--dlg-primary);
-  color: #fff;
+  color: var(--vr-white);
 }
 
 .dlg-title {
@@ -29,12 +29,12 @@
   height: 32px;
   flex-shrink: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--vr-white-18);
 }
 
 .dlg-icon i {
   font-size: 18px;
-  color: #facc15;
+  color: var(--vr-highlight);
 }
 
 .dlg-head h2 {
@@ -52,7 +52,7 @@
 }
 
 .close-btn {
-  color: #fff !important;
+  color: var(--vr-white) !important;
 }
 
 .dlg-content {

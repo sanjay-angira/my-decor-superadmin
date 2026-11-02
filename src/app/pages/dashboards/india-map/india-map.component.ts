@@ -126,7 +126,9 @@ export class IndiaMapComponent implements AfterViewInit {
     const indiaPolygons = Highcharts.geojson(topology);
     const indiaBorders = Highcharts.geojson(topology, 'mapline');
     const dark = this.theme.isDark();
-    const textColor = dark ? '#f0f0f0' : '#242424';
+    const rootColors = getComputedStyle(document.documentElement);
+    const color = (token: string) => rootColors.getPropertyValue(token).trim();
+    const textColor = color('--vr-map-text');
     const tooltipFormatter = this.getMapTooltip.bind(this);
 
     return {
@@ -163,8 +165,8 @@ export class IndiaMapComponent implements AfterViewInit {
           type: 'map',
           name: 'India',
           data: indiaPolygons,
-          nullColor: dark ? '#343434' : '#e8e8e8',
-          borderColor: dark ? '#b8b8b8' : '#333333',
+          nullColor: color(dark ? '--vr-map-area-dark' : '--vr-map-area'),
+          borderColor: color(dark ? '--vr-map-border-dark' : '--vr-map-border'),
           borderWidth: 1.4,
           showInLegend: false,
           enableMouseTracking: false,
@@ -174,7 +176,7 @@ export class IndiaMapComponent implements AfterViewInit {
           type: 'mapline',
           name: 'State borders',
           data: indiaBorders,
-          color: dark ? '#888888' : '#777777',
+          color: color(dark ? '--vr-map-state-dark' : '--vr-map-state'),
           showInLegend: false,
           enableMouseTracking: false,
           lineWidth: 1,
@@ -184,7 +186,7 @@ export class IndiaMapComponent implements AfterViewInit {
           name: 'Routes',
           data: this.routeLines(),
           lineWidth: 2,
-          color: dark ? '#f0f0f0' : '#000000',
+          color: color(dark ? '--vr-map-route-dark' : '--vr-black'),
           enableMouseTracking: true,
           showInLegend: true,
         },
@@ -192,13 +194,13 @@ export class IndiaMapComponent implements AfterViewInit {
           type: 'mappoint',
           name: 'Warehouses',
           data: this.warehousePoints(),
-          color: dark ? '#bdbdbd' : '#666666',
+          color: color(dark ? '--vr-map-point-dark' : '--vr-map-point'),
         },
         {
           type: 'mappoint',
           name: 'Customers',
           data: this.customerPoints(),
-          color: dark ? '#f5f5f5' : '#242424',
+          color: color(dark ? '--vr-map-customer-dark' : '--vr-map-text'),
         },
       ],
     };

@@ -187,14 +187,14 @@
 }
 
 .password-strength-meter.very-weak {
-  color: #dc2626;
+  color: var(--vr-danger);
 }
 .password-strength-meter.weak {
-  color: #ea580c;
+  color: var(--vr-status-orange-strong);
 }
 .password-strength-meter.medium {
-  color: #ca8a04;
+  color: var(--vr-warning);
 }
 .password-strength-meter.strong {
-  color: #16a34a;
+  color: var(--vr-status-green-strong);
 }

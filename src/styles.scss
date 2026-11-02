@@ -11,8 +11,8 @@ html[data-theme='dark'] {
 
 body {
   color-scheme: inherit;
-  background-color: var(--vr-page-bg, #f5f5f5);
-  color: var(--vr-text, rgba(0, 0, 0, 0.87));
+  background-color: var(--vr-page-bg);
+  color: var(--vr-text);
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 14px;
   margin: 0;

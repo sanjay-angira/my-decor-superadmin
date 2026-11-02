@@ -84,7 +84,7 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
         padding: 0 12px 0 20px;
         height: 64px;
         background: var(--dlg-primary);
-        color: #fff;
+        color: var(--vr-white);
       }
       .dlg-head h2 {
         margin: 0;
@@ -92,7 +92,7 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
         font-weight: 600;
       }
       .close-btn {
-        color: #fff !important;
+        color: var(--vr-white) !important;
       }
       .dlg-content {
         display: grid;
@@ -132,7 +132,7 @@ import { UploadService, UPLOAD_PATHS } from '../../../core/services/upload.servi
       .upload-btn {
         min-width: 110px;
         background: var(--dlg-primary);
-        color: #fff;
+        color: var(--vr-white);
       }
       .upload-btn:disabled {
         opacity: 0.7;
