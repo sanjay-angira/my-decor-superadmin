@@ -16,54 +16,78 @@
     @if (loading()) {
       <div class="center"><p-progress-spinner [style]="{ width: '36px', height: '36px' }" /></div>
     } @else {
-      <div class="vr-card">
-        <div class="card-head">
-          <h3>Sections</h3>
-          <button pButton type="button" (click)="openSection()">Add section</button>
-        </div>
-        @for (section of sections(); track section.id; let i = $index) {
-          <div class="list-row">
-            <div>
-              <p class="title">{{ section.title }}</p>
-              <span class="chip">Position {{ section.position }}</span>
+      <div class="settings-grid">
+        <section class="vr-card settings-card" aria-labelledby="footer-sections-title">
+          <div class="card-head">
+            <div class="card-heading">
+              <h3 id="footer-sections-title">Sections</h3>
+              <p>Manage the columns shown in your storefront footer.</p>
             </div>
-            <div class="row-btns">
-              <button pButton [text]="true" [rounded]="true" icon="pi pi-arrow-up" type="button" aria-label="Move up" [disabled]="i === 0" (click)="moveSection(i, -1)">
-              </button>
-              <button pButton [text]="true" [rounded]="true" icon="pi pi-arrow-down" type="button" aria-label="Move down" [disabled]="i === sections().length - 1" (click)="moveSection(i, 1)">
-              </button>
-              <p-toggleswitch
-                [ngModel]="section.status"
-                (ngModelChange)="toggleSection(section, $event)"
-                ariaLabel="Visible"
-              />
-              <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" aria-label="Edit section" (click)="openSection(section)"></button>
-              <button pButton [text]="true" [rounded]="true" icon="pi pi-trash" type="button" aria-label="Delete section" (click)="deleteSection(section)"></button>
-            </div>
+            <button pButton type="button" icon="pi pi-plus" (click)="openSection()">Add section</button>
           </div>
-        }
-      </div>
+          <div class="list">
+            @for (section of sections(); track section.id; let i = $index) {
+              <div class="list-row">
+                <div class="row-copy">
+                  <p class="title">{{ section.title }}</p>
+                  <span class="chip">Position {{ section.position }}</span>
+                </div>
+                <div class="row-btns">
+                  <button pButton [text]="true" [rounded]="true" icon="pi pi-arrow-up" type="button" aria-label="Move up" [disabled]="i === 0" (click)="moveSection(i, -1)"></button>
+                  <button pButton [text]="true" [rounded]="true" icon="pi pi-arrow-down" type="button" aria-label="Move down" [disabled]="i === sections().length - 1" (click)="moveSection(i, 1)"></button>
+                  <p-toggleswitch
+                    [ngModel]="section.status"
+                    (ngModelChange)="toggleSection(section, $event)"
+                    ariaLabel="Visible"
+                  />
+                  <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" aria-label="Edit section" (click)="openSection(section)"></button>
+                  <button pButton [text]="true" [rounded]="true" severity="danger" icon="pi pi-trash" type="button" aria-label="Delete section" (click)="deleteSection(section)"></button>
+                </div>
+              </div>
+            }
+            @empty {
+              <div class="empty-state">
+                <i class="pi pi-list" aria-hidden="true"></i>
+                <p>No footer sections yet</p>
+                <span>Add a section to start building your footer.</span>
+              </div>
+            }
+          </div>
+        </section>
 
-      <div class="vr-card">
-        <div class="card-head">
-          <h3>Footer items</h3>
-          <button pButton type="button" [disabled]="!menuSection()" (click)="openItem()">
-            Add item
-          </button>
-        </div>
-        @for (row of items(); track row.id) {
-          <div class="list-row">
-            <div>
-              <p class="title">{{ row.label }}</p>
-              <p class="muted">{{ row.url }}</p>
+        <section class="vr-card settings-card" aria-labelledby="footer-items-title">
+          <div class="card-head">
+            <div class="card-heading">
+              <h3 id="footer-items-title">Footer items</h3>
+              <p>Manage links inside your footer sections.</p>
             </div>
-            <div class="row-btns">
-              <p-toggleswitch [ngModel]="row.status" (ngModelChange)="toggleItem(row, $event)" />
-              <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" aria-label="Edit item" (click)="openItem(row)"></button>
-              <button pButton [text]="true" [rounded]="true" icon="pi pi-trash" type="button" aria-label="Delete item" (click)="deleteItem(row)"></button>
-            </div>
+            <button pButton type="button" icon="pi pi-plus" [disabled]="!menuSection()" (click)="openItem()">
+              Add item
+            </button>
           </div>
-        }
+          <div class="list">
+            @for (row of items(); track row.id) {
+              <div class="list-row">
+                <div class="row-copy">
+                  <p class="title">{{ row.label }}</p>
+                  <p class="muted">{{ row.url }}</p>
+                </div>
+                <div class="row-btns">
+                  <p-toggleswitch [ngModel]="row.status" (ngModelChange)="toggleItem(row, $event)" ariaLabel="Active" />
+                  <button pButton [text]="true" [rounded]="true" icon="pi pi-pencil" type="button" aria-label="Edit item" (click)="openItem(row)"></button>
+                  <button pButton [text]="true" [rounded]="true" severity="danger" icon="pi pi-trash" type="button" aria-label="Delete item" (click)="deleteItem(row)"></button>
+                </div>
+              </div>
+            }
+            @empty {
+              <div class="empty-state">
+                <i class="pi pi-link" aria-hidden="true"></i>
+                <p>No footer items yet</p>
+                <span>{{ menuSection() ? 'Add links to display under a footer section.' : 'Add a footer section before creating links.' }}</span>
+              </div>
+            }
+          </div>
+        </section>
       </div>
     }
   </div>

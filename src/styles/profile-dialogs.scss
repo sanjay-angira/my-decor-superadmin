@@ -1,13 +1,199 @@
+.p-dialog {
+  max-width: calc(100vw - 2rem);
+  overflow: hidden;
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-table-radius);
+  background: var(--vr-card);
+  box-shadow: var(--vr-shadow);
+  color: var(--vr-text);
+}
+
+.p-dialog .p-dialog-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--vr-border-subtle);
+  background: var(--vr-card);
+  color: var(--vr-text);
+}
+
+.p-dialog .p-dialog-title {
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.p-dialog .p-dialog-header-actions .p-dialog-close-button {
+  color: var(--vr-text-secondary);
+}
+
+.p-dialog .p-dialog-header-actions .p-dialog-close-button:hover {
+  background: var(--vr-surface-subtle);
+  color: var(--vr-text);
+}
+
+.p-dialog .p-dialog-content {
+  max-height: min(72vh, 640px);
+  padding: 1.25rem;
+  overflow: auto;
+  background: var(--vr-card);
+  color: var(--vr-text);
+}
+
+.p-dialog .p-dialog-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--vr-border-subtle);
+  background: var(--vr-card);
+}
+
 .vr-dialog,
 .vr-profile-dialog {
-  border-radius: 5px;
   overflow: hidden;
 }
 
 .vr-dialog .p-dialog-content,
 .vr-profile-dialog .p-dialog-content {
-  max-height: min(70vh, 560px);
-  overflow-x: hidden;
+  padding: 0;
+}
+
+.p-confirmdialog .p-confirmdialog-message {
+  line-height: 1.55;
+}
+
+.p-confirmdialog .p-dialog-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: 1rem;
+  background: var(--vr-overlay);
+  backdrop-filter: blur(2px);
+}
+
+.overlay .dialog {
+  width: min(520px, 100%);
+  max-height: min(90vh, 760px);
+  overflow: auto;
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-table-radius);
+  background: var(--vr-card);
+  box-shadow: var(--vr-shadow);
+  color: var(--vr-text);
+}
+
+.dlg {
+  min-width: 0;
+  background: var(--vr-card);
+  color: var(--vr-text);
+}
+
+.dlg-head {
+  background: var(--vr-sidenav-bg) !important;
+  color: var(--vr-sidenav-text-active) !important;
+}
+
+.dlg-head h2,
+.dlg-head p {
+  color: inherit;
+}
+
+.dlg-head p {
+  opacity: 0.78;
+}
+
+.dlg-head .close-btn {
+  color: var(--vr-sidenav-text-active) !important;
+}
+
+.dlg-icon {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.dlg-content,
+.dlg-body {
+  color: var(--vr-text);
+}
+
+.dlg-actions,
+.tag-dialog-actions,
+.p-dialog .actions,
+.overlay .actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.dlg-actions .submit-btn,
+.p-dialog .actions > button:last-child,
+.overlay .actions > button:last-child,
+.tag-dialog-actions > p-button:last-child,
+.upload-btn {
+  background: var(--vr-sidenav-bg) !important;
+  border-color: var(--vr-sidenav-bg) !important;
+  color: var(--vr-sidenav-text-active) !important;
+}
+
+.dlg-actions .submit-btn:hover:not(:disabled),
+.p-dialog .actions > button:last-child:hover:not(:disabled),
+.overlay .actions > button:last-child:hover:not(:disabled),
+.tag-dialog-actions > p-button:last-child:hover:not(:disabled),
+.upload-btn:hover:not(:disabled) {
+  background: var(--vr-primary) !important;
+  border-color: var(--vr-primary) !important;
+  color: var(--vr-text-on-primary) !important;
+}
+
+.cancel-btn {
+  color: var(--vr-text-secondary) !important;
+}
+
+@media (max-width: 600px) {
+  .p-dialog {
+    width: calc(100vw - 2rem) !important;
+    max-width: 32rem;
+    max-height: calc(100dvh - 2rem);
+  }
+
+  .p-dialog .p-dialog-header {
+    padding: 0.875rem 1rem;
+  }
+
+  .p-dialog .p-dialog-content {
+    padding: 1rem;
+  }
+
+  .vr-dialog .p-dialog-content,
+  .vr-profile-dialog .p-dialog-content {
+    padding: 0;
+  }
+
+  .overlay {
+    place-items: start center;
+    padding: 1rem;
+  }
+
+  .overlay .dialog {
+    max-height: calc(100dvh - 2rem);
+  }
+
+  .dlg-actions,
+  .tag-dialog-actions {
+    justify-content: stretch;
+  }
+
+  .dlg-actions > button,
+  .tag-dialog-actions > p-button {
+    flex: 1 1 auto;
+  }
 }
 
 .tag-select-panel .add-tag-option {

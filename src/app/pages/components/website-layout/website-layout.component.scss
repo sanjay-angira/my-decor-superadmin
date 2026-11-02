@@ -1,16 +1,22 @@
 .filter-actions {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .column-filter-menu {
   position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
   z-index: 20;
   display: grid;
   gap: 8px;
   min-width: 180px;
+  max-height: min(20rem, 60vh);
+  overflow: auto;
   padding: 12px;
   background: var(--vr-card);
   border: 1px solid var(--vr-border);
@@ -26,10 +32,64 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 4px;
+  color: var(--vr-text);
+  cursor: pointer;
+}
+
+.vr-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--vr-text);
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.vr-table th,
+.vr-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--vr-border-subtle);
+  vertical-align: middle;
+}
+
+.vr-table th {
+  background: var(--vr-surface-subtle);
+  color: var(--vr-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+}
+
+.vr-table tbody tr {
+  background: var(--vr-card);
+  transition: background-color 0.14s ease;
+}
+
+.vr-table tbody tr:hover {
+  background: var(--vr-surface-subtle);
+}
+
+.vr-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.vr-table .drag-col {
+  width: 3rem;
+  padding-right: 0.25rem;
+  padding-left: 0.75rem;
 }
 
 .website-layout-actions {
+  display: table-cell;
   white-space: nowrap;
+}
+
+.website-layout-actions a,
+.website-layout-actions button {
+  vertical-align: middle;
 }
 
 .website-layout-actions button:hover,
@@ -53,6 +113,18 @@
   cursor: grab;
 }
 
+.drag-handle:hover:not(:disabled),
+.drag-handle:focus-visible {
+  border-radius: 6px;
+  background: var(--vr-primary-soft);
+  color: var(--vr-primary);
+}
+
+.drag-handle:focus-visible {
+  outline: 2px solid var(--vr-primary);
+  outline-offset: 2px;
+}
+
 .drag-handle:active {
   cursor: grabbing;
 }
@@ -74,4 +146,20 @@
 
 .cdk-drop-list-dragging tr:not(.cdk-drag-placeholder) {
   transition: transform 180ms ease;
+}
+
+@media (max-width: 600px) {
+  :host ::ng-deep .vr-filter-bar {
+    padding-inline: 0.75rem;
+  }
+
+  .column-filter-menu {
+    right: 0;
+    min-width: min(12rem, calc(100vw - 3rem));
+  }
+
+  .vr-table th,
+  .vr-table td {
+    padding: 0.75rem;
+  }
 }
