@@ -468,29 +468,23 @@ p-paginator .p-paginator {
   }
 }
 
-/* Shared image/file upload dropzone (floating label on dashed box) */
+/* Shared image/file upload field */
 .vr-upload {
   display: grid;
-  gap: 8px;
+  gap: 0.4rem;
   width: 100%;
 }
 
 .vr-upload-dropzone-wrap {
-  position: relative;
+  display: grid;
+  gap: 0.35rem;
 }
 
 .vr-upload-label {
-  position: absolute;
-  top: -8px;
-  left: 12px;
-  z-index: 1;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
   color: var(--vr-text-secondary);
-  background: var(--vr-input-bg, var(--vr-card));
-  padding: 0 4px;
-  pointer-events: none;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .req {
@@ -507,22 +501,27 @@ p-paginator .p-paginator {
   justify-content: center;
   gap: 10px;
   width: 100%;
-  min-height: 56px;
-  padding: 1rem 1.25rem;
-  border: 1px dashed var(--vr-primary);
-  border-radius: var(--vr-table-radius);
-  background: var(--vr-primary-soft);
-  color: var(--vr-primary);
+  min-height: 42px;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--vr-border-strong);
+  border-radius: var(--p-form-field-border-radius, 6px);
+  background: var(--vr-input-bg);
+  color: var(--vr-text);
   font: inherit;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
   cursor: pointer;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
 }
 
-.vr-upload-dropzone:hover:not(:disabled),
+.vr-upload-dropzone:hover:not(:disabled) {
+  border-color: var(--vr-text-secondary);
+}
+
 .vr-upload-dropzone:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--vr-primary);
+  border-color: var(--vr-primary);
+  box-shadow: 0 0 0 3px var(--vr-primary-soft);
 }
 
 .vr-upload-dropzone:disabled {
@@ -531,10 +530,8 @@ p-paginator .p-paginator {
 }
 
 .vr-upload-dropzone .pi {
-  color: var(--vr-primary);
-  width: 22px;
-  height: 22px;
-  font-size: 22px;
+  color: var(--vr-text-secondary);
+  font-size: 1rem;
 }
 
 .vr-form .tab,
