@@ -1,5 +1,5 @@
 {
-  "name": "my-decor-admin",
+  "name": "my-decor-superadmin",
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
