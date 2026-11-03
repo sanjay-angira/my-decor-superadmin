@@ -71,16 +71,28 @@ export class LoginService {
     localStorage.setItem('admin_user', JSON.stringify(user || {}));
     this.permissions.setPermissions(user?.permissions || []);
     this.isAuthenticatedSubject.next(true);
-    try {
-      const decoded: any = jwtDecode(this.jwt.getToken() || '');
-      if (decoded?.exp) localStorage.setItem('expiryTime', String(decoded.exp));
-    } catch {
-      /* ignore */
-    }
+    this.updateExpiryTime(this.jwt.getToken() || '');
     localStorage.setItem(
       'user_name',
       `${user?.firstName || ''} ${user?.lastName || ''}`.trim()
     );
+  }
+
+  updateTokens(data: { accessToken: string; refreshToken?: string }): void {
+    this.jwt.saveToken(data.accessToken);
+    if (data.refreshToken) {
+      this.jwt.saveRefreshToken(data.refreshToken);
+    }
+    this.updateExpiryTime(data.accessToken);
+  }
+
+  private updateExpiryTime(token: string): void {
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded?.exp) localStorage.setItem('expiryTime', String(decoded.exp));
+    } catch {
+      /* ignore */
+    }
   }
 
   attemptLogin(email: string, password: string): Observable<any> {

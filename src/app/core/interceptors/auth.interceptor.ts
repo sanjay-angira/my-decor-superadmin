@@ -63,7 +63,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       isRefreshing = true;
       refreshedAccessToken$.next(null);
 
-      return api.post('/user/refresh-token', { refreshToken: refresh }).pipe(
+      return api.post('/auth/refresh-token', { refreshToken: refresh }).pipe(
         switchMap((res) => {
           const accessToken = res?.data?.accessToken as string | undefined;
           if (!res?.success || !accessToken) {
@@ -71,7 +71,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             login.logout();
             return throwError(() => err);
           }
-          login.setAuth(res.data);
+          login.updateTokens(res.data);
           isRefreshing = false;
           refreshedAccessToken$.next(accessToken);
           return next(
