@@ -81,10 +81,6 @@ export class ModuleListComponent {
         return;
       }
       const config = getAdminModuleTableConfig(module)!;
-      if (config.customRoute && module === 'website-layout') {
-        this.router.navigateByUrl('/admin/website-layout');
-        return;
-      }
       this.moduleKey = module;
       this.apiPath = getAdminModuleApiPath(module);
       this.label = config.label;

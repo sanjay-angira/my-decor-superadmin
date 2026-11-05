@@ -213,12 +213,3 @@ export const RolesComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'time', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
-
-export const WebsiteLayoutColumns: AdminTableColumnDefinition[] = [
-  { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
-  { label: 'Title', property: 'title', type: 'text', datatype: 'title', visible: true },
-  { label: 'Type', property: 'type', type: 'text', datatype: 'type', visible: true },
-  { label: 'Status', property: 'status', type: 'text', datatype: 'status', visible: true },
-  { label: 'Position', property: 'position', type: 'text', datatype: 'text', visible: true },
-  { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
-];

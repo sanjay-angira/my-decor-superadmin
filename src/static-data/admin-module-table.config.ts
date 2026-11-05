@@ -18,7 +18,6 @@ import {
   RolesComponentColumns,
   UserComponentColumns,
   SellerUserColumns,
-  WebsiteLayoutColumns,
   type AdminTableColumnDefinition,
 } from './static-common-table-columns';
 
@@ -38,7 +37,6 @@ export type AdminModuleKey =
   | 'blog-categories'
   | 'blog-tags'
   | 'reviews'
-  | 'website-layout'
   | 'users'
   | 'admins'
   | 'customers'
@@ -66,8 +64,6 @@ export type AdminModuleTableConfig = {
   columns: AdminTableColumnDefinition[];
   actions: AdminModuleAction[];
   addLabel?: string;
-  /** Dedicated route instead of generic CRUD */
-  customRoute?: boolean;
   formFields?: AdminFormField[];
 };
 
@@ -402,15 +398,6 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
       { key: 'content', label: 'Content', type: 'textarea' },
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
-  },
-  'website-layout': {
-    label: 'Website Layout',
-    description: 'Manage homepage sections',
-    apiPath: 'cms-sections',
-    columns: WebsiteLayoutColumns,
-    actions: ['add', 'view', 'edit', 'delete'],
-    addLabel: 'Add section',
-    customRoute: true,
   },
   'user-roles': {
     label: 'User Roles',

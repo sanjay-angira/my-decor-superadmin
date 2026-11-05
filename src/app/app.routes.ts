@@ -64,27 +64,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'website-layout',
-        loadComponent: () =>
-          import('./pages/components/website-layout/website-layout.component').then(
-            (m) => m.WebsiteLayoutComponent
-          ),
-      },
-      {
-        path: 'website-layout/add',
-        loadComponent: () =>
-          import(
-            './pages/components/website-layout/add-update/website-layout-form.component'
-          ).then((m) => m.WebsiteLayoutFormComponent),
-      },
-      {
-        path: 'website-layout/modify/:id',
-        loadComponent: () =>
-          import(
-            './pages/components/website-layout/add-update/website-layout-form.component'
-          ).then((m) => m.WebsiteLayoutFormComponent),
-      },
-      {
         path: 'orders/view/:id',
         loadComponent: () =>
           import('./pages/components/orders/view/order-view.component').then(

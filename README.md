@@ -47,7 +47,7 @@ src/
       dashboards/
       social/profile/
       errors/
-      components/       # module-crud, header/footer, website-layout, orders…
+      components/       # module-crud, header/footer, orders…
 ```
 
 ## Migration status
