@@ -42,19 +42,21 @@ export class NavigationService {
    * sort by categoryOrderNo → module.order → id, then nest links under categories.
    */
   private buildSections(modules: AdminNavModule[]): AdminMenuSection[] {
-    const sorted = [...modules].sort((a, b) => {
-      const categoryOrderA = a.categoryOrderNo ?? 9999;
-      const categoryOrderB = b.categoryOrderNo ?? 9999;
-      if (categoryOrderA !== categoryOrderB) {
-        return categoryOrderA - categoryOrderB;
-      }
-      const orderA = a.order ?? 0;
-      const orderB = b.order ?? 0;
-      if (orderA !== orderB) {
-        return orderA - orderB;
-      }
-      return (a.id ?? 0) - (b.id ?? 0);
-    });
+    const sorted = modules
+      .filter((module) => !this.isWebsiteLayoutModule(module))
+      .sort((a, b) => {
+        const categoryOrderA = a.categoryOrderNo ?? 9999;
+        const categoryOrderB = b.categoryOrderNo ?? 9999;
+        if (categoryOrderA !== categoryOrderB) {
+          return categoryOrderA - categoryOrderB;
+        }
+        const orderA = a.order ?? 0;
+        const orderB = b.order ?? 0;
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+        return (a.id ?? 0) - (b.id ?? 0);
+      });
 
     const sections: AdminMenuSection[] = [];
     const existingLabels = new Map<string, number>();
@@ -85,6 +87,15 @@ export class NavigationService {
     }
 
     return sections;
+  }
+
+  private isWebsiteLayoutModule(module: AdminNavModule): boolean {
+    const route = this.normalizeNavigationRoute(module.router_link);
+    return (
+      (module.name || '').trim().toLowerCase() === 'website layout' ||
+      route === '/admin/website-layout' ||
+      route.startsWith('/admin/website-layout/')
+    );
   }
 
   private normalizeNavigationRoute(route?: string): string {
