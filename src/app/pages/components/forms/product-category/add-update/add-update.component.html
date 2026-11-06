@@ -17,7 +17,7 @@
           <ng-template #content let-activateCallback="activateCallback">
         <div class="step-grid">
           <label class="prime-form-field">
-            <span>Category Name</span>
+            <span>Category Name <span class="required">*</span></span>
             <input pInputText formControlName="categoryName" />
             @if (form.controls.categoryName.touched && form.controls.categoryName.hasError('required')) {
               <span class="field-error">Category name is required</span>
@@ -40,7 +40,7 @@
           </label>
 
           <label class="prime-form-field full">
-            <span>Short Description</span>
+            <span>Short Description <span class="required">*</span></span>
             <input pInputText formControlName="shortDescription" [maxlength]="shortDescMax" />
             <small>{{ shortDescLength() }}/{{ shortDescMax }}</small>
             @if (form.controls.shortDescription.touched && form.controls.shortDescription.hasError('required')) {
@@ -136,7 +136,7 @@
           <ng-template #content let-activateCallback="activateCallback">
         <div class="step-grid" formGroupName="seo">
           <label class="prime-form-field full">
-            <span>Meta Title</span>
+            <span>Meta Title <span class="required">*</span></span>
             <input pInputText formControlName="metaTitle" [maxlength]="metaTitleMax" />
             <small>{{ metaTitleLength() }}/{{ metaTitleMax }}</small>
             @if (form.controls.seo.controls.metaTitle.touched && form.controls.seo.controls.metaTitle.hasError('required')) {
@@ -144,7 +144,7 @@
             }
           </label>
           <label class="prime-form-field full">
-            <span>Meta Description</span>
+            <span>Meta Description <span class="required">*</span></span>
             <textarea pInputText rows="3" formControlName="metaDescription" [maxlength]="metaDescMax"></textarea>
             <small>{{ metaDescLength() }}/{{ metaDescMax }}</small>
             @if (form.controls.seo.controls.metaDescription.touched && form.controls.seo.controls.metaDescription.hasError('required')) {

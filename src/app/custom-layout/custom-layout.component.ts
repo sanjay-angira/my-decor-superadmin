@@ -60,10 +60,9 @@ export class CustomLayoutComponent implements OnInit {
     matrixParams: 'ignored' as const,
   };
 
-  /** Keep Category Hierarchy nav active on nested attribute/guideline pages. */
+  /** Keep Category Hierarchy nav active on nested guideline pages. */
   private readonly routeAliases: Record<string, string[]> = {
     '/admin/category-hierarchy': [
-      '/admin/category-hierarchy/attribute-groups',
       '/admin/category-hierarchy/guidelines',
     ],
   };

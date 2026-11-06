@@ -263,52 +263,6 @@
 
         <p-step-panel [value]="2">
           <ng-template #content>
-      <section class="step-panel" aria-label="Product specifications">
-        @if (formConfigLoading()) {
-          <p class="attr-help">Loading specification fields for this category…</p>
-        } @else if (!getDeepestCategoryId()) {
-          <p class="attr-help">
-            Select a category first. Specification fields are category-specific.
-          </p>
-        } @else if (!specTabs().length || !attributeValues.length) {
-          <p class="attr-help">
-            This category has no specification groups yet. You can continue, or add groups on the
-            category edit screen.
-          </p>
-        } @else {
-          @for (tab of specTabs(); track tab.code) {
-            <section class="spec-tab-section">
-              <h3>{{ tab.label }}</h3>
-              <app-dynamic-attribute-tab [groups]="tab.attributeGroups" [form]="attributeValues" />
-            </section>
-          }
-        }
-        @if (specStepHint()) {
-          <p class="field-error">{{ specStepHint() }}</p>
-        }
-        <div class="step-actions">
-          <p-button
-            label="Previous"
-            icon="pi pi-arrow-left"
-            severity="secondary"
-            [outlined]="true"
-            type="button"
-            (onClick)="goPrevious()"
-          />
-          <p-button
-            label="Next"
-            icon="pi pi-arrow-right"
-            iconPos="right"
-            type="button"
-            (onClick)="goNext(2)"
-          />
-        </div>
-      </section>
-          </ng-template>
-        </p-step-panel>
-
-        <p-step-panel [value]="3">
-          <ng-template #content>
       <section class="step-panel" aria-label="Product variations">
         <div class="variations-head">
           <h3>Variations</h3>
@@ -543,7 +497,7 @@
             icon="pi pi-arrow-right"
             iconPos="right"
             type="button"
-            (onClick)="goNext(3)"
+            (onClick)="goNext(2)"
           />
         </div>
         @if (variantStepHint()) {
@@ -553,7 +507,7 @@
           </ng-template>
         </p-step-panel>
 
-        <p-step-panel [value]="4">
+        <p-step-panel [value]="3">
           <ng-template #content>
       <section class="step-panel" aria-label="Product SEO settings">
         <div formGroupName="seo" class="step-grid">
@@ -757,14 +711,14 @@
             icon="pi pi-arrow-right"
             iconPos="right"
             type="button"
-            (onClick)="goNext(4)"
+            (onClick)="goNext(3)"
           />
         </div>
       </section>
           </ng-template>
         </p-step-panel>
 
-        <p-step-panel [value]="5">
+        <p-step-panel [value]="4">
           <ng-template #content>
       <section class="step-panel" aria-label="Product settings">
         <div class="step-grid">
@@ -812,7 +766,7 @@
             "
             icon="pi pi-check"
             type="submit"
-            [disabled]="saving() || !isStepValid(5)"
+            [disabled]="saving() || !isStepValid(4)"
           />
         </div>
       </section>

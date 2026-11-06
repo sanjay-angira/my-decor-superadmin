@@ -78,13 +78,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'category-hierarchy/attribute-groups/:categoryId',
-        loadComponent: () =>
-          import(
-            './pages/components/category-attribute-groups/category-attribute-groups-page.component'
-          ).then((m) => m.CategoryAttributeGroupsPageComponent),
-      },
-      {
         path: 'category-hierarchy/guidelines/:categoryId',
         loadComponent: () =>
           import(

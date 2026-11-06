@@ -95,11 +95,6 @@ export class CategoryHierarchyComponent {
     this.router.navigateByUrl(`/admin/categories/edit/${node.id}`);
   }
 
-  openAddAttribute(node: CategoryTreeNode, event?: Event): void {
-    event?.stopPropagation();
-    this.router.navigateByUrl(`/admin/category-hierarchy/attribute-groups/${node.id}`);
-  }
-
   openCategoryGuidelines(node: CategoryTreeNode, event?: Event): void {
     event?.stopPropagation();
     this.router.navigateByUrl(`/admin/category-hierarchy/guidelines/${node.id}`);

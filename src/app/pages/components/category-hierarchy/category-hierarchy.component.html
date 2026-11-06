@@ -28,14 +28,6 @@
           <button
             pButton
             type="button"
-            (click)="openAddAttribute(leaf)"
-          >
-            <i class="pi pi-plus" aria-hidden="true"></i>
-            Add Attribute
-          </button>
-          <button
-            pButton
-            type="button"
             (click)="openCategoryGuidelines(leaf)"
           >
             <i class="pi pi-list-check" aria-hidden="true"></i>
@@ -85,24 +77,13 @@
                       [outlined]="true"
                       type="button"
                       class="leaf-groups-btn"
-                      (click)="openAddAttribute(leaf)"
-                    >
-                      <i class="pi pi-plus" aria-hidden="true"></i>
-                      Add Attribute
-                    </button>
-                    <button
-                      pButton
-                      [outlined]="true"
-                      type="button"
-                      class="leaf-groups-btn"
                       (click)="openCategoryGuidelines(leaf)"
                     >
                       <i class="pi pi-list-check" aria-hidden="true"></i>
                       Add Category Guideline
                     </button>
                     <p class="leaf-hint">
-                      Manage attributes and guidelines for
-                      <strong>{{ leaf.categoryName }}</strong>.
+                      Manage guidelines for <strong>{{ leaf.categoryName }}</strong>.
                     </p>
                   }
                 </div>
