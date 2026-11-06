@@ -39,11 +39,11 @@ export class UploadService {
     if (imageType) {
       form.append('imageType', imageType);
     }
-    return this.http.post(`${environment.api_url}/admin/upload`, form);
+    return this.http.post(`${environment.api_url}/upload`, form);
   }
 
   delete(fileUrl: string): Observable<any> {
-    return this.http.delete(`${environment.api_url}/admin/upload`, {
+    return this.http.delete(`${environment.api_url}/upload`, {
       body: { url: fileUrl },
     });
   }

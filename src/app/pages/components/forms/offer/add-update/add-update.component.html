@@ -85,21 +85,18 @@
           <ng-template #content let-activateCallback="activateCallback">
             <div class="media-grid">
               <app-image-upload
-                class="full"
                 label="Desktop Offer Image (3:1, max 1920px)"
                 [path]="uploadPath"
                 imageType="offer_desktop"
                 formControlName="desktopImage"
               />
               <app-image-upload
-                class="full"
                 label="Tablet Offer Image (2:1, max 1200px)"
                 [path]="uploadPath"
                 imageType="offer_tablet"
                 formControlName="tabletImage"
               />
               <app-image-upload
-                class="full"
                 label="Mobile Offer Image (3:2, max 800px)"
                 [path]="uploadPath"
                 imageType="offer_mobile"
