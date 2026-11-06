@@ -73,7 +73,6 @@
               }
             </div>
             <div class="step-actions">
-              <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
               <button pButton type="button" [disabled]="!isStepValid(1)" (click)="activateCallback(2)">
                 Next
               </button>
@@ -104,7 +103,6 @@
               />
             </div>
             <div class="step-actions">
-              <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
               <button pButton [outlined]="true" type="button" (click)="activateCallback(1)">
                 Back
               </button>
@@ -128,7 +126,6 @@
               </label>
             </div>
             <div class="step-actions">
-              <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
               <button pButton [outlined]="true" type="button" (click)="activateCallback(2)">
                 Back
               </button>

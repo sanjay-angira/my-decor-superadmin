@@ -7,7 +7,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { StepperModule } from 'primeng/stepper';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { ImageUploadComponent } from '../../shared/image-upload.component';
@@ -17,7 +16,6 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
   selector: 'app-offer-form',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
     ButtonModule,
     CheckboxModule,
     DatePickerModule,
