@@ -94,10 +94,24 @@
         <div class="media-grid">
           <app-image-upload
             class="full"
-            label="Main Image"
+            label="Desktop Category Banner (3:1, max 1920px)"
             [path]="paths.image"
-            imageType="category"
-            formControlName="image"
+            imageType="category_desktop"
+            formControlName="desktopBanner"
+          />
+          <app-image-upload
+            class="full"
+            label="Tablet Category Banner (2:1, max 1200px)"
+            [path]="paths.image"
+            imageType="category_tablet"
+            formControlName="tabletBanner"
+          />
+          <app-image-upload
+            class="full"
+            label="Mobile Category Banner (3:2, max 800px)"
+            [path]="paths.image"
+            imageType="category_mobile"
+            formControlName="mobileBanner"
           />
           <app-image-upload
             class="full"
