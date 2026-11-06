@@ -34,8 +34,24 @@
         <span>Time Based</span>
       </label>
     </div>
-    <app-image-upload label="Offer Image (Ratio 4:1)" [path]="uploadPath" formControlName="image" />
-    <app-image-upload label="Offer Image" [path]="uploadPath" formControlName="image" />
+    <app-image-upload
+      label="Desktop Offer Image (3:1, max 1920px)"
+      [path]="uploadPath"
+      imageType="offer_desktop"
+      formControlName="desktopImage"
+    />
+    <app-image-upload
+      label="Tablet Offer Image (2:1, max 1200px)"
+      [path]="uploadPath"
+      imageType="offer_tablet"
+      formControlName="tabletImage"
+    />
+    <app-image-upload
+      label="Mobile Offer Image (3:2, max 800px)"
+      [path]="uploadPath"
+      imageType="offer_mobile"
+      formControlName="mobileImage"
+    />
 
     <label class="prime-form-toggle">
       <p-toggleswitch formControlName="isActive" />

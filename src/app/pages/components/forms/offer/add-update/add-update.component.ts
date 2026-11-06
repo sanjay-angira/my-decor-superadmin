@@ -47,7 +47,9 @@ export class OfferFormComponent implements OnInit {
   readonly form = this.fb.nonNullable.group({
     offerName: ['', [Validators.required, Validators.minLength(2)]],
     offerSlug: ['', Validators.required],
-    image: [''],
+    desktopImage: [''],
+    tabletImage: [''],
+    mobileImage: [''],
     discountType: ['percentage' as 'percentage' | 'fixed', Validators.required],
     discountValue: [0, Validators.required],
     timeBased: [false],
@@ -75,7 +77,9 @@ export class OfferFormComponent implements OnInit {
       this.form.patchValue({
         offerName: String(data.offerName ?? ''),
         offerSlug: String(data.offerSlug ?? ''),
-        image: String(data.image ?? ''),
+        desktopImage: String(data.desktopImage ?? ''),
+        tabletImage: String(data.tabletImage ?? ''),
+        mobileImage: String(data.mobileImage ?? ''),
         discountType: (data.discountType ?? 'percentage') as 'percentage' | 'fixed',
         discountValue: Number(data.discountValue ?? 0),
         timeBased: Boolean(data.timeBased ?? false),
@@ -102,7 +106,9 @@ export class OfferFormComponent implements OnInit {
       .save(this.module(), this.recordId(), {
         offerName: v.offerName,
         offerSlug: v.offerSlug,
-        image: v.image || null,
+        desktopImage: v.desktopImage || null,
+        tabletImage: v.tabletImage || null,
+        mobileImage: v.mobileImage || null,
         discountType: v.discountType,
         discountValue: Number(v.discountValue),
         timeBased: v.timeBased,
