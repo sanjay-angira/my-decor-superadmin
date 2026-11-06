@@ -65,13 +65,31 @@ export class CategoryFormComponent implements OnInit {
     parentId: [null as number | null],
     offerIds: [[] as number[]],
     isActive: [true],
+    showOnHomePage: [false],
+    useAsHeroBanner: [false],
+    image: [''],
     desktopBanner: [''],
     tabletBanner: [''],
     mobileBanner: [''],
+    video: [''],
     seo: this.fb.nonNullable.group({
       metaTitle: ['', [Validators.required, Validators.maxLength(this.metaTitleMax)]],
       metaDescription: ['', [Validators.required, Validators.maxLength(this.metaDescMax)]],
       metaKeywords: [''],
+      canonicalUrl: [''],
+      focusKeyword: [''],
+      secondaryKeywords: [''],
+      robotsIndex: [true],
+      robotsFollow: [true],
+      metaRobots: [''],
+      ogTitle: [''],
+      ogDescription: [''],
+      ogImage: [''],
+      twitterCard: [''],
+      twitterTitle: [''],
+      twitterDescription: [''],
+      twitterImage: [''],
+      schemaType: ['CollectionPage'],
     }),
   });
 
@@ -96,13 +114,33 @@ export class CategoryFormComponent implements OnInit {
         parentId: parentIdRaw != null && parentIdRaw !== '' ? Number(parentIdRaw) : null,
         offerIds: normalizeIds(data.offerIds ?? data.categoryOffers),
         isActive: Boolean(data.isActive ?? true),
+        showOnHomePage: Boolean(data.showOnHomePage ?? false),
+        useAsHeroBanner: Boolean(data.useAsHeroBanner ?? false),
+        image: String(data.image ?? data.desktopBanner ?? ''),
         desktopBanner: String(data.desktopBanner ?? data.desktopImage ?? data.image ?? ''),
         tabletBanner: String(data.tabletBanner ?? data.tabletImage ?? ''),
         mobileBanner: String(data.mobileBanner ?? ''),
+        video: String(data.video ?? ''),
         seo: {
           metaTitle: String(seo.metaTitle ?? data.metaTitle ?? ''),
           metaDescription: String(seo.metaDescription ?? data.metaDescription ?? ''),
           metaKeywords: String(seo.metaKeywords ?? data.metaKeywords ?? ''),
+          canonicalUrl: String(seo.canonicalUrl ?? ''),
+          focusKeyword: String(seo.focusKeyword ?? ''),
+          secondaryKeywords: Array.isArray(seo.secondaryKeywords)
+            ? seo.secondaryKeywords.join(', ')
+            : String(seo.secondaryKeywords ?? ''),
+          robotsIndex: Boolean(seo.robotsIndex ?? true),
+          robotsFollow: Boolean(seo.robotsFollow ?? true),
+          metaRobots: String(seo.metaRobots ?? ''),
+          ogTitle: String(seo.ogTitle ?? ''),
+          ogDescription: String(seo.ogDescription ?? ''),
+          ogImage: String(seo.ogImage ?? ''),
+          twitterCard: String(seo.twitterCard ?? ''),
+          twitterTitle: String(seo.twitterTitle ?? ''),
+          twitterDescription: String(seo.twitterDescription ?? ''),
+          twitterImage: String(seo.twitterImage ?? ''),
+          schemaType: String(seo.schemaType ?? 'CollectionPage'),
         },
       });
     });
@@ -150,10 +188,20 @@ export class CategoryFormComponent implements OnInit {
         parentId: v.parentId ? Number(v.parentId) : null,
         offerIds: v.offerIds,
         isActive: v.isActive,
+        showOnHomePage: v.showOnHomePage,
+        useAsHeroBanner: v.useAsHeroBanner,
+        image: v.image || null,
         desktopBanner: v.desktopBanner || null,
         tabletBanner: v.tabletBanner || null,
         mobileBanner: v.mobileBanner || null,
-        seo: v.seo,
+        video: v.video || null,
+        seo: {
+          ...v.seo,
+          secondaryKeywords: v.seo.secondaryKeywords
+            .split(',')
+            .map((keyword) => keyword.trim())
+            .filter(Boolean),
+        },
       })
       .subscribe((res) => {
         this.saving.set(false);

@@ -79,6 +79,14 @@
                 {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
               </span>
             </div>
+            <div class="toggle-item">
+              <span>Show on Home Page</span>
+              <p-toggleswitch formControlName="showOnHomePage" />
+            </div>
+            <div class="toggle-item">
+              <span>Use as Hero Banner</span>
+              <p-toggleswitch formControlName="useAsHeroBanner" />
+            </div>
           </div>
         </div>
         <div class="step-actions">
@@ -92,6 +100,13 @@
         <p-step-panel [value]="2">
           <ng-template #content let-activateCallback="activateCallback">
         <div class="media-grid">
+          <app-image-upload
+            class="full"
+            label="Category Image"
+            [path]="paths.image"
+            imageType="category"
+            formControlName="image"
+          />
           <app-image-upload
             class="full"
             label="Desktop Category Banner (3:1, max 1920px)"
@@ -112,6 +127,13 @@
             [path]="paths.image"
             imageType="category_mobile"
             formControlName="mobileBanner"
+          />
+          <app-image-upload
+            class="full"
+            label="Category Video"
+            [path]="paths.video"
+            accept="video/*"
+            formControlName="video"
           />
         </div>
         <div class="step-actions">
@@ -148,6 +170,65 @@
             <span>Meta Keywords</span>
             <input pInputText formControlName="metaKeywords" />
             <small>Separate keywords with commas</small>
+          </label>
+          <label class="prime-form-field full">
+            <span>Canonical URL</span>
+            <input pInputText formControlName="canonicalUrl" />
+          </label>
+          <label class="prime-form-field">
+            <span>Focus Keyword</span>
+            <input pInputText formControlName="focusKeyword" />
+          </label>
+          <label class="prime-form-field">
+            <span>Secondary Keywords</span>
+            <input pInputText formControlName="secondaryKeywords" />
+            <small>Separate keywords with commas</small>
+          </label>
+          <label class="prime-form-field">
+            <span>Meta Robots</span>
+            <input pInputText formControlName="metaRobots" placeholder="index, follow" />
+          </label>
+          <label class="prime-form-field">
+            <span>Schema Type</span>
+            <input pInputText formControlName="schemaType" />
+          </label>
+          <div class="toggle-row full">
+            <div class="toggle-item">
+              <span>Allow Search Indexing</span>
+              <p-toggleswitch formControlName="robotsIndex" />
+            </div>
+            <div class="toggle-item">
+              <span>Allow Link Following</span>
+              <p-toggleswitch formControlName="robotsFollow" />
+            </div>
+          </div>
+          <label class="prime-form-field">
+            <span>Open Graph Title</span>
+            <input pInputText formControlName="ogTitle" />
+          </label>
+          <label class="prime-form-field">
+            <span>Open Graph Description</span>
+            <textarea pInputText rows="3" formControlName="ogDescription"></textarea>
+          </label>
+          <label class="prime-form-field full">
+            <span>Open Graph Image URL</span>
+            <input pInputText formControlName="ogImage" />
+          </label>
+          <label class="prime-form-field">
+            <span>Twitter Card</span>
+            <input pInputText formControlName="twitterCard" placeholder="summary_large_image" />
+          </label>
+          <label class="prime-form-field">
+            <span>Twitter Title</span>
+            <input pInputText formControlName="twitterTitle" />
+          </label>
+          <label class="prime-form-field">
+            <span>Twitter Description</span>
+            <textarea pInputText rows="3" formControlName="twitterDescription"></textarea>
+          </label>
+          <label class="prime-form-field">
+            <span>Twitter Image URL</span>
+            <input pInputText formControlName="twitterImage" />
           </label>
         </div>
         <div class="step-actions">

@@ -76,7 +76,6 @@ const ATTRIBUTE_OPTION_REMOVED_KEYS = new Set([
 ]);
 
 const CATEGORY_REMOVED_KEYS = new Set([
-  'showOnHomePage',
   'publishStatus',
   'bannerImage',
   'categorySlug',
