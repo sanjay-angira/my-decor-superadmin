@@ -11,6 +11,7 @@
         <p-step [value]="1">General Information</p-step>
         <p-step [value]="2">Media Assets</p-step>
         <p-step [value]="3">SEO Settings</p-step>
+        <p-step [value]="4">Category Settings</p-step>
       </p-step-list>
       <p-step-panels>
         <p-step-panel [value]="1">
@@ -71,23 +72,6 @@
             />
           </label>
 
-          <div class="toggle-row full">
-            <div class="toggle-item">
-              <span>Active Status</span>
-              <p-toggleswitch formControlName="isActive" />
-              <span class="status-chip" [class.on]="form.controls.isActive.value">
-                {{ form.controls.isActive.value ? 'Active' : 'Not Active' }}
-              </span>
-            </div>
-            <div class="toggle-item">
-              <span>Show on Home Page</span>
-              <p-toggleswitch formControlName="showOnHomePage" />
-            </div>
-            <div class="toggle-item">
-              <span>Use as Hero Banner</span>
-              <p-toggleswitch formControlName="useAsHeroBanner" />
-            </div>
-          </div>
         </div>
         <div class="step-actions">
           <button pButton type="button" [disabled]="!isStepValid(1)" (click)="activateCallback(2)">
@@ -101,35 +85,30 @@
           <ng-template #content let-activateCallback="activateCallback">
         <div class="media-grid">
           <app-image-upload
-            class="full"
-            label="Category Image"
-            [path]="paths.image"
-            imageType="category"
-            formControlName="image"
-          />
-          <app-image-upload
-            class="full"
             label="Desktop Category Banner (3:1, max 1920px)"
             [path]="paths.image"
             imageType="category_desktop"
             formControlName="desktopBanner"
           />
           <app-image-upload
-            class="full"
             label="Tablet Category Banner (2:1, max 1200px)"
             [path]="paths.image"
             imageType="category_tablet"
             formControlName="tabletBanner"
           />
           <app-image-upload
-            class="full"
             label="Mobile Category Banner (3:2, max 800px)"
             [path]="paths.image"
             imageType="category_mobile"
             formControlName="mobileBanner"
           />
           <app-image-upload
-            class="full"
+            label="Category Image"
+            [path]="paths.image"
+            imageType="category"
+            formControlName="image"
+          />
+          <app-image-upload
             label="Category Video"
             [path]="paths.video"
             accept="video/*"
@@ -235,10 +214,36 @@
           <button pButton [outlined]="true" type="button" (click)="activateCallback(2)">
             Back
           </button>
-          <button pButton type="button" [disabled]="saving() || !form.valid" (click)="submit()">
-            {{ isEdit() ? 'Update Product Category' : 'Create Product Category' }}
+          <button pButton type="button" [disabled]="!isStepValid(3)" (click)="activateCallback(4)">
+            Next
           </button>
         </div>
+          </ng-template>
+        </p-step-panel>
+        <p-step-panel [value]="4">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step-grid">
+              <label class="prime-form-toggle">
+                <p-toggleswitch formControlName="isActive" />
+                <span>Active</span>
+              </label>
+              <label class="prime-form-toggle">
+                <p-toggleswitch formControlName="showOnHomePage" />
+                <span>Show on Home Page</span>
+              </label>
+              <label class="prime-form-toggle">
+                <p-toggleswitch formControlName="useAsHeroBanner" />
+                <span>Use as Hero Banner</span>
+              </label>
+            </div>
+            <div class="step-actions">
+              <button pButton [outlined]="true" type="button" (click)="activateCallback(3)">
+                Back
+              </button>
+              <button pButton type="button" [disabled]="saving() || !form.valid" (click)="submit()">
+                {{ isEdit() ? 'Update Product Category' : 'Create Product Category' }}
+              </button>
+            </div>
           </ng-template>
         </p-step-panel>
       </p-step-panels>
