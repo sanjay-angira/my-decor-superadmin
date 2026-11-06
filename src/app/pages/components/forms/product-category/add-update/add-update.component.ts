@@ -68,9 +68,6 @@ export class CategoryFormComponent implements OnInit {
     desktopBanner: [''],
     tabletBanner: [''],
     mobileBanner: [''],
-    video: [''],
-    icon: [''],
-    banner: [''],
     seo: this.fb.nonNullable.group({
       metaTitle: ['', [Validators.required, Validators.maxLength(this.metaTitleMax)]],
       metaDescription: ['', [Validators.required, Validators.maxLength(this.metaDescMax)]],
@@ -101,10 +98,7 @@ export class CategoryFormComponent implements OnInit {
         isActive: Boolean(data.isActive ?? true),
         desktopBanner: String(data.desktopBanner ?? data.desktopImage ?? data.image ?? ''),
         tabletBanner: String(data.tabletBanner ?? data.tabletImage ?? ''),
-        mobileBanner: String(data.mobileBanner ?? data.mobileImage ?? ''),
-        video: String(data.video ?? ''),
-        icon: String(data.icon ?? ''),
-        banner: String(data.banner ?? ''),
+        mobileBanner: String(data.mobileBanner ?? ''),
         seo: {
           metaTitle: String(seo.metaTitle ?? data.metaTitle ?? ''),
           metaDescription: String(seo.metaDescription ?? data.metaDescription ?? ''),
@@ -159,9 +153,6 @@ export class CategoryFormComponent implements OnInit {
         desktopBanner: v.desktopBanner || null,
         tabletBanner: v.tabletBanner || null,
         mobileBanner: v.mobileBanner || null,
-        video: v.video || null,
-        icon: v.icon || null,
-        banner: v.banner || null,
         seo: v.seo,
       })
       .subscribe((res) => {

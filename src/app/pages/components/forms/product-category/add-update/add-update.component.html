@@ -113,27 +113,6 @@
             imageType="category_mobile"
             formControlName="mobileBanner"
           />
-          <app-image-upload
-            class="full"
-            label="Category Icon"
-            [path]="paths.icon"
-            accept="image/svg+xml,.svg,image/*"
-            formControlName="icon"
-          />
-          <app-image-upload
-            class="full"
-            label="Category Banner"
-            [path]="paths.banner"
-            imageType="category"
-            formControlName="banner"
-          />
-          <app-image-upload
-            class="full"
-            label="Category Video"
-            [path]="paths.video"
-            accept="video/*"
-            formControlName="video"
-          />
         </div>
         <div class="step-actions">
           <button pButton [outlined]="true" type="button" (click)="activateCallback(1)">
