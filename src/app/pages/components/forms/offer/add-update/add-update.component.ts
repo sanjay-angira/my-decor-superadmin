@@ -5,6 +5,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { StepperModule } from 'primeng/stepper';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
@@ -22,6 +23,7 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
     DatePickerModule,
     InputTextModule,
     SelectModule,
+    StepperModule,
     ToggleSwitchModule,
     AdminFormShellComponent,
     ImageUploadComponent,
@@ -50,11 +52,12 @@ export class OfferFormComponent implements OnInit {
     tabletImage: [''],
     mobileImage: [''],
     discountType: ['percentage' as 'percentage' | 'fixed', Validators.required],
-    discountValue: [0, Validators.required],
+    discountValue: [0, [Validators.required, Validators.min(0.01)]],
     timeBased: [false],
     startDateTime: [null as Date | null],
     endDateTime: [null as Date | null],
     isActive: [true],
+    useAsHeroBanner: [false],
   });
 
   ngOnInit(): void {
@@ -84,6 +87,7 @@ export class OfferFormComponent implements OnInit {
         startDateTime: this.parseDate(data.startDateTime ?? data.startDate),
         endDateTime: this.parseDate(data.endDateTime ?? data.endDate),
         isActive: Boolean(data.isActive ?? true),
+        useAsHeroBanner: Boolean(data.useAsHeroBanner ?? false),
       });
       this.updateDateValidators();
     });
@@ -101,6 +105,15 @@ export class OfferFormComponent implements OnInit {
     this.form.controls.endDateTime.setValidators(validator);
     this.form.controls.startDateTime.updateValueAndValidity({ emitEvent: false });
     this.form.controls.endDateTime.updateValueAndValidity({ emitEvent: false });
+  }
+
+  isStepValid(step: number): boolean {
+    if (step !== 1) return true;
+    return (
+      this.form.controls.offerName.valid &&
+      this.form.controls.discountType.valid &&
+      this.form.controls.discountValue.valid
+    );
   }
 
   submit(): void {
@@ -121,6 +134,7 @@ export class OfferFormComponent implements OnInit {
         discountValue: Number(v.discountValue),
         timeBased: v.timeBased,
         isActive: v.isActive,
+        useAsHeroBanner: v.useAsHeroBanner,
         ...(v.timeBased
           ? {
               startDate: v.startDateTime!.toISOString(),

@@ -1,1 +1,52 @@
-/* form styles */
+.offer-form {
+  display: block;
+  background: transparent;
+}
+
+:host ::ng-deep .p-steppanel-content {
+  background: transparent;
+  padding: 2rem 0 0 !important;
+}
+
+.step-grid,
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.required {
+  color: var(--vr-danger);
+}
+
+.field-error {
+  margin-top: 4px;
+  color: var(--vr-danger);
+  font-size: 12px;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vr-border-strong);
+}
+
+@media (max-width: 768px) {
+  .step-grid,
+  .media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full {
+    grid-column: span 1;
+  }
+}
