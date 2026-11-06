@@ -75,13 +75,11 @@ export class CategoryFormComponent implements OnInit {
     seo: this.fb.nonNullable.group({
       metaTitle: ['', [Validators.required, Validators.maxLength(this.metaTitleMax)]],
       metaDescription: ['', [Validators.required, Validators.maxLength(this.metaDescMax)]],
-      metaKeywords: [''],
       canonicalUrl: [''],
       focusKeyword: [''],
       secondaryKeywords: [''],
       robotsIndex: [true],
       robotsFollow: [true],
-      metaRobots: [''],
       ogTitle: [''],
       ogDescription: [''],
       ogImage: [''],
@@ -90,6 +88,7 @@ export class CategoryFormComponent implements OnInit {
       twitterDescription: [''],
       twitterImage: [''],
       schemaType: ['CollectionPage'],
+      seoContent: [''],
     }),
   });
 
@@ -124,7 +123,6 @@ export class CategoryFormComponent implements OnInit {
         seo: {
           metaTitle: String(seo.metaTitle ?? data.metaTitle ?? ''),
           metaDescription: String(seo.metaDescription ?? data.metaDescription ?? ''),
-          metaKeywords: String(seo.metaKeywords ?? data.metaKeywords ?? ''),
           canonicalUrl: String(seo.canonicalUrl ?? ''),
           focusKeyword: String(seo.focusKeyword ?? ''),
           secondaryKeywords: Array.isArray(seo.secondaryKeywords)
@@ -132,7 +130,6 @@ export class CategoryFormComponent implements OnInit {
             : String(seo.secondaryKeywords ?? ''),
           robotsIndex: Boolean(seo.robotsIndex ?? true),
           robotsFollow: Boolean(seo.robotsFollow ?? true),
-          metaRobots: String(seo.metaRobots ?? ''),
           ogTitle: String(seo.ogTitle ?? ''),
           ogDescription: String(seo.ogDescription ?? ''),
           ogImage: String(seo.ogImage ?? ''),
@@ -141,6 +138,7 @@ export class CategoryFormComponent implements OnInit {
           twitterDescription: String(seo.twitterDescription ?? ''),
           twitterImage: String(seo.twitterImage ?? ''),
           schemaType: String(seo.schemaType ?? 'CollectionPage'),
+          seoContent: String(seo.seoContent ?? ''),
         },
       });
     });
