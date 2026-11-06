@@ -2,6 +2,7 @@ import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -9,7 +10,6 @@ import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { ImageUploadComponent } from '../../shared/image-upload.component';
-import { generateSlug, toDateTimeLocal } from '../../shared/form-utils';
 import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
 
 @Component({
@@ -19,6 +19,7 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
     RouterLink,
     ButtonModule,
     CheckboxModule,
+    DatePickerModule,
     InputTextModule,
     SelectModule,
     ToggleSwitchModule,
@@ -31,7 +32,6 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
 export class OfferFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly crud = inject(AdminCrudFormService);
-  private slugManuallyDirty = false;
 
   readonly module = input.required<string>();
   readonly recordId = input<string | undefined>();
@@ -46,52 +46,61 @@ export class OfferFormComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     offerName: ['', [Validators.required, Validators.minLength(2)]],
-    offerSlug: ['', Validators.required],
     desktopImage: [''],
     tabletImage: [''],
     mobileImage: [''],
     discountType: ['percentage' as 'percentage' | 'fixed', Validators.required],
     discountValue: [0, Validators.required],
     timeBased: [false],
-    startDateTime: [''],
-    endDateTime: [''],
+    startDateTime: [null as Date | null],
+    endDateTime: [null as Date | null],
     isActive: [true],
   });
 
   ngOnInit(): void {
-    this.form.controls.offerName.valueChanges.subscribe((name) => {
-      if (!this.isEdit() && !this.slugManuallyDirty) {
-        this.form.controls.offerSlug.setValue(generateSlug(name), { emitEvent: false });
-      }
+    this.form.controls.timeBased.valueChanges.subscribe(() => {
+      this.updateDateValidators();
     });
 
     const id = this.recordId();
     this.isEdit.set(!!id);
-    if (!id) return;
+    if (!id) {
+      this.updateDateValidators();
+      return;
+    }
     this.loading.set(true);
     this.crud.loadRecord(this.module(), id).subscribe(({ data, error }) => {
       this.loading.set(false);
       this.loadError.set(error);
       if (!data) return;
-      this.slugManuallyDirty = true;
       this.form.patchValue({
         offerName: String(data.offerName ?? ''),
-        offerSlug: String(data.offerSlug ?? ''),
         desktopImage: String(data.desktopImage ?? ''),
         tabletImage: String(data.tabletImage ?? ''),
         mobileImage: String(data.mobileImage ?? ''),
         discountType: (data.discountType ?? 'percentage') as 'percentage' | 'fixed',
         discountValue: Number(data.discountValue ?? 0),
         timeBased: Boolean(data.timeBased ?? false),
-        startDateTime: toDateTimeLocal(data.startDateTime ?? data.startDate),
-        endDateTime: toDateTimeLocal(data.endDateTime ?? data.endDate),
+        startDateTime: this.parseDate(data.startDateTime ?? data.startDate),
+        endDateTime: this.parseDate(data.endDateTime ?? data.endDate),
         isActive: Boolean(data.isActive ?? true),
       });
+      this.updateDateValidators();
     });
   }
 
-  markSlugDirty(): void {
-    this.slugManuallyDirty = true;
+  private parseDate(value: unknown): Date | null {
+    if (!value) return null;
+    const date = new Date(String(value));
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  private updateDateValidators(): void {
+    const validator = this.form.controls.timeBased.value ? Validators.required : null;
+    this.form.controls.startDateTime.setValidators(validator);
+    this.form.controls.endDateTime.setValidators(validator);
+    this.form.controls.startDateTime.updateValueAndValidity({ emitEvent: false });
+    this.form.controls.endDateTime.updateValueAndValidity({ emitEvent: false });
   }
 
   submit(): void {
@@ -105,7 +114,6 @@ export class OfferFormComponent implements OnInit {
     this.crud
       .save(this.module(), this.recordId(), {
         offerName: v.offerName,
-        offerSlug: v.offerSlug,
         desktopImage: v.desktopImage || null,
         tabletImage: v.tabletImage || null,
         mobileImage: v.mobileImage || null,
@@ -115,8 +123,8 @@ export class OfferFormComponent implements OnInit {
         isActive: v.isActive,
         ...(v.timeBased
           ? {
-              startDate: new Date(v.startDateTime).toISOString(),
-              endDate: new Date(v.endDateTime).toISOString(),
+              startDate: v.startDateTime!.toISOString(),
+              endDate: v.endDateTime!.toISOString(),
             }
           : {}),
       })

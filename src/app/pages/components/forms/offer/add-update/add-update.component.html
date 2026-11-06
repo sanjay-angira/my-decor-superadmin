@@ -1,13 +1,9 @@
 <app-admin-form-shell [title]="isEdit() ? 'Edit Offer' : 'Add Offer'" [module]="module()" [loading]="loading()"
   [loadError]="loadError()" [submitError]="submitError()">
   <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
-    <label class="prime-form-field">
+    <label class="prime-form-field full">
       <span>Offer Name</span>
       <input pInputText formControlName="offerName" />
-    </label>
-    <label class="prime-form-field">
-      <span>Offer Slug</span>
-      <input pInputText formControlName="offerSlug" (input)="markSlugDirty()" />
     </label>
     <label class="prime-form-field">
       <span>Discount Type</span>
@@ -21,11 +17,27 @@
     @if (form.controls.timeBased.value) {
     <label class="prime-form-field">
       <span>Start Date/Time</span>
-      <input pInputText type="datetime-local" formControlName="startDateTime" />
+      <p-datepicker
+        formControlName="startDateTime"
+        [showIcon]="true"
+        [showTime]="true"
+        [showButtonBar]="true"
+        hourFormat="24"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+      />
     </label>
     <label class="prime-form-field">
       <span>End Date/Time</span>
-      <input pInputText type="datetime-local" formControlName="endDateTime" />
+      <p-datepicker
+        formControlName="endDateTime"
+        [showIcon]="true"
+        [showTime]="true"
+        [showButtonBar]="true"
+        hourFormat="24"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+      />
     </label>
     }
     <div class="form-field full">
@@ -35,18 +47,21 @@
       </label>
     </div>
     <app-image-upload
+      class="full"
       label="Desktop Offer Image (3:1, max 1920px)"
       [path]="uploadPath"
       imageType="offer_desktop"
       formControlName="desktopImage"
     />
     <app-image-upload
+      class="full"
       label="Tablet Offer Image (2:1, max 1200px)"
       [path]="uploadPath"
       imageType="offer_tablet"
       formControlName="tabletImage"
     />
     <app-image-upload
+      class="full"
       label="Mobile Offer Image (3:2, max 800px)"
       [path]="uploadPath"
       imageType="offer_mobile"
