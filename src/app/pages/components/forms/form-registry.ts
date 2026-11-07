@@ -1,7 +1,6 @@
 import type { Type } from '@angular/core';
 import { AttributeFormComponent } from './attributes/add-update/add-update.component';
 import { AttributeOptionFormComponent } from './attribute-options/add-update/add-update.component';
-import { BannerFormComponent } from './banner/add-update/add-update.component';
 import { BlogCategoryFormComponent } from './blog-category/add-update/add-update.component';
 import { BlogFormComponent } from './blog/add-update/add-update.component';
 import { BlogTagFormComponent } from './blog-tags/add-update/add-update.component';
@@ -22,7 +21,6 @@ export const ADMIN_FORM_REGISTRY: Record<string, Type<unknown>> = {
   products: ProductFormComponent,
   attributes: AttributeFormComponent,
   'attribute-options': AttributeOptionFormComponent,
-  banners: BannerFormComponent,
   'blog-categories': BlogCategoryFormComponent,
   'blog-tags': BlogTagFormComponent,
   blogs: BlogFormComponent,

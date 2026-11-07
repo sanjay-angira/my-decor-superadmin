@@ -1,0 +1,88 @@
+<div class="vr-page">
+  <div class="vr-page-header-band">
+    <div class="vr-title-card">
+      <div class="vr-title-left">
+        <h1>Banners</h1>
+        <div class="vr-breadcrumbs">
+          <span>Banners</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vr-page-content">
+    @if (error()) {
+      <div class="error-banner">
+        <span>{{ error() }}</span>
+        <button pButton type="button" [text]="true" (click)="load()">Retry</button>
+      </div>
+    }
+
+    <div class="vr-card">
+      @if (loading()) {
+        <div class="table-message">Loading banner sources...</div>
+      } @else if (!rows().length) {
+        <div class="table-message">No offers or categories found.</div>
+      } @else {
+        <div class="vr-table-scroll">
+          <p-table [value]="rows()" [tableStyle]="{ 'min-width': '68rem' }">
+            <ng-template #header>
+              <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Desktop Image</th>
+                <th>Tablet Image</th>
+                <th>Mobile Image</th>
+                <th>Use as banner</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-row>
+              <tr>
+                <td>{{ row.source === 'offer' ? 'Offer' : 'Category' }}</td>
+                <td>{{ row.name }}</td>
+                <td>
+                  <div class="image-preview">
+                    @if (row.desktopImage) {
+                      <img [src]="row.desktopImage" [alt]="row.name + ' desktop image'" loading="lazy" />
+                    } @else {
+                      <span>No image</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <div class="image-preview">
+                    @if (row.tabletImage) {
+                      <img [src]="row.tabletImage" [alt]="row.name + ' tablet image'" loading="lazy" />
+                    } @else {
+                      <span>No image</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <div class="image-preview mobile-preview">
+                    @if (row.mobileImage) {
+                      <img [src]="row.mobileImage" [alt]="row.name + ' mobile image'" loading="lazy" />
+                    } @else {
+                      <span>No image</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <label class="banner-toggle">
+                    <p-toggleswitch
+                      [ngModel]="row.useAsBanner"
+                      [ngModelOptions]="{ standalone: true }"
+                      [disabled]="isSaving(row)"
+                      (ngModelChange)="setUseAsBanner(row, $event)"
+                    />
+                    <span>{{ row.useAsBanner ? 'On' : 'Off' }}</span>
+                  </label>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      }
+    </div>
+  </div>
+</div>

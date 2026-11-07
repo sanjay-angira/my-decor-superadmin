@@ -1,7 +1,6 @@
 import {
   AttributeComponentColumns,
   AttributeOptionComponentColumns,
-  BannerComponentColumns,
   BlogCategoryComponentColumns,
   BlogComponentColumns,
   BlogTagComponentColumns,
@@ -31,7 +30,6 @@ export type AdminModuleKey =
   | 'attribute-options'
   | 'offers'
   | 'coupons'
-  | 'banners'
   | 'cms-pages'
   | 'blogs'
   | 'blog-categories'
@@ -181,30 +179,6 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
       { key: 'startDate', label: 'Start Date', type: 'date' },
       { key: 'endDate', label: 'End Date', type: 'date' },
       { key: 'isActive', label: 'Active', type: 'toggle' },
-    ],
-  },
-  banners: {
-    label: 'Banners',
-    description: 'Manage homepage banners',
-    columns: BannerComponentColumns,
-    actions: ['add', 'view', 'edit', 'delete'],
-    addLabel: 'Add banner',
-    formFields: [
-      { key: 'title', label: 'Title', type: 'text', required: true },
-      { key: 'subtitle', label: 'Subtitle', type: 'text' },
-      { key: 'link', label: 'Link', type: 'text' },
-      { key: 'image', label: 'Desktop Image URL', type: 'text' },
-      { key: 'mobileImage', label: 'Mobile Image URL', type: 'text' },
-      { key: 'position', label: 'Position', type: 'number' },
-      {
-        key: 'status',
-        label: 'Status',
-        type: 'select',
-        options: [
-          { label: 'Active', value: 'active' },
-          { label: 'Inactive', value: 'inactive' },
-        ],
-      },
     ],
   },
   blogs: {

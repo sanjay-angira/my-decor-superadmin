@@ -118,16 +118,6 @@ export const CouponComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
-export const BannerComponentColumns: AdminTableColumnDefinition[] = [
-  { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
-  { label: 'Title', property: 'title', type: 'text', datatype: 'title', visible: true },
-  { label: 'Subtitle', property: 'subtitle', type: 'text', datatype: 'text', visible: true },
-  { label: 'Position', property: 'position', type: 'text', datatype: 'text', visible: true },
-  { label: 'Status', property: 'status', type: 'text', datatype: 'status', visible: true },
-  { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
-  { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
-];
-
 export const CmsPagesComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
   { label: 'Title', property: 'title', type: 'text', datatype: 'title', visible: true },

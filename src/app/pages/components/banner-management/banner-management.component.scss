@@ -1,0 +1,36 @@
+.table-message {
+  padding: 2rem 1rem;
+  color: var(--vr-text-secondary);
+  text-align: center;
+}
+
+.image-preview {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 70px;
+  overflow: hidden;
+  border: 1px solid var(--vr-border);
+  border-radius: 4px;
+  background: var(--vr-surface-subtle);
+  color: var(--vr-text-secondary);
+  font-size: 0.8rem;
+}
+
+.image-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mobile-preview {
+  width: 76px;
+  height: 88px;
+}
+
+.banner-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}

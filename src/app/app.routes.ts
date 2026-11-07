@@ -93,6 +93,13 @@ export const routes: Routes = [
       },
       // Config-driven CRUD — mirrors vr-frontend /admin/[module]
       {
+        path: 'banners',
+        loadComponent: () =>
+          import('./pages/components/banner-management/banner-management.component').then(
+            (m) => m.BannerManagementComponent
+          ),
+      },
+      {
         path: ':module',
         loadComponent: () =>
           import('./pages/components/module-crud/module-list.component').then(

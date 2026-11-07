@@ -15,7 +15,6 @@ export const UPLOAD_PATHS = {
   },
   offers: '/offers/images',
   coupons: '/coupons/images',
-  banners: '/banners/images',
   blogs: '/blog/images',
   users: '/user/images',
   attributeColors: '/products/attribute-colors',
