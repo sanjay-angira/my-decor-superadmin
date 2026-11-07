@@ -62,7 +62,7 @@
                       class="nav-item nav-child"
                       [routerLink]="item.href"
                       routerLinkActive="active"
-                      [routerLinkActiveOptions]="navLinkActiveOptions(item.href)"
+                      [routerLinkActiveOptions]="navLinkActiveOptions()"
                       (click)="isHandset() && closeMobileNavigation()"
                     >
                       <i [class]="primeIcon(item.icon)" aria-hidden="true"></i>

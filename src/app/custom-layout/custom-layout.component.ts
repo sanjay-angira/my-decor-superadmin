@@ -109,12 +109,8 @@ export class CustomLayoutComponent implements OnInit {
     return this.sectionHasActiveChild(section);
   }
 
-  navLinkActiveOptions(href: string) {
-    const normalized = this.normalizeHref(href);
-    if (normalized === '/admin/category-hierarchy') {
-      return this.routeMatchOptions;
-    }
-    return { exact: true as const };
+  navLinkActiveOptions() {
+    return this.routeMatchOptions;
   }
 
   toggleSection(title: string): void {
