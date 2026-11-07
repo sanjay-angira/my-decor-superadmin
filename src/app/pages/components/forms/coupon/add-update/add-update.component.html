@@ -87,7 +87,7 @@
         <p-step-panel [value]="2">
           <ng-template #content let-activateCallback="activateCallback">
             <div class="media-grid">
-              <app-image-upload label="Coupon Image" [path]="uploadPath" formControlName="image" />
+              <app-image-upload label="Coupon Image (6:1)" [path]="uploadPath" formControlName="image" />
             </div>
             <div class="step-actions">
               <button pButton [outlined]="true" type="button" (click)="activateCallback(1)">
