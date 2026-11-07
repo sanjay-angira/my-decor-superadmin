@@ -18,7 +18,6 @@ import { SelectModule } from 'primeng/select';
 import { StepperModule } from 'primeng/stepper';
 import { TextareaModule } from 'primeng/textarea';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { catchError, of, startWith, switchMap } from 'rxjs';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import {
@@ -93,7 +92,6 @@ export class ProductFormComponent implements OnInit {
     { label: 'Image', value: 'image' },
   ];
 
-  readonly brands = signal<SelectOption[]>([]);
   readonly warehouses = signal<WarehouseOption[]>([]);
   readonly warehousesLoading = signal(false);
   readonly warehouseLoadError = signal('');
@@ -128,7 +126,6 @@ export class ProductFormComponent implements OnInit {
     ],
     shortDescription: ['', [trimmedMinimumLength(2)]],
     description: ['', htmlRequired(2)],
-    brandId: ['' as number | string | '', Validators.required],
     warehouseId: ['' as number | string | '', Validators.required],
     category: ['' as number | string | '', Validators.required],
     childCategories: this.fb.nonNullable.control<number[]>([]),
@@ -168,37 +165,16 @@ export class ProductFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.options.brands().subscribe((r) => this.brands.set(r));
     this.options.rootCategories().subscribe((r) => this.rootCategories.set(r));
     this.options.offers().subscribe((r) => this.offers.set(r));
     this.options.products().subscribe((r) => this.products.set(r));
     this.options.attributes().subscribe((r) => this.attributes.set(r));
     this.options.productTags().subscribe((r) => this.productTags.set(r));
-    this.form.controls.brandId.valueChanges
-      .pipe(
-        startWith(this.form.controls.brandId.value),
-        switchMap((brandId) => {
-          this.warehouseLoadError.set('');
-          if (!brandId) {
-            this.warehouses.set([]);
-            this.warehousesLoading.set(false);
-            return of<WarehouseOption[]>([]);
-          }
-          this.warehousesLoading.set(true);
-          return this.options.registeredWarehouses(brandId).pipe(
-            catchError((error: unknown) => {
-              const message =
-                error && typeof error === 'object' && 'message' in error
-                  ? String(error.message)
-                  : 'Could not load pickup addresses for this brand';
-              this.warehouseLoadError.set(message);
-              return of<WarehouseOption[]>([]);
-            }),
-          );
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((warehouses) => {
+    this.warehousesLoading.set(true);
+    this.options.registeredWarehouses()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (warehouses) => {
         this.warehouses.set(warehouses);
         this.warehousesLoading.set(false);
         const selectedId = this.form.controls.warehouseId.value;
@@ -208,6 +184,16 @@ export class ProductFormComponent implements OnInit {
         ) {
           this.form.controls.warehouseId.setValue('');
         }
+        },
+        error: (error: unknown) => {
+          this.warehouseLoadError.set(
+            error && typeof error === 'object' && 'message' in error
+              ? String(error.message)
+              : 'Could not load registered pickup addresses',
+          );
+          this.warehouses.set([]);
+          this.warehousesLoading.set(false);
+        },
       });
 
     this.form.get('productName')?.valueChanges.subscribe((name) => {
@@ -251,11 +237,6 @@ export class ProductFormComponent implements OnInit {
 
   markSlugDirty(): void {
     this.slugDirty = true;
-  }
-
-  onBrandChange(): void {
-    this.form.controls.warehouseId.setValue('');
-    this.warehouseLoadError.set('');
   }
 
   existingProductTagNames(): string[] {
@@ -514,7 +495,6 @@ export class ProductFormComponent implements OnInit {
       productSlug: r.productSlug ?? '',
       shortDescription: r.shortDescription ?? '',
       description: r.description ?? '',
-      brandId: r.brandId ?? r.brand?.id ?? '',
       warehouseId: r.warehouseId ?? r.warehouse?.id ?? '',
       category: r.category?.id ?? r.category ?? '',
       childCategories: [],
@@ -767,7 +747,6 @@ export class ProductFormComponent implements OnInit {
         SLUG_PATTERN.test((v.productSlug || '').trim()) &&
         (v.shortDescription || '').trim().length >= 2 &&
         descriptionText.length >= 2 &&
-        !!v.brandId &&
         !!v.warehouseId &&
         categorySelected &&
         displayValid &&
@@ -775,7 +754,6 @@ export class ProductFormComponent implements OnInit {
         this.form.controls.productSlug.valid &&
         this.form.controls.shortDescription.valid &&
         this.form.controls.description.valid &&
-        this.form.controls.brandId.valid &&
         this.form.controls.warehouseId.valid &&
         this.form.controls.category.valid
       );
@@ -814,7 +792,6 @@ export class ProductFormComponent implements OnInit {
       description: v.description,
       publishStatus: v.publishStatus,
       isActive: v.isActive,
-      brandId: Number(v.brandId),
       warehouseId: Number(v.warehouseId),
       category: this.getDeepestCategoryId(),
       productOffers: v.productOffers,

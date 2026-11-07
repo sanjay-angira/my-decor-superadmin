@@ -80,16 +80,16 @@ export class FormOptionsService {
     );
   }
 
-  brands() {
-    return this.list('brands', 'name');
-  }
-
-  registeredWarehouses(brandId: number | string): Observable<WarehouseOption[]> {
-    return this.api.get(`/brands/${brandId}/warehouses`).pipe(
+  registeredWarehouses(): Observable<WarehouseOption[]> {
+    return this.api.get('/admin/warehouses', {
+      registeredOnly: true,
+      pageNumber: 1,
+      pageSize: 1000,
+    }).pipe(
       map((res) => {
-        const rows: any[] = res?.data;
+        const rows: any[] = res?.data?.rows;
         if (!Array.isArray(rows)) {
-          throw new Error('Could not load pickup addresses for this brand');
+          throw new Error('Could not load registered pickup addresses');
         }
 
         return rows

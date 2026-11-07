@@ -45,14 +45,6 @@ const HIDDEN_KEYS = new Set([
   'roleIds',
 ]);
 
-const BRAND_REMOVED_KEYS = new Set([
-  'slug',
-  'products',
-  'categories',
-  'brandOffers',
-  'productCount',
-]);
-
 const ATTRIBUTE_REMOVED_KEYS = new Set([
   'isRequired',
   'supportsImage',
@@ -337,7 +329,6 @@ export class ModuleViewComponent {
 
   private isHiddenKey(key: string): boolean {
     if (HIDDEN_KEYS.has(key)) return true;
-    if (this.moduleKey() === 'brands' && BRAND_REMOVED_KEYS.has(key)) return true;
     if (this.moduleKey() === 'attributes' && ATTRIBUTE_REMOVED_KEYS.has(key)) return true;
     if (this.moduleKey() === 'attribute-options' && ATTRIBUTE_OPTION_REMOVED_KEYS.has(key)) return true;
     return this.moduleKey() === 'categories' && CATEGORY_REMOVED_KEYS.has(key);

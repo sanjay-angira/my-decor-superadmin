@@ -368,13 +368,6 @@ export class ModuleListComponent {
       parentRecord?.['categoryName'] ??
       parentRecord?.['name'] ??
       null;
-    const brand = row['brand'];
-    const brandRecord =
-      brand && typeof brand === 'object'
-        ? (brand as Record<string, unknown>)
-        : null;
-    const brandName =
-      row['brandName'] ?? brandRecord?.['name'] ?? brandRecord?.['brandName'] ?? null;
     const attribute = row['attribute'];
     const attributeRecord =
       attribute && typeof attribute === 'object'
@@ -388,7 +381,6 @@ export class ModuleListComponent {
       role: roles.join(', '),
       parentCategory,
       attributeName,
-      brandName,
     };
   }
 
@@ -402,7 +394,6 @@ export class ModuleListComponent {
       row['name'] ||
       row['title'] ||
       row['categoryName'] ||
-      row['brandName'] ||
       row['offerName'] ||
       row['couponCode'] ||
       row['question'] ||

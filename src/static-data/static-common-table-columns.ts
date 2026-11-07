@@ -38,7 +38,6 @@ export const ProductComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
   { label: 'Product Name', property: 'productName', type: 'text', datatype: 'productName', visible: true },
   { label: 'Category', property: 'categoryName', type: 'text', datatype: 'categoryName', visible: true },
-  { label: 'Brand', property: 'brandName', type: 'text', datatype: 'brandName', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
@@ -55,10 +54,14 @@ export const CategoryComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
-export const BrandComponentColumns: AdminTableColumnDefinition[] = [
+export const WarehouseComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
-  { label: 'Brand Name', property: 'brandName', type: 'text', datatype: 'brandName', visible: true },
-  { label: 'Brand Slug', property: 'brandSlug', type: 'text', datatype: 'slug', visible: true },
+  { label: 'Warehouse', property: 'name', type: 'text', datatype: 'name', visible: true },
+  { label: 'City', property: 'city', type: 'text', datatype: 'text', visible: true },
+  { label: 'State', property: 'state', type: 'text', datatype: 'text', visible: true },
+  { label: 'PIN Code', property: 'pincode', type: 'text', datatype: 'text', visible: true },
+  { label: 'Registration', property: 'registrationStatus', type: 'text', datatype: 'text', visible: true },
+  { label: 'Default', property: 'isDefault', type: 'text', datatype: 'on-off', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },

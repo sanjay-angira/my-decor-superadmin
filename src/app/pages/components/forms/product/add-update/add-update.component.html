@@ -40,23 +40,6 @@
           </div>
 
           <div class="form-field">
-            <label for="product-brand">Brand <span class="required">*</span></label>
-            <p-select
-              inputId="product-brand"
-              formControlName="brandId"
-              [options]="brands()"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Select a brand"
-              [filter]="true"
-              [fluid]="true"
-              (onChange)="onBrandChange()"
-            />
-            @if (form.controls.brandId.touched && form.controls.brandId.invalid) {
-              <small class="field-error">Brand is required.</small>
-            }
-          </div>
-          <div class="form-field">
             <label for="product-warehouse">Pickup address <span class="required">*</span></label>
             <p-select
               inputId="product-warehouse"
@@ -65,17 +48,13 @@
               optionLabel="label"
               optionValue="value"
               [placeholder]="
-                !form.controls.brandId.value
-                  ? 'Select a brand first'
-                  : warehousesLoading()
-                    ? 'Loading pickup addresses...'
-                    : warehouses().length
-                      ? 'Select a pickup address'
-                      : 'No active registered pickup addresses'
+                warehousesLoading()
+                  ? 'Loading pickup addresses...'
+                  : warehouses().length
+                    ? 'Select a pickup address'
+                    : 'No active registered pickup addresses'
               "
-              [disabled]="
-                !form.controls.brandId.value || warehousesLoading() || !warehouses().length
-              "
+              [disabled]="warehousesLoading() || !warehouses().length"
               [fluid]="true"
             />
             @if (form.controls.warehouseId.touched && form.controls.warehouseId.invalid) {

@@ -5,7 +5,6 @@ import {
   BlogCategoryComponentColumns,
   BlogComponentColumns,
   BlogTagComponentColumns,
-  BrandComponentColumns,
   CategoryComponentColumns,
   CmsPagesComponentColumns,
   ContactUsLeadsColumns,
@@ -18,6 +17,7 @@ import {
   RolesComponentColumns,
   UserComponentColumns,
   SellerUserColumns,
+  WarehouseComponentColumns,
   type AdminTableColumnDefinition,
 } from './static-common-table-columns';
 
@@ -26,7 +26,7 @@ export type AdminModuleAction = 'add' | 'view' | 'edit' | 'delete';
 export type AdminModuleKey =
   | 'products'
   | 'categories'
-  | 'brands'
+  | 'warehouses'
   | 'attributes'
   | 'attribute-options'
   | 'offers'
@@ -94,22 +94,14 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
   },
-  brands: {
-    label: 'Brands',
-    description: 'Manage product brands',
-    columns: BrandComponentColumns,
-    actions: ['add', 'view', 'edit', 'delete'],
-    addLabel: 'Add brand',
-    formFields: [
-      { key: 'brandName', label: 'Brand Name', type: 'text', required: true },
-      { key: 'shortDescription', label: 'Short Description', type: 'textarea', required: true },
-      { key: 'description', label: 'Description', type: 'textarea', required: true },
-      { key: 'website', label: 'Website', type: 'text' },
-      { key: 'metaTitle', label: 'Meta Title', type: 'text', required: true },
-      { key: 'metaDescription', label: 'Meta Description', type: 'textarea', required: true },
-      { key: 'metaKeywords', label: 'Meta Keywords', type: 'text' },
-      { key: 'isActive', label: 'Active', type: 'toggle' },
-    ],
+  warehouses: {
+    label: 'Warehouses',
+    description: 'Manage dispatch and return locations',
+    apiPath: 'admin/warehouses',
+    columns: WarehouseComponentColumns,
+    actions: ['add', 'view', 'edit'],
+    addLabel: 'Add warehouse',
+    formFields: [],
   },
   attributes: {
     label: 'Attributes',
@@ -442,7 +434,7 @@ const RELATION_SORT_COLUMNS = new Set([
 /**
  * Maps a table header property to the API `column` param.
  * Mirrors vr-admin list `shorting` handlers, with field names for this backend
- * (e.g. brand `name` instead of `brandName`).
+ * (e.g. user `firstName` instead of `name`).
  */
 export function getAdminModuleSortColumn(
   module: AdminModuleKey,
@@ -459,7 +451,6 @@ export function getAdminModuleSortColumn(
     sellers: 'firstName',
     'delete-requests': 'firstName',
     products: 'productName',
-    brands: 'name',
     categories: 'categoryName',
     offers: 'offerName',
     coupons: 'couponCode',
@@ -472,9 +463,6 @@ export function getAdminModuleSortColumn(
     return nameColumnByModule[module]!;
   }
 
-  if (property === 'brandName' && module === 'brands') {
-    return 'name';
-  }
   if (property === 'coupon_code' || (property === 'couponCode' && module === 'coupons')) {
     return 'couponCode';
   }
@@ -486,7 +474,7 @@ export function getAdminModuleSortColumn(
   }
 
   if (
-    (property === 'brandName' || property === 'categoryName') &&
+    property === 'categoryName' &&
     (module === 'products' || module === 'blogs')
   ) {
     return 'id';
