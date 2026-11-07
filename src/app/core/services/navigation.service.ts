@@ -69,7 +69,7 @@ export class NavigationService {
       const item: AdminMenuItem = {
         label: element.name || 'Untitled',
         href: this.normalizeNavigationRoute(element.router_link),
-        icon: this.toPrimeIconKey(element.icon),
+        icon: element.icon || '',
       };
 
       const existingIndex = existingLabels.get(element.categories);
@@ -80,7 +80,7 @@ export class NavigationService {
 
       sections.push({
         title: element.categories,
-        icon: this.toPrimeIconKey(element.category_icon || element.icon),
+        icon: element.category_icon || element.icon || '',
         items: [item],
       });
       existingLabels.set(element.categories, sections.length - 1);
@@ -131,14 +131,4 @@ export class NavigationService {
     '/admin/delete-request': '/admin/delete-requests',
   };
 
-  /** Normalize persisted menu icon keys for the PrimeIcons key map. */
-  private toPrimeIconKey(icon?: string | null): string {
-    const raw = (icon || '').trim();
-    if (!raw) {
-      return 'folder';
-    }
-    const withoutNs = raw.replace(/^(mat|icon):/i, '').trim();
-    const ligature = withoutNs.replace(/-/g, '_');
-    return ligature || 'folder';
-  }
 }

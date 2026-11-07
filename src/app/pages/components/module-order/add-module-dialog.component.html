@@ -26,14 +26,8 @@
 
       <label class="prime-form-field full">
         <span>Icon</span>
-        <p-select
-          [options]="filteredIcons"
-          [filter]="true"
-          [showClear]="true"
-          placeholder="Select an icon"
-          formControlName="icon"
-        />
-        <small>Select an icon ({{ availableIcons.length }} available)</small>
+        <input pInputText formControlName="icon" placeholder="category" />
+        <small>Enter a Material icon name, such as category or dashboard</small>
         @if (form.controls.icon.hasError('required') && form.controls.icon.touched) {
           <span class="field-error">Icon is required</span>
         }

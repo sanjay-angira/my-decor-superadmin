@@ -26,15 +26,8 @@
       </label>
 
       <label class="prime-form-field full">
-        <span>Category Icon (heading)</span>
-        <p-select
-          [options]="filteredIcons"
-          [filter]="true"
-          [showClear]="true"
-          placeholder="Select an icon"
-          formControlName="categoryIcon"
-        />
-        <small>Select an icon for the category heading</small>
+        <span>Category Icon (Material ligature)</span>
+        <input pInputText formControlName="categoryIcon" placeholder="category" />
       </label>
     </div>
 

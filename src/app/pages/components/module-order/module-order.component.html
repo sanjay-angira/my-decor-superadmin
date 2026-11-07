@@ -74,7 +74,7 @@
                       <i class="pi pi-bars"></i>
                     </span>
                     <span class="cat-icon">
-                      <i [class]="iconClass(category.categoryIcon)"></i>
+                      <span class="material-icons">{{ materialIconName(category.categoryIcon) }}</span>
                     </span>
                     <h2>{{ category.category }}</h2>
                     <span class="count-chip">{{ category.modules.length }}</span>
@@ -130,7 +130,7 @@
                     <div class="module-main">
                       <i class="pi pi-bars row-drag"></i>
                       <span class="mod-icon">
-                        <i [class]="iconClass(module.icon)"></i>
+                        <span class="material-icons">{{ materialIconName(module.icon) }}</span>
                       </span>
                       <div class="module-copy">
                         <h4>{{ module.name }}</h4>
@@ -210,7 +210,7 @@
                 <div class="module-main">
                   <i class="pi pi-bars row-drag"></i>
                   <span class="mod-icon gray">
-                    <i [class]="iconClass(module.icon)"></i>
+                    <span class="material-icons">{{ materialIconName(module.icon) }}</span>
                   </span>
                   <div class="module-copy">
                     <h4>{{ module.name }}</h4>

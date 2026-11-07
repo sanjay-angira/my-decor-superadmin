@@ -51,7 +51,7 @@
                 [attr.aria-expanded]="isOpen(section.title)"
                 (click)="toggleSection(section.title)"
               >
-                <i [class]="primeIcon(section.icon)" aria-hidden="true"></i>
+                <span class="material-icons nav-icon" aria-hidden="true">{{ materialIconName(section.icon) }}</span>
                 <span>{{ section.title }}</span>
                 <i class="pi pi-chevron-right nav-chevron" aria-hidden="true"></i>
               </button>
@@ -65,7 +65,7 @@
                       [routerLinkActiveOptions]="navLinkActiveOptions()"
                       (click)="isHandset() && closeMobileNavigation()"
                     >
-                      <i [class]="primeIcon(item.icon)" aria-hidden="true"></i>
+                      <span class="material-icons nav-icon" aria-hidden="true">{{ item.icon }}</span>
                       <span>{{ item.label }}</span>
                     </a>
                   }

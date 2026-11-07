@@ -4,7 +4,6 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { iconsIC } from '../../../../static-data/icons-ic';
 import type { AdminNavModule } from '../../../core/services/module.service';
 
 export type AddModuleDialogData = {
@@ -31,9 +30,6 @@ export class AddModuleDialogComponent implements OnInit {
   private readonly dialogRef = inject(DynamicDialogRef);
   readonly data: AddModuleDialogData = inject(DynamicDialogConfig).data;
 
-  readonly availableIcons = iconsIC;
-  filteredIcons = [...iconsIC];
-  iconSearchTerm = '';
   showNewCategoryInput = false;
   readonly editMode = !!this.data?.module;
   readonly existingCategories = (this.data?.categories || []).filter((c): c is string => !!c);
@@ -44,7 +40,7 @@ export class AddModuleDialogComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],
-    icon: ['', Validators.required],
+    icon: ['folder', Validators.required],
     router_link: ['/admin/dashboard', Validators.required],
     category: ['', Validators.required],
     newCategory: [''],
@@ -52,10 +48,7 @@ export class AddModuleDialogComponent implements OnInit {
 
   ngOnInit(): void {
     const module = this.data?.module;
-    let iconValue = module?.icon || '';
-    if (iconValue.includes(':')) {
-      iconValue = iconValue.split(':')[1] || '';
-    }
+    const iconValue = module?.icon?.trim().replace(/^mat:/i, '') || 'folder';
 
     this.form.patchValue({
       name: module?.name || '',
@@ -91,16 +84,6 @@ export class AddModuleDialogComponent implements OnInit {
     this.form.controls.newCategory.updateValueAndValidity();
   }
 
-  filterIcons(searchTerm: string): void {
-    this.iconSearchTerm = searchTerm;
-    if (!searchTerm.trim()) {
-      this.filteredIcons = this.availableIcons;
-      return;
-    }
-    const term = searchTerm.toLowerCase().trim();
-    this.filteredIcons = this.availableIcons.filter((icon: string) => icon.toLowerCase().includes(term));
-  }
-
   cancel(): void {
     this.dialogRef.close();
   }
@@ -127,7 +110,7 @@ export class AddModuleDialogComponent implements OnInit {
     this.dialogRef.close({
       module: {
         name: this.form.controls.name.value,
-        icon: iconValue ? `mat:${iconValue}` : 'mat:assignment',
+        icon: `mat:${iconValue || 'folder'}`,
         router_link: this.form.controls.router_link.value,
         categories: category,
         order: this.data?.order || 1,

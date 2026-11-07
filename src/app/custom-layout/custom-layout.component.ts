@@ -185,27 +185,8 @@ export class CustomLayoutComponent implements OnInit {
     this.mobileNavOpen.set(false);
   }
 
-  primeIcon(icon: string | undefined): string {
-    const icons: Record<string, string> = {
-      dashboard: 'pi pi-chart-bar',
-      home: 'pi pi-home',
-      category: 'pi pi-sitemap',
-      inventory_2: 'pi pi-box',
-      shopping_cart: 'pi pi-shopping-cart',
-      people: 'pi pi-users',
-      person: 'pi pi-user',
-      settings: 'pi pi-cog',
-      image: 'pi pi-image',
-      article: 'pi pi-file',
-      campaign: 'pi pi-megaphone',
-      local_offer: 'pi pi-tag',
-      rate_review: 'pi pi-star',
-      analytics: 'pi pi-chart-line',
-      language: 'pi pi-globe',
-      contact_support: 'pi pi-question-circle',
-      expand_more: 'pi pi-chevron-down',
-    };
-    return icons[icon || ''] || 'pi pi-folder';
+  materialIconName(icon: string | undefined): string {
+    return icon?.trim().replace(/^mat:/i, '') || 'folder';
   }
 
   logout(): void {

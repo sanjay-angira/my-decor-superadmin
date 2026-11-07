@@ -496,28 +496,8 @@ export class ModuleOrderComponent implements OnInit {
     return this.categories().length;
   }
 
-  iconClass(icon?: string | null): string {
-    const icons: Record<string, string> = {
-      dashboard: 'pi pi-chart-bar',
-      home: 'pi pi-home',
-      category: 'pi pi-sitemap',
-      inventory_2: 'pi pi-box',
-      shopping_cart: 'pi pi-shopping-cart',
-      people: 'pi pi-users',
-      person: 'pi pi-user',
-      settings: 'pi pi-cog',
-      image: 'pi pi-image',
-      article: 'pi pi-file',
-      campaign: 'pi pi-megaphone',
-      local_offer: 'pi pi-tag',
-      rate_review: 'pi pi-star',
-      analytics: 'pi pi-chart-line',
-      language: 'pi pi-globe',
-      folder: 'pi pi-folder',
-      folder_off: 'pi pi-folder-open',
-    };
-    const raw = (icon || '').replace(/^mat:/i, '').trim();
-    return icons[raw] || 'pi pi-folder';
+  materialIconName(icon?: string | null): string {
+    return icon?.trim().replace(/^mat:/i, '') || 'folder';
   }
 
   private isSuccess(res: { success?: boolean; status?: boolean } | null | undefined): boolean {
