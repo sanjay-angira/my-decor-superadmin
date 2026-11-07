@@ -230,7 +230,8 @@ button.nav-item {
 }
 
 .nav-child {
-  padding-inline-start: 52px;
+  width: calc(100% - 24px);
+  padding-inline-start: 30px;
 }
 
 .nav-item > .nav-icon {
