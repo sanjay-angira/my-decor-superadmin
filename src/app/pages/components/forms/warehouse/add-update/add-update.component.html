@@ -6,9 +6,9 @@
   [loadError]="loadError()"
   [submitError]="submitError()"
 >
-  <form [formGroup]="form" class="vr-form">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
     @if (isEdit()) {
-      <section class="vr-form-section">
+      <section class="vr-form-section full">
         <h2>Registration</h2>
         <p><strong>Status:</strong> {{ registrationStatus() || 'Unknown' }}</p>
         @if (registrationError()) {
@@ -30,111 +30,101 @@
       </section>
     }
 
-    <section class="vr-form-section">
+    <section class="vr-form-section full">
       <h2>Warehouse Details</h2>
       <div class="vr-form-grid">
-        <label class="form-field">
-          Warehouse name *
+        <label class="prime-form-field">
+          <span>Warehouse name *</span>
           <input pInputText formControlName="name" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Contact name *
+        <label class="prime-form-field">
+          <span>Contact name *</span>
           <input pInputText formControlName="contactName" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Email *
+        <label class="prime-form-field">
+          <span>Email *</span>
           <input pInputText type="email" formControlName="email" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Phone *
+        <label class="prime-form-field">
+          <span>Phone *</span>
           <input pInputText formControlName="phone" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Address line 1 *
+        <label class="prime-form-field">
+          <span>Address line 1 *</span>
           <input pInputText formControlName="addressLine1" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Address line 2
+        <label class="prime-form-field">
+          <span>Address line 2</span>
           <input pInputText formControlName="addressLine2" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          City *
+        <label class="prime-form-field">
+          <span>City *</span>
           <input pInputText formControlName="city" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          State *
+        <label class="prime-form-field">
+          <span>State *</span>
           <input pInputText formControlName="state" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Country *
+        <label class="prime-form-field">
+          <span>Country *</span>
           <input pInputText formControlName="country" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          PIN code *
+        <label class="prime-form-field">
+          <span>PIN code *</span>
           <input pInputText formControlName="pincode" [readonly]="providerFieldsLocked" />
         </label>
       </div>
     </section>
 
-    <section class="vr-form-section">
+    <section class="vr-form-section full">
       <h2>Return Address</h2>
       <div class="vr-form-grid">
-        <label class="form-field">
-          Registered name *
+        <label class="prime-form-field">
+          <span>Registered name *</span>
           <input pInputText formControlName="registeredName" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Return address *
+        <label class="prime-form-field">
+          <span>Return address *</span>
           <textarea pTextarea rows="3" formControlName="returnAddress" [readonly]="providerFieldsLocked"></textarea>
         </label>
-        <label class="form-field">
-          Return PIN code *
+        <label class="prime-form-field">
+          <span>Return PIN code *</span>
           <input pInputText formControlName="returnPin" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Return city *
+        <label class="prime-form-field">
+          <span>Return city *</span>
           <input pInputText formControlName="returnCity" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Return state *
+        <label class="prime-form-field">
+          <span>Return state *</span>
           <input pInputText formControlName="returnState" [readonly]="providerFieldsLocked" />
         </label>
-        <label class="form-field">
-          Return country *
+        <label class="prime-form-field">
+          <span>Return country *</span>
           <input pInputText formControlName="returnCountry" [readonly]="providerFieldsLocked" />
         </label>
       </div>
     </section>
 
-    <section class="vr-form-section">
+    <section class="vr-form-section full">
       <h2>Availability</h2>
       <div class="vr-form-grid">
-        <label class="form-field toggle-field">
+        <label class="prime-form-toggle">
           <p-toggleswitch formControlName="isActive" [disabled]="registrationStatus() === 'PENDING'" />
           <span>Active</span>
         </label>
-        <label class="form-field toggle-field">
+        <label class="prime-form-toggle">
           <p-toggleswitch formControlName="isDefault" [disabled]="registrationStatus() === 'PENDING'" />
           <span>Default warehouse</span>
         </label>
       </div>
     </section>
 
-    <div class="form-actions">
-      <p-button
-        type="button"
-        label="Cancel"
-        severity="secondary"
-        [outlined]="true"
-        [routerLink]="['/admin', module()]"
-      />
-      <p-button
-        type="button"
-        [label]="isEdit() ? 'Save changes' : 'Create warehouse'"
-        icon="pi pi-check"
-        [loading]="saving()"
-        (onClick)="submit()"
-      />
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Save changes' : 'Create warehouse' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
     </div>
   </form>
 </app-admin-form-shell>

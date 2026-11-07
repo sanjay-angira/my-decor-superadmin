@@ -15,8 +15,14 @@
 
 .vr-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .vr-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form-field {
