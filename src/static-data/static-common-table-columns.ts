@@ -103,7 +103,8 @@ export const OffersAndDealsColumns: AdminTableColumnDefinition[] = [
   { label: 'Start Date', property: 'startDate', type: 'text', datatype: 'time', visible: true },
   { label: 'End Date', property: 'endDate', type: 'text', datatype: 'time', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
-  { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Created At', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Updated At', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
@@ -115,6 +116,8 @@ export const CouponComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Start Date', property: 'startDate', type: 'text', datatype: 'date', visible: true },
   { label: 'End Date', property: 'endDate', type: 'text', datatype: 'date', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
+  { label: 'Created At', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Updated At', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
