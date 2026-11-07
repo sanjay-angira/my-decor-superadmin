@@ -91,6 +91,13 @@ export const routes: Routes = [
             (m) => m.CategoryHierarchyComponent
           ),
       },
+      {
+        path: 'brands/:brandId/warehouses',
+        loadComponent: () =>
+          import('./pages/components/brand-warehouses/brand-warehouses.component').then(
+            (m) => m.BrandWarehousesComponent
+          ),
+      },
       // Config-driven CRUD — mirrors vr-frontend /admin/[module]
       {
         path: ':module',

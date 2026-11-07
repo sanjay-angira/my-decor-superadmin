@@ -5,11 +5,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { StepperModule } from 'primeng/stepper';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
 import { ImageUploadComponent } from '../../shared/image-upload.component';
-import { QuillEditorComponent } from '../../shared/quill-editor.component';
 import { normalizeIds } from '../../shared/form-utils';
 import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
 
@@ -22,9 +22,9 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
     MultiSelectModule,
     StepperModule,
     ToggleSwitchModule,
+    RouterLink,
     AdminFormShellComponent,
     ImageUploadComponent,
-    QuillEditorComponent,
   ],
   templateUrl: './add-update.component.html',
   styleUrl: './add-update.component.scss',
@@ -50,26 +50,16 @@ export class BrandFormComponent implements OnInit {
   readonly metaDescMax = 300;
 
   readonly form = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-    website: ['', Validators.maxLength(255)],
-    description: [''],
-    countryOfOrigin: ['', Validators.maxLength(100)],
-    gstNumber: ['', Validators.maxLength(50)],
-    supportEmail: ['', Validators.maxLength(150)],
-    supportPhone: ['', Validators.maxLength(20)],
-    instagramUrl: ['', Validators.maxLength(255)],
-    facebookUrl: ['', Validators.maxLength(255)],
-    metaTitle: ['', Validators.maxLength(this.metaTitleMax)],
-    metaDescription: ['', Validators.maxLength(this.metaDescMax)],
-    metaKeywords: [''],
-    logoUrl: [''],
-    bannerImageUrl: [''],
-    ogImageUrl: [''],
-    trademarkCertificateUrl: [''],
+    brandName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(150)]],
+    shortDescription: ['', [Validators.required, Validators.minLength(5)]],
+    description: ['', [Validators.required, Validators.minLength(5)]],
+    website: ['', Validators.pattern(/^https?:\/\/.+/i)],
     categoryIds: [[] as number[]],
     offerIds: [[] as number[]],
-    isVerified: [false],
-    isFeatured: [false],
+    metaTitle: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(this.metaTitleMax)]],
+    metaDescription: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(this.metaDescMax)]],
+    metaKeywords: [''],
+    logo: [''],
     isActive: [true],
   });
 
@@ -79,33 +69,25 @@ export class BrandFormComponent implements OnInit {
 
     const id = this.recordId();
     this.isEdit.set(!!id);
-    if (!id) return;
+    if (!id) {
+      return;
+    }
     this.loading.set(true);
     this.crud.loadRecord(this.module(), id).subscribe(({ data, error }) => {
       this.loading.set(false);
       this.loadError.set(error);
       if (!data) return;
       this.form.patchValue({
-        name: String(data.name ?? data.brandName ?? ''),
+        brandName: String(data.brandName ?? ''),
+        shortDescription: String(data.shortDescription ?? ''),
         website: String(data.website ?? ''),
         description: String(data.description ?? ''),
-        countryOfOrigin: String(data.countryOfOrigin ?? ''),
-        gstNumber: String(data.gstNumber ?? ''),
-        supportEmail: String(data.supportEmail ?? ''),
-        supportPhone: String(data.supportPhone ?? ''),
-        instagramUrl: String(data.instagramUrl ?? ''),
-        facebookUrl: String(data.facebookUrl ?? ''),
         metaTitle: String(data.metaTitle ?? ''),
         metaDescription: String(data.metaDescription ?? ''),
         metaKeywords: String(data.metaKeywords ?? ''),
-        logoUrl: String(data.logoUrl ?? data.logo ?? ''),
-        bannerImageUrl: String(data.bannerImageUrl ?? ''),
-        ogImageUrl: String(data.ogImageUrl ?? ''),
-        trademarkCertificateUrl: String(data.trademarkCertificateUrl ?? ''),
+        logo: String(data.logo ?? ''),
         categoryIds: normalizeIds(data.categoryIds ?? data.categories),
         offerIds: normalizeIds(data.offerIds ?? data.brandOffers ?? data.offers),
-        isVerified: Boolean(data.isVerified),
-        isFeatured: Boolean(data.isFeatured),
         isActive: data.isActive !== false,
       });
     });
@@ -113,7 +95,18 @@ export class BrandFormComponent implements OnInit {
 
   isStepValid(step: number): boolean {
     if (step === 1) {
-      return this.form.controls.name.valid;
+      return (
+        this.form.controls.brandName.valid &&
+        this.form.controls.shortDescription.valid &&
+        this.form.controls.description.valid &&
+        this.form.controls.website.valid
+      );
+    }
+    if (step === 3) {
+      return (
+        this.form.controls.metaTitle.valid &&
+        this.form.controls.metaDescription.valid
+      );
     }
     return true;
   }
@@ -137,26 +130,16 @@ export class BrandFormComponent implements OnInit {
     this.submitError.set('');
     this.crud
       .save(this.module(), this.recordId(), {
-        name: v.name.trim(),
+        brandName: v.brandName.trim(),
+        shortDescription: v.shortDescription.trim(),
         website: emptyToNull(v.website),
         description: emptyToNull(v.description),
-        countryOfOrigin: emptyToNull(v.countryOfOrigin),
-        gstNumber: emptyToNull(v.gstNumber),
-        supportEmail: emptyToNull(v.supportEmail),
-        supportPhone: emptyToNull(v.supportPhone),
-        instagramUrl: emptyToNull(v.instagramUrl),
-        facebookUrl: emptyToNull(v.facebookUrl),
-        metaTitle: emptyToNull(v.metaTitle),
-        metaDescription: emptyToNull(v.metaDescription),
+        metaTitle: v.metaTitle.trim(),
+        metaDescription: v.metaDescription.trim(),
         metaKeywords: emptyToNull(v.metaKeywords),
-        logoUrl: emptyToNull(v.logoUrl),
-        bannerImageUrl: emptyToNull(v.bannerImageUrl),
-        ogImageUrl: emptyToNull(v.ogImageUrl),
-        trademarkCertificateUrl: emptyToNull(v.trademarkCertificateUrl),
+        logo: emptyToNull(v.logo),
         categoryIds: v.categoryIds,
         offerIds: v.offerIds,
-        isVerified: v.isVerified,
-        isFeatured: v.isFeatured,
         isActive: v.isActive,
       })
       .subscribe((res) => {

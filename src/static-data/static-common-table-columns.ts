@@ -57,9 +57,8 @@ export const CategoryComponentColumns: AdminTableColumnDefinition[] = [
 
 export const BrandComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
-  { label: 'Brand Name', property: 'name', type: 'text', datatype: 'brandName', visible: true },
-  { label: 'Verified', property: 'isVerified', type: 'text', datatype: 'on-off', visible: true },
-  { label: 'Featured', property: 'isFeatured', type: 'text', datatype: 'on-off', visible: true },
+  { label: 'Brand Name', property: 'brandName', type: 'text', datatype: 'brandName', visible: true },
+  { label: 'Brand Slug', property: 'brandSlug', type: 'text', datatype: 'slug', visible: true },
   { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
   { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
   { label: 'Updated On', property: 'updatedAt', type: 'text', datatype: 'date', visible: true },

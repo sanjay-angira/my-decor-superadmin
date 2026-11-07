@@ -1,0 +1,127 @@
+.warehouse-page {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.warehouse-header,
+.warehouse-card {
+  padding: 1.5rem;
+  border: 1px solid var(--vr-border-strong);
+  border-radius: 0.75rem;
+  background: var(--surface-card, #fff);
+}
+
+.warehouse-header h1 {
+  margin: 1rem 0 0.25rem;
+  font-size: 1.5rem;
+}
+
+.warehouse-header p,
+.card-heading p,
+.warehouse-item p {
+  color: var(--text-color-secondary);
+}
+
+.message {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--vr-status-green-soft);
+  border-radius: 0.5rem;
+  color: var(--vr-status-green);
+  background: var(--vr-status-green-soft);
+}
+
+.message.error,
+.registration-error {
+  border-color: var(--vr-danger-soft);
+  color: var(--vr-danger);
+  background: var(--vr-danger-soft);
+}
+
+.warehouse-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: 1.25rem;
+}
+
+.card-heading h2 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+}
+
+.warehouse-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.warehouse-options,
+.form-actions,
+.item-actions,
+.warehouse-status,
+.warehouse-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.warehouse-options {
+  margin-top: 1rem;
+}
+
+.form-actions {
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.warehouse-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.warehouse-item {
+  padding: 1rem;
+  border: 1px solid var(--vr-border-strong);
+  border-radius: 0.5rem;
+}
+
+.warehouse-title h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.warehouse-item p {
+  margin: 0.5rem 0;
+  overflow-wrap: anywhere;
+}
+
+.warehouse-status {
+  margin: 0.75rem 0;
+  font-size: 0.8rem;
+}
+
+.badge {
+  padding: 0.15rem 0.5rem;
+  border-radius: 1rem;
+  background: var(--vr-status-green-soft);
+  color: var(--vr-status-green);
+  font-size: 0.75rem;
+}
+
+.registration-error {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+@media (max-width: 1000px) {
+  .warehouse-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .warehouse-fields {
+    grid-template-columns: 1fr;
+  }
+}

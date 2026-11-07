@@ -3,6 +3,12 @@
   background: transparent;
 }
 
+.warehouse-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
 :host ::ng-deep .p-steppanel-content {
   padding: 2rem 0 0;
   background: transparent;
