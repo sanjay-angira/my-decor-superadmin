@@ -2,11 +2,12 @@ import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
+import { StepperModule } from 'primeng/stepper';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { RouterLink } from '@angular/router';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
 import { AdminCrudFormService } from '../../shared/admin-crud-form.service';
 import { FormOptionsService, type SelectOption } from '../../shared/form-options.service';
@@ -18,12 +19,13 @@ import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
   selector: 'app-coupon-form',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
     ButtonModule,
     CheckboxModule,
+    DatePickerModule,
     InputTextModule,
     MultiSelectModule,
     SelectModule,
+    StepperModule,
     ToggleSwitchModule,
     AdminFormShellComponent,
     ImageUploadComponent,
@@ -54,8 +56,9 @@ export class CouponFormComponent implements OnInit {
     image: [''],
     discountType: ['percentage' as 'percentage' | 'fixed', Validators.required],
     discountValue: [0, Validators.required],
-    startDate: ['', Validators.required],
-    endDate: ['', Validators.required],
+    timeBased: [false],
+    startDate: [null as Date | null],
+    endDate: [null as Date | null],
     isActive: [true],
     isUserSpecific: [false],
     userIds: [[] as number[]],
@@ -65,6 +68,8 @@ export class CouponFormComponent implements OnInit {
     this.form.controls.isUserSpecific.valueChanges.subscribe((enabled) => {
       if (enabled) this.ensureUsersLoaded();
     });
+    this.form.controls.timeBased.valueChanges.subscribe(() => this.updateDateValidators());
+    this.updateDateValidators();
 
     const id = this.recordId();
     this.isEdit.set(!!id);
@@ -81,12 +86,14 @@ export class CouponFormComponent implements OnInit {
         image: String(data.image ?? ''),
         discountType: (data.discountType ?? 'percentage') as 'percentage' | 'fixed',
         discountValue: Number(data.discountValue ?? 0),
-        startDate: toDateInput(data.startDate),
-        endDate: toDateInput(data.endDate),
+        timeBased: Boolean(data.timeBased ?? true),
+        startDate: this.parseDate(data.startDate),
+        endDate: this.parseDate(data.endDate),
         isActive: Boolean(data.isActive ?? true),
         isUserSpecific,
         userIds: normalizeIds(data.userIds ?? data.users),
       });
+      this.updateDateValidators();
     });
   }
 
@@ -94,6 +101,47 @@ export class CouponFormComponent implements OnInit {
     if (this.usersLoaded) return;
     this.usersLoaded = true;
     this.options.users().subscribe((rows) => this.users.set(rows));
+  }
+
+  private parseDate(value: unknown): Date | null {
+    const dateInput = toDateInput(value);
+    if (!dateInput) return null;
+    const [year, month, day] = dateInput.split('-').map(Number);
+    if (!year || !month || !day) return null;
+    return new Date(year, month - 1, day);
+  }
+
+  private formatDate(value: Date | null): string {
+    if (!value) return '';
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private updateDateValidators(): void {
+    const validator = this.form.controls.timeBased.value ? Validators.required : null;
+    this.form.controls.startDate.setValidators(validator);
+    this.form.controls.endDate.setValidators(validator);
+    this.form.controls.startDate.updateValueAndValidity({ emitEvent: false });
+    this.form.controls.endDate.updateValueAndValidity({ emitEvent: false });
+  }
+
+  isStepValid(step: number): boolean {
+    if (step === 1) {
+      return this.form.controls.couponCode.valid &&
+        this.form.controls.discountType.valid &&
+        this.form.controls.discountValue.valid &&
+        (!this.form.controls.timeBased.value || (
+          this.form.controls.startDate.valid && this.form.controls.endDate.valid
+        ));
+    }
+
+    if (step === 3) {
+      return this.form.controls.startDate.valid && this.form.controls.endDate.valid;
+    }
+
+    return true;
   }
 
   submit(): void {
@@ -110,8 +158,13 @@ export class CouponFormComponent implements OnInit {
         image: v.image || null,
         discountType: v.discountType,
         discountValue: Number(v.discountValue),
-        startDate: v.startDate,
-        endDate: v.endDate,
+        timeBased: v.timeBased,
+        ...(v.timeBased
+          ? {
+              startDate: this.formatDate(v.startDate),
+              endDate: this.formatDate(v.endDate),
+            }
+          : {}),
         isActive: v.isActive,
         isUserSpecific: v.isUserSpecific,
         ...(v.isUserSpecific ? { userIds: v.userIds } : {}),

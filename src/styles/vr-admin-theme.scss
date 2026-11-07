@@ -448,13 +448,15 @@ html[data-theme='dark'] {
   gap: 0.35rem;
   min-width: 0;
   width: 100%;
-  color: var(--vr-text-secondary);
-  font-size: 13px;
+  color: var(--vr-text);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .prime-form-field input[pInputText],
 .prime-form-field p-select,
-.prime-form-field p-multiselect {
+.prime-form-field p-multiselect,
+.prime-form-field p-datepicker {
   width: 100%;
 }
 
@@ -586,8 +588,8 @@ p-paginator .p-paginator {
 }
 
 .vr-upload-label {
-  color: var(--vr-text-secondary);
-  font-size: 13px;
+  color: var(--vr-text);
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.4;
 }

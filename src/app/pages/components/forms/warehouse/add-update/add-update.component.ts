@@ -1,8 +1,8 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { StepperModule } from 'primeng/stepper';
 import { TextareaModule } from 'primeng/textarea';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AdminFormShellComponent } from '../../shared/admin-form-shell.component';
@@ -21,9 +21,9 @@ type WarehouseRecord = {
   selector: 'app-warehouse-form',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
     ButtonModule,
     InputTextModule,
+    StepperModule,
     TextareaModule,
     ToggleSwitchModule,
     AdminFormShellComponent,
@@ -112,6 +112,37 @@ export class WarehouseFormComponent implements OnInit {
   get canRetryRegistration(): boolean {
     return Boolean(this.recordId()) &&
       this.registrationStatus() === 'FAILED';
+  }
+
+  isStepValid(step: number): boolean {
+    if (step === 1) {
+      const controls = this.form.controls;
+      return [
+        controls.name,
+        controls.contactName,
+        controls.email,
+        controls.phone,
+        controls.addressLine1,
+        controls.city,
+        controls.state,
+        controls.country,
+        controls.pincode,
+      ].every((control) => control.valid);
+    }
+
+    if (step === 2) {
+      const controls = this.form.controls;
+      return [
+        controls.registeredName,
+        controls.returnAddress,
+        controls.returnPin,
+        controls.returnCity,
+        controls.returnState,
+        controls.returnCountry,
+      ].every((control) => control.valid);
+    }
+
+    return this.form.valid;
   }
 
   submit(): void {

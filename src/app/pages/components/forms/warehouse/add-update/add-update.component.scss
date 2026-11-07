@@ -13,10 +13,23 @@
   font-size: 1.1rem;
 }
 
+.required {
+  color: var(--vr-danger);
+}
+
 .vr-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--vr-border-strong);
 }
 
 @media (max-width: 768px) {
