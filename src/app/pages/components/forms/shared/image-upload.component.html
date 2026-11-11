@@ -1,10 +1,10 @@
 <div class="vr-upload">
-  @if (value) {
+  @if (value()) {
     <div class="preview">
       @if (isVideo()) {
-        <video [src]="value" controls></video>
+        <video [src]="value()" controls></video>
       } @else {
-        <img [src]="value" [alt]="label()" />
+        <img [src]="value()" [alt]="label()" (error)="onPreviewError()" />
       }
       <p-button
         type="button"
@@ -16,6 +16,9 @@
         ariaLabel="Remove"
       />
     </div>
+  }
+  @if (previewError()) {
+    <small class="preview-error">The saved image URL could not be loaded.</small>
   }
   <div class="vr-upload-dropzone-wrap">
     <span class="vr-upload-label"
@@ -34,7 +37,7 @@
         <p-progressspinner [style]="{ width: '22px', height: '22px' }" />
       } @else {
         <i class="pi pi-cloud-upload" aria-hidden="true"></i>
-        <span>{{ value ? 'Replace file' : 'Click to upload' }}</span>
+        <span>{{ value() ? 'Replace file' : 'Click to upload' }}</span>
       }
     </button>
   </div>

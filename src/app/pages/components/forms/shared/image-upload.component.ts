@@ -29,14 +29,16 @@ export class ImageUploadComponent implements ControlValueAccessor {
 
   readonly uploading = signal(false);
   readonly uploadError = signal('');
-  value = '';
+  readonly value = signal('');
+  readonly previewError = signal(false);
   disabled = false;
 
   private onChange: (v: string) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
   writeValue(value: string | null): void {
-    this.value = value || '';
+    this.value.set(value || '');
+    this.previewError.set(false);
   }
   registerOnChange(fn: (v: string) => void): void {
     this.onChange = fn;
@@ -49,11 +51,16 @@ export class ImageUploadComponent implements ControlValueAccessor {
   }
 
   isVideo(): boolean {
-    return /\.(mp4|webm|mov)(\?|$)/i.test(this.value) || this.accept().includes('video');
+    return /\.(mp4|webm|mov)(\?|$)/i.test(this.value()) || this.accept().includes('video');
+  }
+
+  onPreviewError(): void {
+    this.previewError.set(true);
   }
 
   clear(): void {
-    this.value = '';
+    this.value.set('');
+    this.previewError.set(false);
     this.uploadError.set('');
     this.onChange('');
     this.onTouched();
@@ -69,7 +76,8 @@ export class ImageUploadComponent implements ControlValueAccessor {
     this.upload.upload(file, this.path(), this.imageType()).subscribe({
       next: (res: any) => {
         const url = res?.data?.Location || res?.Location || res?.data?.url || '';
-        this.value = url;
+        this.value.set(url);
+        this.previewError.set(false);
         this.onChange(url);
         this.onTouched();
         this.uploading.set(false);
