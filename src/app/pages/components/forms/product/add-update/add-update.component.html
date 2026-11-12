@@ -362,19 +362,6 @@
                     }
                   </div>
                 }
-                <div class="form-field">
-                  <label [for]="'variant-offers-' + i">Variant offers</label>
-                  <p-multiselect
-                    [inputId]="'variant-offers-' + i"
-                    formControlName="productVariantOffers"
-                    [options]="offers()"
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Select offers"
-                    display="chip"
-                    [fluid]="true"
-                  />
-                </div>
                 <div class="form-field full">
                   <app-quill-editor label="Variant description" formControlName="description" />
                 </div>

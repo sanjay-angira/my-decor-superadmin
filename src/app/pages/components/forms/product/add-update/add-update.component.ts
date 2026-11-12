@@ -259,7 +259,6 @@ export class ProductFormComponent implements OnInit {
         data?.packageWeightGrams ?? '',
         [Validators.required, Validators.min(0.01)],
       ],
-      productVariantOffers: [normalizeIds(data?.productVariantOffers ?? data?.productOffers)],
       images: [this.normalizeImageUrls(data?.images ?? data?.variantImages ?? data?.image)],
       variantAttributes: this.fb.array([] as any[]),
     });
@@ -817,7 +816,6 @@ export class ProductFormComponent implements OnInit {
             sortOrder: i + 1,
             ...(this.imageSizesByUrl.has(url) ? this.imageSizesByUrl.get(url) : {}),
           })),
-          productVariantOffers: variant.productVariantOffers || [],
           variantAttributes: this.variantAttributesFrom(ctrl).map((a) => {
             const attributeId = Number(a.attributeId);
             const p: Record<string, unknown> = {
