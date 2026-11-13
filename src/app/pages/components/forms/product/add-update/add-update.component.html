@@ -18,7 +18,7 @@
 
       <section class="step-panel" aria-label="Product information">
         <div class="step-grid">
-          <div class="form-field">
+          <div class="form-field full">
             <label for="product-name">Product name <span class="required">*</span></label>
             <input id="product-name" pInputText formControlName="productName" class="w-full" />
             @if (form.controls.productName.touched && form.controls.productName.invalid) {
@@ -118,33 +118,24 @@
               [filter]="true"
               [fluid]="true"
             />
-            <p-button
-              label="Add tag"
-              icon="pi pi-plus"
-              severity="secondary"
-              [text]="true"
-              type="button"
-              (onClick)="openAddTagDialog()"
-            />
-            <details class="tag-management">
-              <summary>Manage product tags</summary>
-              @for (tag of productTags(); track tag.value) {
-                <div class="tag-management-item">
-                  <span>{{ tag.label }}</span>
-                  <p-button
-                    [ariaLabel]="'Delete ' + tag.label"
-                    icon="pi pi-trash"
-                    severity="danger"
-                    [text]="true"
-                    type="button"
-                    (onClick)="requestTagDelete(tag)"
-                  />
-                </div>
-              }
-            </details>
-            @if (tagDeleteError()) {
-              <small class="field-error">{{ tagDeleteError() }}</small>
-            }
+            <div class="tag-actions">
+              <p-button
+                label="Add tag"
+                icon="pi pi-plus"
+                severity="secondary"
+                [text]="true"
+                type="button"
+                (onClick)="openAddTagDialog()"
+              />
+              <p-button
+                label="Manage product tags"
+                icon="pi pi-tags"
+                severity="secondary"
+                [text]="true"
+                type="button"
+                (onClick)="openManageTagsDialog()"
+              />
+            </div>
           </div>
           <div class="form-field">
             <label for="product-attributes">Product attributes</label>
@@ -718,6 +709,36 @@
     (visibleChange)="onTagDialogVisibleChange($event)"
     (created)="onTagCreated($event)"
   />
+  <p-dialog
+    header="Manage product tags"
+    [visible]="showManageTagsDialog()"
+    (visibleChange)="onManageTagsDialogVisibleChange($event)"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: 'min(520px, 90vw)' }"
+  >
+    <div class="tag-management-list">
+      @if (productTags().length) {
+        @for (tag of productTags(); track tag.value) {
+          <div class="tag-management-item">
+            <span>{{ tag.label }}</span>
+            <p-button
+              [ariaLabel]="'Delete ' + tag.label"
+              icon="pi pi-trash"
+              severity="danger"
+              [text]="true"
+              type="button"
+              [disabled]="deletingTag()"
+              (onClick)="requestTagDelete(tag)"
+            />
+          </div>
+        }
+      } @else {
+        <p class="tag-management-empty">No product tags have been created yet.</p>
+      }
+    </div>
+  </p-dialog>
   <p-dialog
     header="Delete product tag"
     [visible]="!!pendingTagDelete()"

@@ -100,6 +100,7 @@ export class ProductFormComponent implements OnInit {
   readonly attributes = signal<SelectOption[]>([]);
   readonly productTags = signal<SelectOption[]>([]);
   readonly showAddTagDialog = signal(false);
+  readonly showManageTagsDialog = signal(false);
   readonly pendingTagDelete = signal<SelectOption | null>(null);
   readonly deletingTag = signal(false);
   readonly tagDeleteError = signal('');
@@ -517,6 +518,15 @@ export class ProductFormComponent implements OnInit {
 
   openAddTagDialog(): void {
     this.showAddTagDialog.set(true);
+  }
+
+  openManageTagsDialog(): void {
+    this.tagDeleteError.set('');
+    this.showManageTagsDialog.set(true);
+  }
+
+  onManageTagsDialogVisibleChange(visible: boolean): void {
+    this.showManageTagsDialog.set(visible);
   }
 
   onTagDialogVisibleChange(visible: boolean): void {
