@@ -31,11 +31,9 @@ import { QuillEditorComponent } from '../../shared/quill-editor.component';
 import { AddTagDialogComponent } from '../add-tag-dialog.component';
 import { jsonObjectValidator, trimmedMinimumLength } from './product-form.validation';
 import {
-  generateSlug,
   htmlRequired,
   normalizeColorCode,
   normalizeIds,
-  SLUG_PATTERN,
   stripHtml,
 } from '../../shared/form-utils';
 import { UPLOAD_PATHS } from '../../../../../core/services/upload.service';
@@ -110,20 +108,8 @@ export class ProductFormComponent implements OnInit {
     { webp400: string | null; webp800: string | null; webp1200: string | null }
   >();
 
-  private slugDirty = false;
-  private variantSlugDirty: boolean[] = [false];
-
   readonly form = this.fb.group({
     productName: ['', [trimmedMinimumLength(2)]],
-    productSlug: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(100),
-        Validators.pattern(SLUG_PATTERN),
-      ],
-    ],
     shortDescription: ['', [trimmedMinimumLength(2)]],
     description: ['', htmlRequired(2)],
     warehouseId: ['' as number | string | '', Validators.required],
@@ -196,12 +182,6 @@ export class ProductFormComponent implements OnInit {
         },
       });
 
-    this.form.get('productName')?.valueChanges.subscribe((name) => {
-      if (!this.isEdit() && !this.slugDirty) {
-        this.form.patchValue({ productSlug: generateSlug(name || '') }, { emitEvent: false });
-      }
-    });
-
     this.form.get('attributeIds')?.valueChanges.subscribe((ids) => {
       const normalized = this.normalizeAttributeIds(ids);
       this.syncAttributeDisplayControls(normalized);
@@ -235,10 +215,6 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
-  markSlugDirty(): void {
-    this.slugDirty = true;
-  }
-
   existingProductTagNames(): string[] {
     return this.productTags().map((option) => option.label);
   }
@@ -247,7 +223,6 @@ export class ProductFormComponent implements OnInit {
     const group = this.fb.group({
       id: [data?.id ?? null],
       name: [data?.name ?? '', trimmedMinimumLength(1)],
-      slug: [data?.slug ?? '', [Validators.required, Validators.pattern(SLUG_PATTERN)]],
       description: [data?.description ?? ''],
       sku: [data?.sku ?? '', trimmedMinimumLength(1)],
       price: [data?.price ?? '', [Validators.required, Validators.min(0.01)]],
@@ -267,26 +242,12 @@ export class ProductFormComponent implements OnInit {
 
   addVariant(): void {
     this.variants.push(this.createVariantGroup());
-    this.variantSlugDirty.push(false);
     this.syncAllVariantAttributes(this.form.value.attributeIds);
   }
 
   removeVariant(index: number): void {
     if (this.variants.length <= 1) return;
     this.variants.removeAt(index);
-    this.variantSlugDirty.splice(index, 1);
-  }
-
-  onVariantName(index: number): void {
-    const group = this.variants.at(index);
-    const name = group.get('name')?.value || '';
-    if (!this.variantSlugDirty[index]) {
-      group.patchValue({ slug: generateSlug(name) }, { emitEvent: false });
-    }
-  }
-
-  markVariantSlugDirty(index: number): void {
-    this.variantSlugDirty[index] = true;
   }
 
   variantAttributes(index: number): FormArray {
@@ -470,7 +431,6 @@ export class ProductFormComponent implements OnInit {
   }
 
   private patchFromRecord(r: any): void {
-    this.slugDirty = true;
     const variantsRaw = Array.isArray(r.variants) && r.variants.length ? r.variants : [{}];
     const fromVariants = variantsRaw.flatMap((v: any) =>
       (v.variantAttributes || []).map((a: any) => Number(a.attributeId ?? a.attribute?.id)),
@@ -483,15 +443,12 @@ export class ProductFormComponent implements OnInit {
       fromVariants.length ? fromVariants : legacyIds.length ? legacyIds : r.attributeIds,
     );
     this.variants.clear();
-    this.variantSlugDirty = [];
     variantsRaw.forEach((v: any) => {
       this.variants.push(this.createVariantGroup(v));
-      this.variantSlugDirty.push(true);
     });
 
     this.form.patchValue({
       productName: r.productName ?? '',
-      productSlug: r.productSlug ?? '',
       shortDescription: r.shortDescription ?? '',
       description: r.description ?? '',
       warehouseId: r.warehouseId ?? r.warehouse?.id ?? '',
@@ -637,15 +594,11 @@ export class ProductFormComponent implements OnInit {
     for (let i = 0; i < this.variants.length; i++) {
       const variant = this.variants.at(i).getRawValue();
       const label = String(variant.name || '').trim() || `Variant #${i + 1}`;
-      const slug = String(variant.slug || '').trim();
       const price = variant.price;
       const stock = variant.stock;
 
       if (!String(variant.name || '').trim()) {
         return `${label}: name is required.`;
-      }
-      if (!slug || !SLUG_PATTERN.test(slug)) {
-        return `${label}: enter a URL-friendly slug (lowercase letters, numbers, hyphens).`;
       }
       if (!String(variant.sku || '').trim()) {
         return `${label}: SKU is required.`;
@@ -743,14 +696,12 @@ export class ProductFormComponent implements OnInit {
         .every((id: number) => Boolean(displayGroup.get(String(id))?.value));
       return (
         (v.productName || '').trim().length >= 2 &&
-        SLUG_PATTERN.test((v.productSlug || '').trim()) &&
         (v.shortDescription || '').trim().length >= 2 &&
         descriptionText.length >= 2 &&
         !!v.warehouseId &&
         categorySelected &&
         displayValid &&
         this.form.controls.productName.valid &&
-        this.form.controls.productSlug.valid &&
         this.form.controls.shortDescription.valid &&
         this.form.controls.description.valid &&
         this.form.controls.warehouseId.valid &&
@@ -786,7 +737,6 @@ export class ProductFormComponent implements OnInit {
     const displayGroup = this.form.get('attributeCustomerDisplay') as FormGroup;
     const payload = {
       productName: v.productName,
-      productSlug: v.productSlug,
       shortDescription: v.shortDescription,
       description: v.description,
       publishStatus: v.publishStatus,
@@ -802,7 +752,6 @@ export class ProductFormComponent implements OnInit {
         return {
           ...(variant.id ? { id: variant.id } : {}),
           name: String(variant.name || '').trim(),
-          slug: String(variant.slug || '').trim() || generateSlug(variant.name || ''),
           description: variant.description || undefined,
           price: Number(variant.price),
           stock: Number(variant.stock),

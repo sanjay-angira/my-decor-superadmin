@@ -26,20 +26,6 @@
             }
           </div>
           <div class="form-field">
-            <label for="product-slug">Product slug <span class="required">*</span></label>
-            <input
-              id="product-slug"
-              pInputText
-              formControlName="productSlug"
-              class="w-full"
-              (input)="markSlugDirty()"
-            />
-            @if (form.controls.productSlug.touched && form.controls.productSlug.invalid) {
-              <small class="field-error">Use 3–100 lowercase letters, numbers, and hyphens.</small>
-            }
-          </div>
-
-          <div class="form-field">
             <label for="product-warehouse">Pickup address <span class="required">*</span></label>
             <p-select
               inputId="product-warehouse"
@@ -267,25 +253,9 @@
                     class="w-full"
                     [id]="'variant-name-' + i"
                     formControlName="name"
-                    (input)="onVariantName(i)"
                   />
                   @if (variant.get('name')?.touched && variant.get('name')?.invalid) {
                     <small class="field-error">Variant name is required.</small>
-                  }
-                </div>
-                <div class="form-field">
-                  <label [for]="'variant-slug-' + i"
-                    >Variant slug <span class="required">*</span></label
-                  >
-                  <input
-                    pInputText
-                    class="w-full"
-                    [id]="'variant-slug-' + i"
-                    formControlName="slug"
-                    (input)="markVariantSlugDirty(i)"
-                  />
-                  @if (variant.get('slug')?.touched && variant.get('slug')?.invalid) {
-                    <small class="field-error">Use lowercase letters, numbers, and hyphens.</small>
                   }
                 </div>
                 <div class="form-field">
