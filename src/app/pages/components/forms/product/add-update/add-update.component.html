@@ -649,6 +649,25 @@
           <ng-template #content>
       <section class="step-panel" aria-label="Product settings">
         <div class="step-grid">
+          <div class="toggle-item">
+            <label for="active-status">Active status</label>
+            <p-toggleswitch inputId="active-status" formControlName="isActive" />
+            <span class="status-chip" [class.on]="form.controls.isActive.value">
+              {{ form.controls.isActive.value ? 'Active' : 'Not active' }}
+            </span>
+          </div>
+          <div class="toggle-item">
+            <label for="featured-status">Featured</label>
+            <p-toggleswitch inputId="featured-status" formControlName="isFeatured" />
+          </div>
+          <div class="toggle-item">
+            <label for="new-arrival-status">New arrival</label>
+            <p-toggleswitch inputId="new-arrival-status" formControlName="newArrival" />
+          </div>
+          <div class="toggle-item">
+            <label for="best-seller-status">Best seller</label>
+            <p-toggleswitch inputId="best-seller-status" formControlName="bestSeller" />
+          </div>
           <div class="form-field">
             <label for="publish-status">Publish status <span class="required">*</span></label>
             <p-select
@@ -663,13 +682,6 @@
               optionValue="value"
               [fluid]="true"
             />
-          </div>
-          <div class="toggle-item">
-            <label for="active-status">Active status</label>
-            <p-toggleswitch inputId="active-status" formControlName="isActive" />
-            <span class="status-chip" [class.on]="form.controls.isActive.value">
-              {{ form.controls.isActive.value ? 'Active' : 'Not active' }}
-            </span>
           </div>
         </div>
         <div class="step-actions">

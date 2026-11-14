@@ -145,6 +145,9 @@ export class ProductFormComponent implements OnInit {
     }),
     publishStatus: ['draft', Validators.required],
     isActive: [true],
+    isFeatured: [false],
+    newArrival: [false],
+    bestSeller: [false],
   });
 
   get variants(): FormArray {
@@ -461,6 +464,9 @@ export class ProductFormComponent implements OnInit {
       attributeIds,
       publishStatus: r.publishStatus ?? 'draft',
       isActive: Boolean(r.isActive ?? true),
+      isFeatured: Boolean(r.isFeatured ?? false),
+      newArrival: Boolean(r.newArrival ?? false),
+      bestSeller: Boolean(r.bestSeller ?? false),
       seo: {
         metaTitle: r.seo?.metaTitle ?? r.metaTitle ?? '',
         metaDescription: r.seo?.metaDescription ?? r.metaDescription ?? '',
@@ -751,6 +757,9 @@ export class ProductFormComponent implements OnInit {
       description: v.description,
       publishStatus: v.publishStatus,
       isActive: v.isActive,
+      isFeatured: v.isFeatured,
+      newArrival: v.newArrival,
+      bestSeller: v.bestSeller,
       warehouseId: Number(v.warehouseId),
       category: this.getDeepestCategoryId(),
       productOffers: v.productOffers,
