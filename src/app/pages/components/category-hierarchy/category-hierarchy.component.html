@@ -13,35 +13,35 @@
       </div>
     </div>
 
-    <div class="vr-filter-bar">
-      <div class="vr-search-pill">
-        <i class="pi pi-search" aria-hidden="true"></i>
-        <input pInputText type="search" [formControl]="searchControl" placeholder="Search categories..." />
-        @if (searchControl.value) {
-          <button pButton type="button" [text]="true" [rounded]="true" (click)="searchControl.setValue('')" aria-label="Clear search">
-            <i class="pi pi-times" aria-hidden="true"></i>
-          </button>
-        }
-      </div>
-      <div class="filter-actions">
-        @if (selectedLeaf(); as leaf) {
-          <button
-            pButton
-            type="button"
-            (click)="openCategoryGuidelines(leaf)"
-          >
-            <i class="pi pi-list-check" aria-hidden="true"></i>
-            Add Category Guideline
-          </button>
-        }
-        <a pButton routerLink="/admin/categories/add">
-          <i class="pi pi-plus" aria-hidden="true"></i>
-          Add Category
-        </a>
-      </div>
+  </div>
+  
+  <div class="vr-filter-bar">
+    <div class="vr-search-pill">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <input pInputText type="search" [formControl]="searchControl" placeholder="Search categories..." />
+      @if (searchControl.value) {
+        <button pButton type="button" [text]="true" [rounded]="true" (click)="searchControl.setValue('')" aria-label="Clear search">
+          <i class="pi pi-times" aria-hidden="true"></i>
+        </button>
+      }
+    </div>
+    <div class="filter-actions">
+      @if (selectedLeaf(); as leaf) {
+        <button
+          pButton
+          type="button"
+          (click)="openCategoryGuidelines(leaf)"
+        >
+          <i class="pi pi-list-check" aria-hidden="true"></i>
+          Add Category Guideline
+        </button>
+      }
+      <a pButton routerLink="/admin/categories/add">
+        <i class="pi pi-plus" aria-hidden="true"></i>
+        Add Category
+      </a>
     </div>
   </div>
-
   <div class="vr-page-content">
     @if (error()) {
       <div class="error-banner">
