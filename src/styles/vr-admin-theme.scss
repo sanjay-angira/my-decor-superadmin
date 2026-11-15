@@ -347,7 +347,7 @@ html[data-theme='dark'] {
 .vr-card {
   background: var(--vr-card);
   border: 1px solid var(--vr-border);
-  border-radius: 0 0 var(--vr-table-radius) var(--vr-table-radius);
+  border-radius: var(--vr-table-radius);
   box-shadow: var(--vr-shadow);
   overflow: auto;
 }
@@ -356,7 +356,7 @@ html[data-theme='dark'] {
   position: relative;
   z-index: 1;
   border: 1px solid var(--vr-border);
-   border-radius: 0 0 var(--vr-table-radius) var(--vr-table-radius);
+  border-radius: 0 0 var(--vr-table-radius) var(--vr-table-radius);
   box-shadow: var(--vr-shadow);
   overflow: hidden;
 }

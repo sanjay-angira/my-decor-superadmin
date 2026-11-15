@@ -1,7 +1,7 @@
 <div class="vr-upload">
-  @if (urls.length) {
+  @if (urls().length) {
     <div class="grid">
-      @for (url of urls; track url; let i = $index) {
+      @for (url of urls(); track url; let i = $index) {
         <div class="item">
           <img [src]="url" alt="" />
           <p-button

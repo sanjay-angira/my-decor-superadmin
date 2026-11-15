@@ -26,12 +26,12 @@ export class MultiImageUploadComponent implements ControlValueAccessor {
   readonly uploading = signal(false);
   readonly uploadError = signal('');
 
-  urls: string[] = [];
+  readonly urls = signal<string[]>([]);
   private onChange: (v: string[]) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
   writeValue(value: string[] | null): void {
-    this.urls = Array.isArray(value) ? [...value] : [];
+    this.urls.set(Array.isArray(value) ? [...value] : []);
   }
   registerOnChange(fn: (v: string[]) => void): void {
     this.onChange = fn;
@@ -41,8 +41,9 @@ export class MultiImageUploadComponent implements ControlValueAccessor {
   }
 
   remove(index: number): void {
-    this.urls = this.urls.filter((_, i) => i !== index);
-    this.onChange(this.urls);
+    const urls = this.urls().filter((_, i) => i !== index);
+    this.urls.set(urls);
+    this.onChange(urls);
     this.onTouched();
   }
 
@@ -59,8 +60,9 @@ export class MultiImageUploadComponent implements ControlValueAccessor {
         next: (res: any) => {
           const url = res?.data?.Location || res?.Location || res?.data?.url || '';
           if (url) {
-            this.urls = [...this.urls, url];
-            this.onChange(this.urls);
+            const urls = [...this.urls(), url];
+            this.urls.set(urls);
+            this.onChange(urls);
           } else {
             this.uploadError.set('Upload succeeded but no URL was returned.');
           }

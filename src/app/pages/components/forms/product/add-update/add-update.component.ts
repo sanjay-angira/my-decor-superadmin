@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -150,6 +150,21 @@ export class ProductFormComponent implements OnInit {
     bestSeller: [false],
   });
 
+  private readonly loadRecordEffect = effect((onCleanup) => {
+    const id = this.recordId();
+    this.isEdit.set(!!id);
+    if (!id) return;
+
+    this.loading.set(true);
+    this.loadError.set('');
+    const subscription = this.crud.loadRecord(this.module(), id).subscribe(({ data, error }) => {
+      this.loading.set(false);
+      this.loadError.set(error);
+      if (data) this.patchFromRecord(data);
+    });
+    onCleanup(() => subscription.unsubscribe());
+  });
+
   get variants(): FormArray {
     return this.form.get('variants') as FormArray;
   }
@@ -158,7 +173,10 @@ export class ProductFormComponent implements OnInit {
     this.options.rootCategories().subscribe((r) => this.rootCategories.set(r));
     this.options.offers().subscribe((r) => this.offers.set(r));
     this.options.products().subscribe((r) => this.products.set(r));
-    this.options.attributes().subscribe((r) => this.attributes.set(r));
+    this.options.attributes().subscribe((r) => {
+      this.attributes.set(r);
+      this.syncAttributeDisplayControls(this.form.controls.attributeIds.value);
+    });
     this.options.productTags().subscribe((r) => this.productTags.set(r));
     this.warehousesLoading.set(true);
     this.options.registeredWarehouses()
@@ -205,17 +223,6 @@ export class ProductFormComponent implements OnInit {
     });
     this.form.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.formTick.update((n) => n + 1);
-    });
-
-    const id = this.recordId();
-    this.isEdit.set(!!id);
-    if (!id) return;
-    this.loading.set(true);
-    this.crud.loadRecord(this.module(), id).subscribe(({ data, error }) => {
-      this.loading.set(false);
-      this.loadError.set(error);
-      if (!data) return;
-      this.patchFromRecord(data);
     });
   }
 
@@ -344,7 +351,7 @@ export class ProductFormComponent implements OnInit {
       if (!ids.includes(Number(key))) group.removeControl(key);
     });
     ids.forEach((id) => {
-      if (!group.contains(String(id)) && this.attrSupportsImage(id)) {
+      if (!group.contains(String(id))) {
         group.addControl(String(id), this.fb.nonNullable.control('value'));
       }
     });
@@ -446,10 +453,10 @@ export class ProductFormComponent implements OnInit {
     const attributeIds = this.normalizeAttributeIds(
       fromVariants.length ? fromVariants : legacyIds.length ? legacyIds : r.attributeIds,
     );
-    this.variants.clear();
-    variantsRaw.forEach((v: any) => {
-      this.variants.push(this.createVariantGroup(v));
-    });
+    const variantGroups: FormGroup[] = variantsRaw.map((variant: any) =>
+      this.createVariantGroup(variant),
+    );
+    this.form.setControl('variants', this.fb.array(variantGroups));
 
     this.form.patchValue({
       productName: r.productName ?? '',
@@ -496,27 +503,24 @@ export class ProductFormComponent implements OnInit {
     });
 
     this.syncAttributeDisplayControls(attributeIds);
-    // restore display modes + variant attrs after patch
-    setTimeout(() => {
-      this.syncAllVariantAttributes(attributeIds);
-      variantsRaw.forEach((v: any, vi: number) => {
-        const attrs = v.variantAttributes || [];
-        attrs.forEach((a: any) => {
-          const attrId = Number(a.attributeId ?? a.attribute?.id);
-          if (this.attrSupportsImage(attrId) && a.viewOption) {
-            (this.form.get('attributeCustomerDisplay') as FormGroup)
-              .get(String(attrId))
-              ?.setValue(a.viewOption);
-          }
-          const control = this.variantAttributes(vi).controls.find(
-            (c) => Number(c.get('attributeId')?.value) === attrId,
-          );
-          control?.patchValue({
-            value: a.value ?? '',
-            code: a.code ?? '',
-            image: a.image ?? '',
-            viewOption: a.viewOption ?? '',
-          });
+    this.syncAllVariantAttributes(attributeIds);
+    variantsRaw.forEach((v: any, vi: number) => {
+      const attrs = v.variantAttributes || [];
+      attrs.forEach((a: any) => {
+        const attrId = Number(a.attributeId ?? a.attribute?.id);
+        if (a.viewOption) {
+          (this.form.get('attributeCustomerDisplay') as FormGroup)
+            .get(String(attrId))
+            ?.setValue(a.viewOption);
+        }
+        const control = this.variantAttributes(vi).controls.find(
+          (c) => Number(c.get('attributeId')?.value) === attrId,
+        );
+        control?.patchValue({
+          value: a.value ?? '',
+          code: a.code ?? '',
+          image: a.image ?? '',
+          viewOption: a.viewOption ?? '',
         });
       });
     });
