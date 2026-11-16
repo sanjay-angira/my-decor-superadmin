@@ -57,6 +57,7 @@ export class ModuleListComponent {
   readonly pageSize = signal(10);
   readonly sortingColumn = signal('id');
   readonly sortingOrder = signal<'ASC' | 'DESC'>('DESC');
+  private lastRequestKey = '';
 
   moduleKey!: AdminModuleKey;
   apiPath = '';
@@ -140,18 +141,23 @@ export class ModuleListComponent {
     });
   }
 
-  load(): void {
+  load(force = false): void {
+    const search = this.searchControl.value.trim();
+    const params = {
+      pageNumber: this.pageNumber(),
+      pageSize: this.pageSize(),
+      column: this.toApiSortColumn(this.sortingColumn()),
+      order: this.sortingOrder(),
+      ...(search ? { search } : {}),
+    };
+    const requestKey = JSON.stringify([this.apiPath, params]);
+    if (!force && requestKey === this.lastRequestKey) return;
+    this.lastRequestKey = requestKey;
+
     this.loading.set(true);
     this.error.set('');
-    const search = this.searchControl.value.trim();
     this.api
-      .get(`/${this.apiPath}`, {
-        pageNumber: this.pageNumber(),
-        pageSize: this.pageSize(),
-        column: this.toApiSortColumn(this.sortingColumn()),
-        order: this.sortingOrder(),
-        ...(search ? { search } : {}),
-      })
+      .get(`/${this.apiPath}`, params)
       .subscribe({
         next: (res) => {
           const rows = res?.data?.rows ?? res?.data ?? [];
@@ -185,7 +191,7 @@ export class ModuleListComponent {
     this.sortingColumn.set(sort.field);
     this.sortingOrder.set(order);
     this.pageNumber.set(1);
-    this.load();
+    this.load(true);
   }
 
   sortDirection(): 'asc' | 'desc' {
@@ -375,12 +381,23 @@ export class ModuleListComponent {
         : null;
     const attributeName =
       row['attributeName'] ?? attributeRecord?.['name'] ?? null;
+    const category = row['category'];
+    const categoryRecord =
+      category && typeof category === 'object'
+        ? (category as Record<string, unknown>)
+        : null;
+    const categoryName =
+      row['categoryName'] ??
+      categoryRecord?.['categoryName'] ??
+      categoryRecord?.['name'] ??
+      null;
     return {
       ...row,
       name: this.displayName(row) || row['name'],
       role: roles.join(', '),
       parentCategory,
       attributeName,
+      categoryName,
     };
   }
 

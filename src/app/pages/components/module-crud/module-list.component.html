@@ -72,7 +72,7 @@
     @if (error()) {
       <div class="error-banner">
         <span>{{ error() }}</span>
-        <button pButton type="button" [text]="true" (click)="load()">Retry</button>
+        <button pButton type="button" [text]="true" (click)="load(true)">Retry</button>
       </div>
     }
 
@@ -99,8 +99,6 @@
           <p-table
             [value]="rows()"
             [lazy]="true"
-            [sortField]="sortingColumn()"
-            [sortOrder]="sortingOrder() === 'ASC' ? 1 : -1"
             (onSort)="onSort($event)"
           >
             <ng-template #header>
