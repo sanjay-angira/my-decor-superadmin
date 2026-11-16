@@ -435,7 +435,7 @@ export class ModuleListComponent {
             if (this.rows().length === 1 && this.pageNumber() > 1) {
               this.pageNumber.update((n) => n - 1);
             }
-            this.load();
+            this.load(true);
           },
           error: () => this.snack.open('Delete failed', 'Dismiss', { duration: 3500 }),
         });
