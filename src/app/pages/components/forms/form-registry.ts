@@ -10,6 +10,7 @@ import { CouponFormComponent } from './coupon/add-update/add-update.component';
 import { OfferFormComponent } from './offer/add-update/add-update.component';
 import { ProductFaqFormComponent } from './product-faq/add-update/add-update.component';
 import { ProductFormComponent } from './product/add-update/add-update.component';
+import { RoomFormComponent } from './rooms/add-update/add-update.component';
 import { ReviewFormComponent } from './reviews/add-update/add-update.component';
 import { ContactLeadFormComponent } from './contact-us-leads/add-update/add-update.component';
 import { UserFormComponent } from './user/add-update/add-update.component';
@@ -25,6 +26,7 @@ export const ADMIN_FORM_REGISTRY: Record<string, Type<unknown>> = {
   'blog-tags': BlogTagFormComponent,
   blogs: BlogFormComponent,
   categories: CategoryFormComponent,
+  rooms: RoomFormComponent,
   warehouses: WarehouseFormComponent,
   'cms-pages': CmsPageFormComponent,
   coupons: CouponFormComponent,

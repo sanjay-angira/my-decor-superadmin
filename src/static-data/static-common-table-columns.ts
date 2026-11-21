@@ -54,6 +54,18 @@ export const CategoryComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
 ];
 
+export const RoomComponentColumns: AdminTableColumnDefinition[] = [
+  { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
+  { label: 'Room Name', property: 'name', type: 'text', datatype: 'name', visible: true },
+  { label: 'Slug', property: 'slug', type: 'text', datatype: 'text', visible: true },
+  { label: 'Products', property: 'productCount', type: 'text', datatype: 'text', visible: true },
+  { label: 'Sort Order', property: 'sortOrder', type: 'text', datatype: 'text', visible: true },
+  { label: 'Show on Home', property: 'showOnHomePage', type: 'text', datatype: 'on-off', visible: true },
+  { label: 'Status', property: 'isActive', type: 'text', datatype: 'status', visible: true },
+  { label: 'Created On', property: 'createdAt', type: 'text', datatype: 'date', visible: true },
+  { label: 'Actions', property: 'actions', type: 'button', datatype: 'button', visible: true },
+];
+
 export const WarehouseComponentColumns: AdminTableColumnDefinition[] = [
   { label: 'ID', property: 'id', type: 'text', datatype: 'id', visible: true },
   { label: 'Warehouse', property: 'name', type: 'text', datatype: 'name', visible: true },

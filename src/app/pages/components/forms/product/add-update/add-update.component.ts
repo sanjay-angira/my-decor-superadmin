@@ -97,6 +97,7 @@ export class ProductFormComponent implements OnInit {
   readonly childCategoryLevels = signal<SelectOption[][]>([[]]);
   readonly offers = signal<SelectOption[]>([]);
   readonly products = signal<SelectOption[]>([]);
+  readonly roomOptions = signal<SelectOption[]>([]);
   readonly attributes = signal<SelectOption[]>([]);
   readonly productTags = signal<SelectOption[]>([]);
   readonly showAddTagDialog = signal(false);
@@ -118,6 +119,7 @@ export class ProductFormComponent implements OnInit {
     childCategories: this.fb.nonNullable.control<number[]>([]),
     productOffers: this.fb.nonNullable.control<number[]>([]),
     productTags: this.fb.nonNullable.control<number[]>([]),
+    roomIds: this.fb.nonNullable.control<number[]>([]),
     frequentlyBoughtTogether: this.fb.nonNullable.control<number[]>([]),
     attributeIds: this.fb.nonNullable.control<number[]>([]),
     attributeCustomerDisplay: this.fb.nonNullable.group({}),
@@ -173,6 +175,7 @@ export class ProductFormComponent implements OnInit {
     this.options.rootCategories().subscribe((r) => this.rootCategories.set(r));
     this.options.offers().subscribe((r) => this.offers.set(r));
     this.options.products().subscribe((r) => this.products.set(r));
+    this.options.rooms().subscribe((r) => this.roomOptions.set(r));
     this.options.attributes().subscribe((r) => {
       this.attributes.set(r);
       this.syncAttributeDisplayControls(this.form.controls.attributeIds.value);
@@ -467,6 +470,7 @@ export class ProductFormComponent implements OnInit {
       childCategories: [],
       productOffers: normalizeIds(r.productOffers ?? r.offers),
       productTags: normalizeIds(r.productTags ?? r.tags),
+      roomIds: normalizeIds(r.rooms ?? r.roomIds),
       frequentlyBoughtTogether: normalizeIds(r.frequentlyBoughtTogether),
       attributeIds,
       publishStatus: r.publishStatus ?? 'draft',
@@ -768,6 +772,7 @@ export class ProductFormComponent implements OnInit {
       category: this.getDeepestCategoryId(),
       productOffers: v.productOffers,
       productTags: (v.productTags || []).map(Number).filter((id) => Number.isFinite(id) && id > 0),
+      roomIds: v.roomIds,
       frequentlyBoughtTogether: v.frequentlyBoughtTogether,
       attributes: (v.attributeIds || []).map((id: number) => ({ attributeId: id })),
       variants: this.variants.controls.map((ctrl) => {

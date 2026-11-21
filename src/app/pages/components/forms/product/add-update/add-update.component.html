@@ -87,6 +87,21 @@
           }
 
           <div class="form-field full">
+            <label for="product-rooms">Rooms</label>
+            <p-multiselect
+              inputId="product-rooms"
+              formControlName="roomIds"
+              [options]="roomOptions()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select rooms"
+              display="chip"
+              [filter]="true"
+              [fluid]="true"
+            />
+          </div>
+
+          <div class="form-field full">
             <label for="short-description">Short description <span class="required">*</span></label>
             <input
               id="short-description"

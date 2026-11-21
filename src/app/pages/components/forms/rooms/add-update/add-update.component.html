@@ -1,0 +1,71 @@
+<app-admin-form-shell
+  [title]="isEdit() ? 'Edit Room' : 'Add Room'"
+  [module]="module()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [submitError]="submitError()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="vr-form">
+    <label class="prime-form-field">
+      <span>Room Name <span class="required">*</span></span>
+      <input pInputText formControlName="name" />
+      @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+        <span class="field-error">Room name is required</span>
+      }
+    </label>
+
+    <label class="prime-form-field">
+      <span>Slug <span class="required">*</span></span>
+      <input pInputText formControlName="slug" (input)="markSlugDirty()" />
+      @if (form.controls.slug.touched && form.controls.slug.hasError('required')) {
+        <span class="field-error">Slug is required</span>
+      }
+    </label>
+
+    <label class="prime-form-field">
+      <span>Sort Order</span>
+      <input pInputText type="number" min="0" formControlName="sortOrder" />
+    </label>
+
+    <label class="prime-form-field">
+      <span>Products</span>
+      <p-multiselect
+        [options]="products()"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="productIds"
+        display="chip"
+        [filter]="true"
+        placeholder="Select products"
+      />
+    </label>
+
+    <app-image-upload
+      label="Room Image"
+      [path]="imagePath"
+      formControlName="image"
+    />
+    <app-image-upload
+      label="Mobile Room Image"
+      [path]="imagePath"
+      formControlName="mobileImage"
+    />
+
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="isActive" />
+      <span>Active</span>
+    </label>
+
+    <label class="prime-form-toggle">
+      <p-toggleswitch formControlName="showOnHomePage" />
+      <span>Show on Home Page</span>
+    </label>
+
+    <div class="actions">
+      <button pButton type="submit" [disabled]="saving()">
+        {{ isEdit() ? 'Update Room' : 'Create Room' }}
+      </button>
+      <a pButton [outlined]="true" [routerLink]="['/admin', module()]">Cancel</a>
+    </div>
+  </form>
+</app-admin-form-shell>

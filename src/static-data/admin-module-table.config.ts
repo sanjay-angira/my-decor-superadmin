@@ -12,6 +12,7 @@ import {
   OrdersComponentColumns,
   ProductComponentColumns,
   ProductFaqComponentColumns,
+  RoomComponentColumns,
   ReviewsComponentColumns,
   RolesComponentColumns,
   UserComponentColumns,
@@ -25,6 +26,7 @@ export type AdminModuleAction = 'add' | 'view' | 'edit' | 'delete';
 export type AdminModuleKey =
   | 'products'
   | 'categories'
+  | 'rooms'
   | 'warehouses'
   | 'attributes'
   | 'attribute-options'
@@ -89,6 +91,18 @@ export const adminModuleTableConfig: Record<AdminModuleKey, AdminModuleTableConf
     formFields: [
       { key: 'categoryName', label: 'Category Name', type: 'text', required: true },
       { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'isActive', label: 'Active', type: 'toggle' },
+    ],
+  },
+  rooms: {
+    label: 'Rooms',
+    description: 'Manage rooms and their products',
+    columns: RoomComponentColumns,
+    actions: ['add', 'view', 'edit', 'delete'],
+    addLabel: 'Add room',
+    formFields: [
+      { key: 'name', label: 'Room Name', type: 'text', required: true },
+      { key: 'slug', label: 'Slug', type: 'text' },
       { key: 'isActive', label: 'Active', type: 'toggle' },
     ],
   },
@@ -426,6 +440,7 @@ export function getAdminModuleSortColumn(
     'delete-requests': 'firstName',
     products: 'productName',
     categories: 'categoryName',
+    rooms: 'name',
     offers: 'offerName',
     coupons: 'couponCode',
     reviews: 'comment',

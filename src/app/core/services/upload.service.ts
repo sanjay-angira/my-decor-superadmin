@@ -13,6 +13,7 @@ export const UPLOAD_PATHS = {
     icon: '/product-category/icons',
     banner: '/product-category/banners',
   },
+  rooms: '/rooms/images',
   offers: '/offers/images',
   coupons: '/coupons/images',
   blogs: '/blog/images',

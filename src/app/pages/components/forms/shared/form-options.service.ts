@@ -130,6 +130,10 @@ export class FormOptionsService {
     return this.list('products', 'productName');
   }
 
+  rooms() {
+    return this.list('rooms', 'name');
+  }
+
   attributes() {
     return this.list('attributes', 'name');
   }
