@@ -15,29 +15,8 @@
     </label>
 
     <label class="prime-form-field">
-      <span>Slug <span class="required">*</span></span>
-      <input pInputText formControlName="slug" (input)="markSlugDirty()" />
-      @if (form.controls.slug.touched && form.controls.slug.hasError('required')) {
-        <span class="field-error">Slug is required</span>
-      }
-    </label>
-
-    <label class="prime-form-field">
       <span>Sort Order</span>
       <input pInputText type="number" min="0" formControlName="sortOrder" />
-    </label>
-
-    <label class="prime-form-field">
-      <span>Products</span>
-      <p-multiselect
-        [options]="products()"
-        optionLabel="label"
-        optionValue="value"
-        formControlName="productIds"
-        display="chip"
-        [filter]="true"
-        placeholder="Select products"
-      />
     </label>
 
     <app-image-upload
